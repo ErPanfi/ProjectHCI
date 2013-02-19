@@ -4,6 +4,6 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <Button Content="ProvaModifica" HorizontalAlignment="Left" Margin="208,147,0,0" VerticalAlignment="Top" Width="101"/>
-
+        <Label>prova</Label>
     </Grid>
 </Window>
