@@ -55,6 +55,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="KinectEngine\CollisionManager\FakeCollisionManager.cs" />
+    <Compile Include="KinectEngine\CollisionManager\ICollisionManager.cs" />
+    <Compile Include="KinectEngine\GameObject\UserFriendlyGameObject.cs" />
+    <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />
+    <Compile Include="KinectEngine\TimerManager\TimerManager.cs" />
+    <Compile Include="KinectEngine\GameObject\GameObjectEventArgs.cs" />
+    <Compile Include="Utility\BitmapUtility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,6 +70,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="KinectEngine\GameLoop\GameLoop.cs" />
+    <Compile Include="KinectEngine\GameObject\IGameObject.cs" />
+    <Compile Include="KinectEngine\SceneBrain\ISceneBrain.cs" />
+    <Compile Include="KinectEngine\SceneBrain\SceneBrain.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\FakeSpawnerManager.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\ISpawnerManager.cs" />
+    <Compile Include="KinectEngine\UpdateRenderer\FakeUpdateRenderer.cs" />
+    <Compile Include="KinectEngine\UpdateRenderer\IUpdateRenderer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -92,6 +107,10 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\skype.png" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
