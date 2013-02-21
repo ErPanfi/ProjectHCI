@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ProjectHCI.KinectEngine
 {
+    /// <summary>
+    /// Used to rise event from the UpdateRender to the GUI canvas
+    /// </summary>
     public class GameObjectEventArgs : EventArgs
     {
         private IGameObject gameObject;

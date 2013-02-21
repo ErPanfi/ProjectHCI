@@ -43,6 +43,7 @@ namespace ProjectHCI.KinectEngine
         {
 
             Dictionary<Type, List<IGameObject>> gameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByType();
+
             
          
             foreach (KeyValuePair<Type, List<IGameObject>> gameObjectListMapByTypeEntry0 in gameObjectListMapByType)
@@ -58,32 +59,38 @@ namespace ProjectHCI.KinectEngine
                     List<IGameObject> prevGameObjectList0 = this.prevFrameGameObjectListMapByType[gameObjectType0];
 
 
-                    IEnumerable<IGameObject> newGameObjectEnumerable0 = gameObjectList0.Except(prevGameObjectList0);
-                    IEnumerable<IGameObject> deadGameObjecEnumerable0 = prevGameObjectList0.Except(gameObjectList0);
-                    IEnumerable<IGameObject> updatableGameObjectEnumerable0 = prevGameObjectList0.Intersect(gameObjectList0);
+                    //we use List and not direclty the Enumerable type because changing the list, wich their are based on, raise an exception.
+                    List<IGameObject> newGameObjectEnumerable0 = gameObjectList0.Except(prevGameObjectList0).ToList<IGameObject>();
+                    List<IGameObject> deadGameObjecEnumerable0 = prevGameObjectList0.Except(gameObjectList0).ToList<IGameObject>();
+                    List<IGameObject> updatableGameObjectEnumerable0 = prevGameObjectList0.Intersect(gameObjectList0).ToList<IGameObject>();
 
+                  
 
+                    //diplay new gameObject to GUI
                     foreach (IGameObject newGameObject00 in newGameObjectEnumerable0)
                     {
-                        //diplay
                         if (displayGameObjectEventHandler != null)
                         {
                             displayGameObjectEventHandler(this, new GameObjectEventArgs(newGameObject00));
                         }
+                        //prepare the structure for the next frame
+                        this.prevFrameGameObjectListMapByType[gameObjectType0].Add(newGameObject00);
                     }
 
+                    //remove deadGameObject from GUI
                     foreach (IGameObject deadGameObject00 in deadGameObjecEnumerable0)
                     {
-                        //remove
                         if (removeGameObjectEventHandler != null)
                         {
                             removeGameObjectEventHandler(this, new GameObjectEventArgs(deadGameObject00));
                         }
+                        //prepare the structure for the next frame
+                        this.prevFrameGameObjectListMapByType[gameObjectType0].Remove(deadGameObject00);
                     }
 
+                    //update gameObject in the GUI
                     foreach (IGameObject updatableGameObject00 in updatableGameObjectEnumerable0)
                     {
-                        //update
                         if (updateGameObjectEventHandler != null)
                         {
                             updateGameObjectEventHandler(this, new GameObjectEventArgs(updatableGameObject00));
@@ -95,24 +102,28 @@ namespace ProjectHCI.KinectEngine
                 }
                 else
                 {
-                    
-                    //display
+
+                    this.prevFrameGameObjectListMapByType.Add(gameObjectType0, new List<IGameObject>(20));
+
+                    //diplay new gameObject to GUI
                     foreach (IGameObject gameObject00 in gameObjectList0)
                     {
                         if (displayGameObjectEventHandler != null)
                         {
                             displayGameObjectEventHandler(this, new GameObjectEventArgs(gameObject00));
                         }
+                        //prepare the structure for the next frame
+                        this.prevFrameGameObjectListMapByType[gameObjectType0].Add(gameObject00);
                     }
                 }
             }
 
 
 
-            this.prevFrameGameObjectListMapByType = gameObjectListMapByType;
-
         }
 
+
+        
 
 
         /// <summary>

@@ -20,6 +20,11 @@ namespace ProjectHCI.KinectEngine
         private int gameTotalTimeMillis;
 
 
+        private int objectLiveCount;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public SceneBrain()
         {
             this.sceneManager = new SceneBrain.SceneManager();
@@ -29,6 +34,8 @@ namespace ProjectHCI.KinectEngine
             this.bonusPercentiege = 0.0f;
 
             this.gameTotalTimeMillis = 0;
+
+            this.objectLiveCount = 0;
         }
 
 
@@ -38,6 +45,13 @@ namespace ProjectHCI.KinectEngine
         /// <param name="gameObject"></param>
         public void addGameObject(IGameObject gameObject)
         {
+
+            //System.Diagnostics.Debug.WriteLine("************ add gameObj:" 
+            //                                                + " geometryX=" + gameObject.getGeometry().Bounds.X 
+            //                                                + " geometryY=" + gameObject.getGeometry().Bounds.Y
+            //                                                + " type=" + gameObject.GetType());
+
+            this.objectLiveCount++;
             this.sceneManager.addGameObject(gameObject);
         }
 
@@ -59,7 +73,15 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public List<IGameObject> getCollaidableGameObjectList(Type gameObjectClassType)
         {
-            return this.sceneManager.getCollidableGameObjectListMapByType()[gameObjectClassType];
+            Dictionary<Type, List<IGameObject>> collidableGameObjectListMapByType =  this.sceneManager.getCollidableGameObjectListMapByType();
+            if (collidableGameObjectListMapByType.ContainsKey(gameObjectClassType))
+            {
+                return this.sceneManager.getCollidableGameObjectListMapByType()[gameObjectClassType];
+            }
+            else
+            {
+                return new List<IGameObject>();
+            }
         }
 
 
@@ -85,7 +107,10 @@ namespace ProjectHCI.KinectEngine
             foreach (IGameObject gameObject0 in deadGameObjectList)
             {
                 this.sceneManager.removeGameObject(gameObject0);
+                this.objectLiveCount--;
             }
+
+            //System.Diagnostics.Debug.WriteLine("************ cleaned " + deadGameObjectList.Count + " gameObject");
         }
 
 
@@ -101,8 +126,16 @@ namespace ProjectHCI.KinectEngine
             //***** Fake implementation, these parameters should be bound to the totaltime...
             Random random = new Random();
             this.maxNumberOfChopAllowed = random.Next(1, 5);
-            this.maxNumberOfUserFriendlyGameObjectAllowed = random.Next(1, 5);
-            this.bonusPercentiege = this.maxNumberOfChopAllowed % this.maxNumberOfUserFriendlyGameObjectAllowed;
+            if (this.objectLiveCount < 10)
+            {
+                this.maxNumberOfUserFriendlyGameObjectAllowed = random.Next(1, 5);
+            }
+            else
+            {
+                this.maxNumberOfUserFriendlyGameObjectAllowed = 0;
+            }
+
+            this.bonusPercentiege = 0.0f;
             //******
 
 
@@ -112,27 +145,50 @@ namespace ProjectHCI.KinectEngine
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<Type, List<IGameObject>> getAllGameObjectListMapByType()
         {
             return this.sceneManager.getGameObjectListMapByType();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<Type, List<IGameObject>> getCollidableGameObjectListMapByType()
         {
             return this.sceneManager.getCollidableGameObjectListMapByType();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int getMaxNumberOfChopAllowed()
         {
             return this.maxNumberOfChopAllowed;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int getMaxNumberOfUserFriendlyGameObjectAllowed()
         {
             return this.maxNumberOfUserFriendlyGameObjectAllowed;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public float getBonusPercentiege()
         {
             return this.bonusPercentiege;

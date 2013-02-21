@@ -10,13 +10,20 @@ namespace ProjectHCI.KinectEngine
         private ISceneBrain sceneBrain;
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sceneBrain"></param>
         public TimerManager(ISceneBrain sceneBrain)
         {
             this.sceneBrain = sceneBrain;
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deltaTimeMillis"></param>
         public void tick(int deltaTimeMillis)
         {
 
@@ -24,8 +31,15 @@ namespace ProjectHCI.KinectEngine
             {
                 foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value)
                 {
-
                     gameObject00.updateTimeToLive(deltaTimeMillis);
+
+                    //System.Diagnostics.Debug.WriteLine("************ updateTimer:"
+                    //                                        + " geometryX=" + gameObject00.getGeometry().Bounds.X
+                    //                                        + " geometryY=" + gameObject00.getGeometry().Bounds.Y
+                    //                                        + " currTimeToLive=" + gameObject00.getCurrentTimeToLiveMillis()
+                    //                                        + " type=" + gameObject00.GetType());
+
+                    
 
                     if (gameObject00.isCollidable())
                     {

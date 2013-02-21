@@ -10,7 +10,10 @@ namespace ProjectHCI.KinectEngine
 
         private ISceneBrain sceneBrain;
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sceneBrain"></param>
         public FakeCollisionManager(ISceneBrain sceneBrain)
         {
             this.sceneBrain = sceneBrain;
@@ -18,7 +21,10 @@ namespace ProjectHCI.KinectEngine
 
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public List<KeyValuePair<IGameObject, IGameObject>> createCollisionList()
         {
 

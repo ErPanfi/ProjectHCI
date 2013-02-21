@@ -15,13 +15,19 @@ namespace ProjectHCI.KinectEngine
 
         private ISceneBrain sceneBrain;
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sceneBrain"></param>
         public FakeSpawnerManager(ISceneBrain sceneBrain)
         {
             this.sceneBrain = sceneBrain;
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void awaken()
         {
 
@@ -35,15 +41,15 @@ namespace ProjectHCI.KinectEngine
 
             //fake implementation
 
-            
+            //System.Diagnostics.Debug.WriteLine("************ numOfItem=" + maxNumberOfUserFriendlyGameObjectAllowed);
 
-            for (int fakeIndex = 0; fakeIndex <= maxNumberOfUserFriendlyGameObjectAllowed; fakeIndex++)
+            Random random = new Random();
+            for (int fakeIndex = 0; fakeIndex < maxNumberOfUserFriendlyGameObjectAllowed; fakeIndex++)
             {
 
 
-                Random random = new Random();
-                int xPosition = random.Next(0, 1000);
-                int yPosition = random.Next(0, 1000);
+                int xPosition = random.Next(0, 800);
+                int yPosition = random.Next(0, 800);
 
 
                 Geometry geometry = new EllipseGeometry(new Point(xPosition, yPosition), 10, 10);
@@ -53,8 +59,9 @@ namespace ProjectHCI.KinectEngine
                 imageSource.Freeze();
 
 
+                String uid = Guid.NewGuid().ToString();
 
-                this.sceneBrain.addGameObject(new UserFriendlyGameObject(geometry, imageSource, 5000, null));
+                this.sceneBrain.addGameObject(new UserFriendlyGameObject(uid, geometry, imageSource, random.Next(200, 1000), null));
 
             }
 

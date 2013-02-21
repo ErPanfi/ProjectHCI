@@ -26,10 +26,13 @@ namespace ProjectHCI
     public partial class MainWindow : Window
     {
 
+        private Canvas targetCanvas;
+
         public MainWindow()
         {
             InitializeComponent();
 
+            targetCanvas = windowsCanvas; //windowsCanvas is defined in the xaml.
 
 
             ISceneBrain sceneBrain = new SceneBrain();
@@ -67,8 +70,28 @@ namespace ProjectHCI
         /// <param name="gameObject"></param>
         public void removeGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
         {
-            //TODO
-            //System.Diagnostics.Debug.WriteLine("*******************remove");
+            
+            Dispatcher.Invoke(new Action(
+                delegate()
+                {
+
+                    IGameObject gameObject = gameObjectEventArgs.getGameObject();
+                    String uid = gameObject.getUid();
+
+                    
+                    foreach (UIElement childUiElement0 in this.targetCanvas.Children)
+                    {
+                        if (childUiElement0.Uid.Equals(uid))
+                        {
+                            this.targetCanvas.Children.Remove(childUiElement0);
+                            break;
+                        }
+                    }
+
+
+                }
+            ));
+
         }
 
 
@@ -92,9 +115,7 @@ namespace ProjectHCI
         public void displayGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
         {
            
-            //fake implementation
-
-            //System.Diagnostics.Debug.WriteLine("*******************display");
+            
             
             Dispatcher.Invoke(new Action(
                 delegate()
@@ -102,6 +123,7 @@ namespace ProjectHCI
 
                     IGameObject gameObject = gameObjectEventArgs.getGameObject();
 
+                    //******fake change color
                     RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)gameObject.getImageSource());
 
                     for (int i = 0; i < rgbData.dataLength; i += 4)
@@ -110,16 +132,14 @@ namespace ProjectHCI
                         rgbData.rawRgbByteArray[i + (int)RGB.Green] = 0; //green;
                     }
                     BitmapSource bitmapSource = BitmapUtility.createBitmapSource(rgbData);
+                    //********
 
-
-                    System.Diagnostics.Debug.WriteLine("helloDisplay");
 
                     Image image = new Image();
                     image.Source = bitmapSource;
+                    image.Uid = gameObject.getUid();
 
-
-                    Canvas canvas = (Canvas)System.Windows.Application.Current.MainWindow.FindName("windowsCanvas");
-                    canvas.Children.Add(image);
+                    this.targetCanvas.Children.Add(image);
 
                     Canvas.SetTop(image, gameObject.getGeometry().Bounds.X);
                     Canvas.SetLeft(image, gameObject.getGeometry().Bounds.Y);

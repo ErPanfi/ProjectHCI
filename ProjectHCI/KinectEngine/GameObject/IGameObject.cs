@@ -19,6 +19,8 @@ namespace ProjectHCI.KinectEngine
 
         ImageSource getImageSource();
 
+        String getUid();
+
 
         void updateTimeToLive(int deltaTimeMillis);
 

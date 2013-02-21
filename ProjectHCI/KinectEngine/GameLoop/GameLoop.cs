@@ -23,8 +23,13 @@ namespace ProjectHCI.KinectEngine
         private Thread gameLoopThread;
 
         /// <summary>
-        /// 
+        /// Game loop constructor, needs all component to start.
         /// </summary>
+        /// <param name="sceneBrain"></param>
+        /// <param name="spawnerManager"></param>
+        /// <param name="updateRenderer"></param>
+        /// <param name="timerManager"></param>
+        /// <param name="collisionManager"></param>
         public GameLoop(ISceneBrain sceneBrain,
                         ISpawnerManager spawnerManager,
                         IUpdateRenderer updateRenderer,
@@ -43,12 +48,13 @@ namespace ProjectHCI.KinectEngine
 
 
             gameLoopThread = new Thread(new ThreadStart(this.runLoop));
+            gameLoopThread.Name = "GameLoopThread";
             gameLoopThread.IsBackground = true; //ensures that will be terminated on application close
          
         }
 
         /// <summary>
-        /// 
+        /// Starts the game loop
         /// </summary>
         public void start()
         {
@@ -58,23 +64,17 @@ namespace ProjectHCI.KinectEngine
 
 
         /// <summary>
-        /// 
+        /// The run method of the gameLoopThread
         /// </summary>
         private void runLoop()
         {
 
             this.gameStillRunning = true;
             this.lastTimeMillis = System.Environment.TickCount;
-
-            //Component initialization
-            //ISceneBrain sceneBrain = new SceneBrain();
-            //ISpawnerManager spawnerManager = new FakeSpawnerManager(sceneBrain);
-            //IUpdateRenderer updateRenderer = new FakeUpdateRenderer(sceneBrain);
-            //ITimerManager timerManager = new TimerManager(sceneBrain);
-            //ICollisionManager collisionManager = new FakeCollisionManager(sceneBrain);
-            
+           
 
             while (gameStillRunning)
+            //for(int i = 0; i < 100; i++)
             {
 
                 int currentTimeMillis = System.Environment.TickCount;
@@ -82,7 +82,7 @@ namespace ProjectHCI.KinectEngine
 
                 this.lastTimeMillis = currentTimeMillis;
 
-
+                //System.Diagnostics.Debug.WriteLine("************ deltaTimeMillis=" + deltaTimeMillis);
 
                 this.spawnerManager.awaken();
                 this.timerManager.tick(deltaTimeMillis);
@@ -90,9 +90,6 @@ namespace ProjectHCI.KinectEngine
                 this.sceneBrain.think(deltaTimeMillis, collidedGameObjectPairList);
                 this.updateRenderer.drawObject();
 
-
-               
-                //gameStillRunning = false;
             }
         }
 
