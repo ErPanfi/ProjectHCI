@@ -1,0 +1,20 @@
+﻿<Window x:Class="ProjectHCI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow"
+        WindowState="Maximized">
+    <Grid>
+<<<<<<< HEAD
+        <Canvas HorizontalAlignment="Stretch"  
+                VerticalAlignment="Stretch"
+                Background="LightBlue"
+                x:Name="windowsCanvas">
+            
+            
+        </Canvas>
+=======
+        <Button Content="ProvaModifica" HorizontalAlignment="Left" Margin="208,147,0,0" VerticalAlignment="Top" Width="101"/>
+        <Label>prova</Label>
+>>>>>>> 61317e0c5c3d11d15c84db82b44e85b80b6fb8ca
+    </Grid>
+</Window>
