@@ -41,7 +41,7 @@ namespace ProjectHCI.KinectEngine
 
                     
 
-                    if (gameObject00.isCollidable())
+                    if (gameObject00.isCollidable() && !this.sceneBrain.getCollaidableGameObjectList(gameObject00.GetType()).Contains(gameObject00))
                     {
                         this.sceneBrain.addCollidableGameObject(gameObject00);
                     }
