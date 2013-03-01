@@ -55,7 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="KinectEngine\CollisionManager\FakeCollisionManager.cs" />
+    <Compile Include="KinectEngine\CollisionManager\CollisionManager.cs" />
     <Compile Include="KinectEngine\CollisionManager\ICollisionManager.cs" />
     <Compile Include="KinectEngine\GameObject\UserFriendlyGameObject.cs" />
     <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />
