@@ -20,7 +20,7 @@ namespace ProjectHCI.KinectEngine
         private int gameTotalTimeMillis;
 
 
-        private int objectLiveCount;
+        //private int objectLiveCount;
 
         /// <summary>
         /// 
@@ -35,7 +35,7 @@ namespace ProjectHCI.KinectEngine
 
             this.gameTotalTimeMillis = 0;
 
-            this.objectLiveCount = 0;
+            //this.objectLiveCount = 0;
         }
 
 
@@ -51,7 +51,7 @@ namespace ProjectHCI.KinectEngine
             //                                                + " geometryY=" + gameObject.getGeometry().Bounds.Y
             //                                                + " type=" + gameObject.GetType());
 
-            this.objectLiveCount++;
+            //this.objectLiveCount++;
             this.sceneManager.addGameObject(gameObject);
         }
 
@@ -107,7 +107,7 @@ namespace ProjectHCI.KinectEngine
             foreach (IGameObject gameObject0 in deadGameObjectList)
             {
                 this.sceneManager.removeGameObject(gameObject0);
-                this.objectLiveCount--;
+                //this.objectLiveCount--;
             }
 
             //System.Diagnostics.Debug.WriteLine("************ cleaned " + deadGameObjectList.Count + " gameObject");
@@ -126,13 +126,25 @@ namespace ProjectHCI.KinectEngine
             //***** Fake implementation, these parameters should be bound to the totaltime...
             Random random = new Random();
             this.maxNumberOfChopAllowed = random.Next(1, 5);
-            if (this.objectLiveCount < 10)
+
+
+            Dictionary<Type, List<IGameObject>> allGameObjectListMapByType = this.getAllGameObjectListMapByType();
+
+            if (allGameObjectListMapByType.ContainsKey(typeof(UserFriendlyGameObject)))
             {
-                this.maxNumberOfUserFriendlyGameObjectAllowed = 1; // random.Next(1, 5);
+                if (allGameObjectListMapByType[typeof(UserFriendlyGameObject)].Count < 5)
+                {
+                    this.maxNumberOfUserFriendlyGameObjectAllowed = 5 - allGameObjectListMapByType[typeof(UserFriendlyGameObject)].Count;
+                }
+                else
+                {
+                    this.maxNumberOfUserFriendlyGameObjectAllowed = 0;
+                }
+                
             }
             else
             {
-                this.maxNumberOfUserFriendlyGameObjectAllowed = 0;
+                this.maxNumberOfUserFriendlyGameObjectAllowed = 5;
             }
 
             this.bonusPercentiege = 0.0f;

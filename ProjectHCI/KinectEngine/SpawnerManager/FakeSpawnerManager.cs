@@ -58,7 +58,7 @@ namespace ProjectHCI.KinectEngine
                 ImageSource imageSource = new BitmapImage(new Uri(@"pack://application:,,,/Resources/skype.png"));
                 imageSource.Freeze();
 
-                this.sceneBrain.addGameObject(new UserFriendlyGameObject(geometry, imageSource, random.Next(200, 3000)));
+                this.sceneBrain.addGameObject(new UserFriendlyGameObject(geometry, imageSource, random.Next(200, 4000)));
 
             }
 
