@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.Diagnostics;
+
 namespace ProjectHCI.KinectEngine
 {
     public class TimerManager : ITimerManager
@@ -26,20 +28,15 @@ namespace ProjectHCI.KinectEngine
         /// <param name="deltaTimeMillis"></param>
         public void tick(int deltaTimeMillis)
         {
+            Dictionary<Type, List<IGameObject>> allGameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByType();
+            Debug.Assert(allGameObjectListMapByType != null, "expected allGameObjectListMapByType != null");
 
-            foreach (KeyValuePair<Type, List<IGameObject>> gameObjectListMapByTypeEntry0 in this.sceneBrain.getAllGameObjectListMapByType())
+            foreach (KeyValuePair<Type, List<IGameObject>> gameObjectListMapByTypeEntry0 in allGameObjectListMapByType)
             {
                 foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value)
                 {
                     gameObject00.updateTimeToLive(deltaTimeMillis);
-
-                    //System.Diagnostics.Debug.WriteLine("************ updateTimer:"
-                    //                                        + " geometryX=" + gameObject00.getGeometry().Bounds.X
-                    //                                        + " geometryY=" + gameObject00.getGeometry().Bounds.Y
-                    //                                        + " currTimeToLive=" + gameObject00.getCurrentTimeToLiveMillis()
-                    //                                        + " type=" + gameObject00.GetType());
-
-                    
+                                       
 
                     if (gameObject00.isCollidable() && !this.sceneBrain.getCollaidableGameObjectList(gameObject00.GetType()).Contains(gameObject00))
                     {

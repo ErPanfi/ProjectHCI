@@ -9,18 +9,18 @@ using System.Diagnostics;
 
 namespace ProjectHCI.KinectEngine
 {
-    public class UserFriendlyGameObject : GameObjectBase
+    public class NotUserFriendlyGameObject : GameObjectBase
     {
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="geometry"></param>
         /// <param name="imageSource"></param>
         /// <param name="timeToLiveMillis"></param>
-        public UserFriendlyGameObject(Geometry geometry,
-                                      ImageSource imageSource,
-                                      int timeToLiveMillis)
+        public NotUserFriendlyGameObject(Geometry geometry,
+                                         ImageSource imageSource,
+                                         int timeToLiveMillis)
         {
             Debug.Assert(geometry != null, "expected geometry != null");
             Debug.Assert(imageSource != null, "expected imageSource != null");
@@ -34,14 +34,13 @@ namespace ProjectHCI.KinectEngine
         }
 
 
-
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public override bool isCollidable()
         {
-            return base._currentTimeToLiveMillis >= 0;
+            return base._currentTimeToLiveMillis <= 0;
         }
 
         /// <summary>
@@ -50,7 +49,7 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public override bool isDead()
         {
-            return base._currentTimeToLiveMillis <= 0;
+            return this.isCollidable();
         }
 
 
@@ -60,10 +59,10 @@ namespace ProjectHCI.KinectEngine
         /// <param name="mainWindowCanvas"></param>
         public override void onRendererUpdateDelegate(Canvas mainWindowCanvas)
         {
-            //TODO maybe bouncing icons...
+            //TODO interpolate color
         }
 
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -81,6 +80,5 @@ namespace ProjectHCI.KinectEngine
         {
             throw new NotSupportedException();
         }
-
     }
 }

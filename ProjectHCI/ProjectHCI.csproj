@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Kinect, Version=1.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -57,7 +58,10 @@
     </ApplicationDefinition>
     <Compile Include="KinectEngine\CollisionManager\CollisionManager.cs" />
     <Compile Include="KinectEngine\CollisionManager\ICollisionManager.cs" />
+    <Compile Include="KinectEngine\GameObject\GameObjectBase.cs" />
+    <Compile Include="KinectEngine\GameObject\NotUserFriendlyGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\UserFriendlyGameObject.cs" />
+    <Compile Include="KinectEngine\GameObject\UserGameObject.cs" />
     <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\TimerManager.cs" />
     <Compile Include="KinectEngine\GameObject\GameObjectEventArgs.cs" />
@@ -76,7 +80,7 @@
     <Compile Include="KinectEngine\SceneBrain\SceneBrain.cs" />
     <Compile Include="KinectEngine\SpawnerManager\FakeSpawnerManager.cs" />
     <Compile Include="KinectEngine\SpawnerManager\ISpawnerManager.cs" />
-    <Compile Include="KinectEngine\UpdateRenderer\FakeUpdateRenderer.cs" />
+    <Compile Include="KinectEngine\UpdateRenderer\UpdateRenderer.cs" />
     <Compile Include="KinectEngine\UpdateRenderer\IUpdateRenderer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

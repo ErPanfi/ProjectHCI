@@ -6,11 +6,12 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Windows.Media.Imaging;
+using System.Diagnostics;
 
 
 namespace ProjectHCI.KinectEngine
 {
-    public class FakeUpdateRenderer : IUpdateRenderer
+    public class UpdateRenderer : IUpdateRenderer
     {
 
         private ISceneBrain sceneBrain;
@@ -28,8 +29,10 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <param name="sceneBrain"></param>
-        public FakeUpdateRenderer(ISceneBrain sceneBrain)
+        public UpdateRenderer(ISceneBrain sceneBrain)
         {
+            Debug.Assert(sceneBrain != null, "expected sceneBrain != null");
+
             this.sceneBrain = sceneBrain;
             this.prevFrameGameObjectListMapByType = new Dictionary<Type, List<IGameObject>>();
         }
@@ -43,7 +46,7 @@ namespace ProjectHCI.KinectEngine
         {
 
             Dictionary<Type, List<IGameObject>> gameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByType();
-
+            Debug.Assert(gameObjectListMapByType != null, "expected gameObjectListMapByType != null");
             
          
             foreach (KeyValuePair<Type, List<IGameObject>> gameObjectListMapByTypeEntry0 in gameObjectListMapByType)
@@ -59,14 +62,14 @@ namespace ProjectHCI.KinectEngine
                     List<IGameObject> prevGameObjectList0 = this.prevFrameGameObjectListMapByType[gameObjectType0];
 
 
-                    //we use List and not direclty the Enumerable type because changing the list, wich their are based on, raise an exception.
+                    //we use List and not directly the Enumerable type because changing the list, witch their are based on, raise an exception.
                     List<IGameObject> newGameObjectEnumerable0 = gameObjectList0.Except(prevGameObjectList0).ToList<IGameObject>();
                     List<IGameObject> deadGameObjecEnumerable0 = prevGameObjectList0.Except(gameObjectList0).ToList<IGameObject>();
                     List<IGameObject> updatableGameObjectEnumerable0 = prevGameObjectList0.Intersect(gameObjectList0).ToList<IGameObject>();
 
                   
 
-                    //diplay new gameObject to GUI
+                    //display new gameObject to GUI
                     foreach (IGameObject newGameObject00 in newGameObjectEnumerable0)
                     {
                         if (displayGameObjectEventHandler != null)
@@ -105,7 +108,7 @@ namespace ProjectHCI.KinectEngine
 
                     this.prevFrameGameObjectListMapByType.Add(gameObjectType0, new List<IGameObject>(20));
 
-                    //diplay new gameObject to GUI
+                    //display new gameObject to GUI
                     foreach (IGameObject gameObject00 in gameObjectList0)
                     {
                         if (displayGameObjectEventHandler != null)

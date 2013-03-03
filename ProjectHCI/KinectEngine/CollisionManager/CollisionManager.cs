@@ -12,12 +12,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using System.Diagnostics;
+
 namespace ProjectHCI.KinectEngine
 {
     public class CollisionManager : ICollisionManager
     {
 
         private ISceneBrain sceneBrain;
+        private ISet<KeyValuePair<Type, Type>> typeCollidablePairSet; 
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -34,9 +39,23 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public List<KeyValuePair<IGameObject, IGameObject>> createCollisionList()
         {
+
+
             List<IGameObject> userFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(typeof(UserFriendlyGameObject));
+
             List<IGameObject> notUserFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(typeof(NotUserFriendlyGameObject));
-            IGameObject user = this.sceneBrain.getCollaidableGameObjectList(typeof(User)); 
+            List<IGameObject> userGameObjectList = this.sceneBrain.getCollaidableGameObjectList(typeof(UserGameObject));
+
+
+            IGameObject userGameObject = null;
+            if (userGameObjectList.Count > 0)
+            {
+                Debug.Assert(userGameObjectList.Count == 1, "expected exactly one userGameObject into the scene, multiplayer not supported yet");
+                userGameObject = userGameObjectList.ElementAt(0);
+            }
+            
+
+
 
             /*return object*/
             List<KeyValuePair<IGameObject, IGameObject>> gameObjectKeyValuePairList = new List<KeyValuePair<IGameObject, IGameObject>>();
@@ -44,10 +63,10 @@ namespace ProjectHCI.KinectEngine
             notUserFriendlyGameObjectList.ForEach(delegate(IGameObject notUserFriendlyGameObject)
             {
                 //manage collision <user, not user friendly>
-                Point[] p = collisionDetect(user.getGeometry(), notUserFriendlyGameObject.getGeometry());
+                Point[] p = collisionDetect(userGameObject.getGeometry(), notUserFriendlyGameObject.getGeometry());
                 if (p.Length > 0)
                 {
-                    gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(user, notUserFriendlyGameObject));
+                    gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, notUserFriendlyGameObject));
                 }
 
                 //manage collision <user friendly, not user friendly>
@@ -56,7 +75,7 @@ namespace ProjectHCI.KinectEngine
                     Point[] p2 = collisionDetect(userFriendlyGameObject.getGeometry(), notUserFriendlyGameObject.getGeometry());
                     if (p2.Length > 0)
                     {
-                        gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(user, userFriendlyGameObject));
+                        gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, userFriendlyGameObject));
                     }
                 });
 
@@ -64,10 +83,10 @@ namespace ProjectHCI.KinectEngine
             //manage collision <user, user friendly>
             userFriendlyGameObjectList.ForEach(delegate(IGameObject userFriendlyGameObject)
             {          
-                Point[] p = collisionDetect(user.getGeometry(), userFriendlyGameObject.getGeometry());
+                Point[] p = collisionDetect(userGameObject.getGeometry(), userFriendlyGameObject.getGeometry());
                 if (p.Length > 0)
                 {
-                    gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(user, userFriendlyGameObject));
+                    gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, userFriendlyGameObject));
                 }
             });
             return gameObjectKeyValuePairList;
@@ -101,5 +120,22 @@ namespace ProjectHCI.KinectEngine
             return intersectionPoints;
         }
 
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeCollidablePairSet"></param>
+        public void setCollisionToHandle(ISet<KeyValuePair<Type, Type>> typeCollidablePairSet)
+        {
+            this.typeCollidablePairSet = typeCollidablePairSet;
+        }
+
+
+
     }
+
+
+
 }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Media;
 using System.Windows.Controls;
 
+
 namespace ProjectHCI.KinectEngine
 {
     public interface IGameObject
@@ -14,12 +15,13 @@ namespace ProjectHCI.KinectEngine
         int getTimeToLiveMillis();
 
         int getCurrentTimeToLiveMillis();
-
+        
         Geometry getGeometry();
 
         ImageSource getImageSource();
 
         String getUid();
+
 
 
         void updateTimeToLive(int deltaTimeMillis);
@@ -29,9 +31,16 @@ namespace ProjectHCI.KinectEngine
         bool isDead();
 
 
-        Delegate getOnTimeToLiveUpdateDelegate();
 
-        Delegate getOnTimeElapsedDelegate();
+        void onRendererUpdateDelegate(Canvas mainWindowCanvas);
+
+        void onRendererDisplayDelegate(Canvas mainWindowCanvas);
+
+        void onRendererRemoveDelegate(Canvas mainWindowCanvas);
+
+        void onCollisionEnterDelegate(IGameObject otherGameObject);
+
+        void onCollisionExitDelegate(IGameObject otherGameObject);
         
         
 

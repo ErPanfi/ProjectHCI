@@ -52,16 +52,13 @@ namespace ProjectHCI.KinectEngine
                 int yPosition = random.Next(0, 800);
 
 
-                Geometry geometry = new EllipseGeometry(new Point(xPosition, yPosition), 10, 10);
+                Geometry geometry = new EllipseGeometry(new Point(xPosition, yPosition), 150, 150);
                 geometry.Freeze();
 
                 ImageSource imageSource = new BitmapImage(new Uri(@"pack://application:,,,/Resources/skype.png"));
                 imageSource.Freeze();
 
-
-                String uid = Guid.NewGuid().ToString();
-
-                this.sceneBrain.addGameObject(new UserFriendlyGameObject(uid, geometry, imageSource, random.Next(200, 1000), null));
+                this.sceneBrain.addGameObject(new UserFriendlyGameObject(geometry, imageSource, random.Next(200, 3000)));
 
             }
 

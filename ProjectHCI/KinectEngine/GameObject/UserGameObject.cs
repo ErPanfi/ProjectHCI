@@ -6,33 +6,31 @@ using System.Text;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Diagnostics;
+using Microsoft.Kinect;
 
 namespace ProjectHCI.KinectEngine
 {
-    public class UserFriendlyGameObject : GameObjectBase
+    class UserGameObject : GameObjectBase
     {
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="geometry"></param>
-        /// <param name="imageSource"></param>
-        /// <param name="timeToLiveMillis"></param>
-        public UserFriendlyGameObject(Geometry geometry,
-                                      ImageSource imageSource,
-                                      int timeToLiveMillis)
+
+        //TODO populate this variable by kinect messages
+        private Skeleton skeleton;
+
+        public UserGameObject(Geometry geometry,
+                                         ImageSource imageSource)
         {
             Debug.Assert(geometry != null, "expected geometry != null");
             Debug.Assert(imageSource != null, "expected imageSource != null");
 
-            base._timeToLiveMillis = timeToLiveMillis;
-            base._currentTimeToLiveMillis = timeToLiveMillis;
+            base._timeToLiveMillis = -1;
+            base._currentTimeToLiveMillis = -1;
             base._geometry = geometry;
             base._imageSource = imageSource;
             base._uid = base.generateUid();
 
-        }
+            this.skeleton = null;
 
+        }
 
 
         /// <summary>
@@ -41,7 +39,7 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public override bool isCollidable()
         {
-            return base._currentTimeToLiveMillis >= 0;
+            return true;
         }
 
         /// <summary>
@@ -50,7 +48,7 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public override bool isDead()
         {
-            return base._currentTimeToLiveMillis <= 0;
+            return false;
         }
 
 
@@ -60,10 +58,10 @@ namespace ProjectHCI.KinectEngine
         /// <param name="mainWindowCanvas"></param>
         public override void onRendererUpdateDelegate(Canvas mainWindowCanvas)
         {
-            //TODO maybe bouncing icons...
+            //TODO rotate and\or translate player image...
         }
 
-        
+
         /// <summary>
         /// 
         /// </summary>

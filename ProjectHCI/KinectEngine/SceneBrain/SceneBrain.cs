@@ -128,7 +128,7 @@ namespace ProjectHCI.KinectEngine
             this.maxNumberOfChopAllowed = random.Next(1, 5);
             if (this.objectLiveCount < 10)
             {
-                this.maxNumberOfUserFriendlyGameObjectAllowed = random.Next(1, 5);
+                this.maxNumberOfUserFriendlyGameObjectAllowed = 1; // random.Next(1, 5);
             }
             else
             {

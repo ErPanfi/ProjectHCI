@@ -36,16 +36,28 @@ namespace ProjectHCI
 
 
             ISceneBrain sceneBrain = new SceneBrain();
-            ISpawnerManager spawnerManager = new FakeSpawnerManager(sceneBrain);
-            IUpdateRenderer updateRenderer = new FakeUpdateRenderer(sceneBrain);
-            ITimerManager timerManager = new TimerManager(sceneBrain);
-            ICollisionManager collisionManager = new FakeCollisionManager(sceneBrain);
+            
 
+            IUpdateRenderer updateRenderer = new UpdateRenderer(sceneBrain);
 
             updateRenderer.setDisplayGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.displayGameObject));
             updateRenderer.setRemoveGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.removeGameObject));
             updateRenderer.setUpdateGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.updateGameObject));
 
+
+            ICollisionManager collisionManager = new CollisionManager(sceneBrain);
+
+            HashSet<KeyValuePair<Type, Type>> collidableTypeHashSet = new HashSet<KeyValuePair<Type, Type>>();
+            collidableTypeHashSet.Add(new KeyValuePair<Type, Type>(typeof(UserGameObject), typeof(UserFriendlyGameObject)));
+            collidableTypeHashSet.Add(new KeyValuePair<Type, Type>(typeof(UserGameObject), typeof(NotUserFriendlyGameObject)));
+            collidableTypeHashSet.Add(new KeyValuePair<Type, Type>(typeof(NotUserFriendlyGameObject), typeof(UserFriendlyGameObject)));
+
+            collisionManager.setCollisionToHandle(collidableTypeHashSet);
+
+
+
+            ISpawnerManager spawnerManager = new FakeSpawnerManager(sceneBrain);
+            ITimerManager timerManager = new TimerManager(sceneBrain);
 
             GameLoop gameLoop = new GameLoop(sceneBrain, spawnerManager, updateRenderer, timerManager, collisionManager);
             gameLoop.start();
@@ -55,12 +67,12 @@ namespace ProjectHCI
         }
 
 
-        public enum RGB
-        {
-            Blue = 0,
-            Green,
-            Red
-        };
+        //public enum RGB
+        //{
+        //    Blue = 0,
+        //    Green,
+        //    Red
+        //};
 
 
 
@@ -76,19 +88,8 @@ namespace ProjectHCI
                 {
 
                     IGameObject gameObject = gameObjectEventArgs.getGameObject();
-                    String uid = gameObject.getUid();
-
+                    gameObject.onRendererRemoveDelegate(targetCanvas);
                     
-                    foreach (UIElement childUiElement0 in this.targetCanvas.Children)
-                    {
-                        if (childUiElement0.Uid.Equals(uid))
-                        {
-                            this.targetCanvas.Children.Remove(childUiElement0);
-                            break;
-                        }
-                    }
-
-
                 }
             ));
 
@@ -102,8 +103,15 @@ namespace ProjectHCI
         /// <param name="gameObject"></param>
         public void updateGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
         {
-            //TODO
-            //System.Diagnostics.Debug.WriteLine("*******************update");
+            Dispatcher.Invoke(new Action(
+                delegate()
+                {
+
+                    IGameObject gameObject = gameObjectEventArgs.getGameObject();
+                    gameObject.onRendererUpdateDelegate(targetCanvas);
+                    
+                }
+            ));
         }
 
 
@@ -122,27 +130,31 @@ namespace ProjectHCI
                 {
 
                     IGameObject gameObject = gameObjectEventArgs.getGameObject();
-
-                    //******fake change color
-                    RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)gameObject.getImageSource());
-
-                    for (int i = 0; i < rgbData.dataLength; i += 4)
-                    {
-                        rgbData.rawRgbByteArray[i + (int)RGB.Blue] = 0;	 //blue
-                        rgbData.rawRgbByteArray[i + (int)RGB.Green] = 0; //green;
-                    }
-                    BitmapSource bitmapSource = BitmapUtility.createBitmapSource(rgbData);
-                    //********
+                    gameObject.onRendererDisplayDelegate(targetCanvas);
 
 
-                    Image image = new Image();
-                    image.Source = bitmapSource;
-                    image.Uid = gameObject.getUid();
+                    //IGameObject gameObject = gameObjectEventArgs.getGameObject();
 
-                    this.targetCanvas.Children.Add(image);
+                    ////******fake change color
+                    //RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)gameObject.getImageSource());
 
-                    Canvas.SetTop(image, gameObject.getGeometry().Bounds.X);
-                    Canvas.SetLeft(image, gameObject.getGeometry().Bounds.Y);
+                    //for (int i = 0; i < rgbData.dataLength; i += 4)
+                    //{
+                    //    rgbData.rawRgbByteArray[i + (int)RGB.Blue] = 0;	 //blue
+                    //    rgbData.rawRgbByteArray[i + (int)RGB.Green] = 0; //green;
+                    //}
+                    //BitmapSource bitmapSource = BitmapUtility.createBitmapSource(rgbData);
+                    ////********
+
+
+                    //Image image = new Image();
+                    //image.Source = bitmapSource;
+                    //image.Uid = gameObject.getUid();
+
+                    //this.targetCanvas.Children.Add(image);
+
+                    //Canvas.SetTop(image, gameObject.getGeometry().Bounds.X);
+                    //Canvas.SetLeft(image, gameObject.getGeometry().Bounds.Y);
                 }
             ));
 
