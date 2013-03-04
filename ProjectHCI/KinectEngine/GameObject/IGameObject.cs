@@ -32,11 +32,11 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        void onRendererUpdateDelegate(Canvas mainWindowCanvas);
+        void onRendererUpdateDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow);
 
-        void onRendererDisplayDelegate(Canvas mainWindowCanvas);
+        void onRendererDisplayDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow);
 
-        void onRendererRemoveDelegate(Canvas mainWindowCanvas);
+        void onRendererRemoveDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow);
 
         void onCollisionEnterDelegate(IGameObject otherGameObject);
 

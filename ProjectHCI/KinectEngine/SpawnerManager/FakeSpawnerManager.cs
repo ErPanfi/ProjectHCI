@@ -22,6 +22,15 @@ namespace ProjectHCI.KinectEngine
         public FakeSpawnerManager(ISceneBrain sceneBrain)
         {
             this.sceneBrain = sceneBrain;
+
+            Geometry geometry = new EllipseGeometry(new Point(100, 100), 100, 100);
+            geometry.Freeze();
+
+            ImageSource imageSource = new BitmapImage(new Uri(@"pack://application:,,,/Resources/shark.png"));
+            imageSource.Freeze();
+
+            this.sceneBrain.addGameObject(new UserGameObject(geometry, imageSource, SkeletonSmoothingFilter.DEFAULT_SMOOTHING_LEVEL));
+
         }
 
 
@@ -34,7 +43,6 @@ namespace ProjectHCI.KinectEngine
             int maxNumberOfChopAllowed = this.sceneBrain.getMaxNumberOfChopAllowed();
             int maxNumberOfUserFriendlyGameObjectAllowed = this.sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed();
             float bonusPercentiage = this.sceneBrain.getBonusPercentiege();
-
 
 
 
@@ -58,7 +66,7 @@ namespace ProjectHCI.KinectEngine
                 ImageSource imageSource = new BitmapImage(new Uri(@"pack://application:,,,/Resources/skype.png"));
                 imageSource.Freeze();
 
-                this.sceneBrain.addGameObject(new UserFriendlyGameObject(geometry, imageSource, random.Next(200, 4000)));
+                this.sceneBrain.addGameObject(new UserFriendlyGameObject(geometry, imageSource, random.Next(100, 5000)));
 
             }
 

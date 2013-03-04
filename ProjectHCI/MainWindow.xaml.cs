@@ -27,12 +27,15 @@ namespace ProjectHCI
     {
 
         private Canvas targetCanvas;
+        private Dictionary<String, UIElement> uiElementMapByUid;
+
 
         public MainWindow()
         {
             InitializeComponent();
 
             targetCanvas = windowsCanvas; //windowsCanvas is defined in the xaml.
+            uiElementMapByUid = new Dictionary<String, UIElement>();
 
 
             ISceneBrain sceneBrain = new SceneBrain();
@@ -66,6 +69,42 @@ namespace ProjectHCI
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uiElement"></param>
+        public void registerUiElement(UIElement uiElement)
+        {
+            Debug.Assert(!this.uiElementMapByUid.ContainsKey(uiElement.Uid), "uiElement already present in uiElementListMapByUid");
+
+            this.uiElementMapByUid.Add(uiElement.Uid, uiElement);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        public UIElement getUiElementByUid(String uid)
+        {
+            Debug.Assert(this.uiElementMapByUid.ContainsKey(uid), "unkown uiElement");
+
+            return this.uiElementMapByUid[uid];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uiElement"></param>
+        public void deregisterUiElement(UIElement uiElement)
+        {
+            Debug.Assert(this.uiElementMapByUid.ContainsKey(uiElement.Uid), "unkown uiElement");
+
+            this.uiElementMapByUid.Remove(uiElement.Uid);
+
+        }
+
 
         //public enum RGB
         //{
@@ -75,62 +114,19 @@ namespace ProjectHCI
         //};
 
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameObject"></param>
-        public void removeGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
-        {
-            
-            Dispatcher.Invoke(new Action(
-                delegate()
-                {
-
-                    IGameObject gameObject = gameObjectEventArgs.getGameObject();
-                    gameObject.onRendererRemoveDelegate(targetCanvas);
-                    
-                }
-            ));
-
-        }
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameObject"></param>
-        public void updateGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
-        {
-            Dispatcher.Invoke(new Action(
-                delegate()
-                {
-
-                    IGameObject gameObject = gameObjectEventArgs.getGameObject();
-                    gameObject.onRendererUpdateDelegate(targetCanvas);
-                    
-                }
-            ));
-        }
-
-
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="gameObject"></param>
         public void displayGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
         {
-           
-            
             
             Dispatcher.Invoke(new Action(
                 delegate()
                 {
 
                     IGameObject gameObject = gameObjectEventArgs.getGameObject();
-                    gameObject.onRendererDisplayDelegate(targetCanvas);
+                    gameObject.onRendererDisplayDelegate(targetCanvas, this);
 
 
                     //IGameObject gameObject = gameObjectEventArgs.getGameObject();
@@ -160,5 +156,46 @@ namespace ProjectHCI
 
 
         }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameObject"></param>
+        public void updateGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
+        {
+            Dispatcher.Invoke(new Action(
+                delegate()
+                {
+
+                    IGameObject gameObject = gameObjectEventArgs.getGameObject();
+                    gameObject.onRendererUpdateDelegate(targetCanvas, this);
+
+                }
+            ));
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameObject"></param>
+        public void removeGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
+        {
+            
+            Dispatcher.Invoke(new Action(
+                delegate()
+                {
+
+                    IGameObject gameObject = gameObjectEventArgs.getGameObject();
+                    gameObject.onRendererRemoveDelegate(targetCanvas, this);
+                    
+                }
+            ));
+
+        }
+
     }
 }

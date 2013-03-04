@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Diagnostics;
+using System.Windows;
 
 
 namespace ProjectHCI.KinectEngine
@@ -18,8 +19,7 @@ namespace ProjectHCI.KinectEngine
         protected Geometry _geometry = null;
         protected ImageSource _imageSource = null;
         protected String _uid = null;
-
-
+        
 
         public int getTimeToLiveMillis()
         {
@@ -76,7 +76,7 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public virtual void onRendererDisplayDelegate(Canvas mainWindowCanvas)
+        public virtual void onRendererDisplayDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow)
         {
             Debug.Assert(mainWindowCanvas != null, "expected mainWindowCanvas != null");
 
@@ -87,9 +87,11 @@ namespace ProjectHCI.KinectEngine
             image.Width = _geometry.Bounds.Width;
 
             mainWindowCanvas.Children.Add(image);
+            currentMainWindow.registerUiElement(image);
             
             Canvas.SetTop(image, _geometry.Bounds.Y);
             Canvas.SetLeft(image, _geometry.Bounds.X);
+
 
 #if DEBUG
             //********************* display boundingBox
@@ -101,6 +103,8 @@ namespace ProjectHCI.KinectEngine
             boundingBoxImage.Uid = "BB_" + _uid;
 
             mainWindowCanvas.Children.Add(boundingBoxImage);
+            currentMainWindow.registerUiElement(boundingBoxImage);
+
             Canvas.SetTop(boundingBoxImage, _geometry.Bounds.Y);
             Canvas.SetLeft(boundingBoxImage, _geometry.Bounds.X);
             Canvas.SetZIndex(boundingBoxImage, 100);
@@ -113,30 +117,21 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public virtual void onRendererRemoveDelegate(Canvas mainWindowCanvas)
+        public virtual void onRendererRemoveDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow)
         {
             Debug.Assert(mainWindowCanvas != null, "expected mainWindowCanvas != null");
 
-            foreach (System.Windows.UIElement childUiElement0 in mainWindowCanvas.Children)
-            {
-                if (childUiElement0.Uid.Equals(_uid))
-                {
-                    mainWindowCanvas.Children.Remove(childUiElement0);
-                    break;
-                }
-            }
+            UIElement uiElement = currentMainWindow.getUiElementByUid(_uid);
+            mainWindowCanvas.Children.Remove(uiElement);
+            currentMainWindow.deregisterUiElement(uiElement);
 
 #if DEBUG
             //********************* hide boundingbox 
             String boundingBoxUid = "BB_" + _uid;
-            foreach (System.Windows.UIElement childUiElement0 in mainWindowCanvas.Children)
-            {
-                if (childUiElement0.Uid.Equals(boundingBoxUid))
-                {
-                    mainWindowCanvas.Children.Remove(childUiElement0);
-                    break;
-                }
-            }
+
+            UIElement boundingBoxUiElement = currentMainWindow.getUiElementByUid(boundingBoxUid);
+            mainWindowCanvas.Children.Remove(boundingBoxUiElement);
+            currentMainWindow.deregisterUiElement(boundingBoxUiElement);
             //*********************
 #endif
 
@@ -145,7 +140,7 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public abstract void onRendererUpdateDelegate(Canvas mainWindowCanvas);
+        public abstract void onRendererUpdateDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow);
 
         public abstract void onCollisionEnterDelegate(IGameObject otherGameObject);
 

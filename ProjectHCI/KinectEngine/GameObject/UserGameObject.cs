@@ -7,17 +7,20 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System.Diagnostics;
 using Microsoft.Kinect;
+using System.Windows;
 
 namespace ProjectHCI.KinectEngine
 {
     class UserGameObject : GameObjectBase
     {
 
-        //TODO populate this variable by kinect messages
-        private Skeleton skeleton;
+
+        private KinectSensorHelper kinectSensorHelper;
+
 
         public UserGameObject(Geometry geometry,
-                                         ImageSource imageSource)
+                              ImageSource imageSource,
+                              SkeletonSmoothingFilter skeletonSmoothingFilter)
         {
             Debug.Assert(geometry != null, "expected geometry != null");
             Debug.Assert(imageSource != null, "expected imageSource != null");
@@ -28,7 +31,8 @@ namespace ProjectHCI.KinectEngine
             base._imageSource = imageSource;
             base._uid = base.generateUid();
 
-            this.skeleton = null;
+            this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
+            this.kinectSensorHelper.initializeKinect();
 
         }
 
@@ -56,9 +60,37 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <param name="mainWindowCanvas"></param>
-        public override void onRendererUpdateDelegate(Canvas mainWindowCanvas)
+        public override void onRendererUpdateDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow)
         {
-            //TODO rotate and\or translate player image...
+
+
+            Skeleton skeleton = this.kinectSensorHelper.getTrackedSkeleton();
+
+            if (skeleton != null)
+            {
+
+                UIElement userUiElement = currentMainWindow.getUiElementByUid(_uid);
+
+                Joint headJoint = skeleton.Joints[JointType.Head];
+                if (headJoint.TrackingState == JointTrackingState.Tracked)
+                {
+
+                    double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0,  1.0, 0, mainWindowCanvas.RenderSize.Width);
+                    double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y,  1.0, -1.0, 0, mainWindowCanvas.RenderSize.Height);
+
+                    TranslateTransform translateTransform = new TranslateTransform(xScreenPosition, yScreenPosition);
+                    userUiElement.RenderTransform = translateTransform;
+
+#if DEBUG
+                    //********************* translateBoundingBox 
+                    UIElement boundingBoxUiElement = currentMainWindow.getUiElementByUid("BB_" + _uid);
+                    boundingBoxUiElement.RenderTransform = translateTransform;
+                    //*********************
+#endif
+                    
+                }
+            }
+
         }
 
 
@@ -78,6 +110,23 @@ namespace ProjectHCI.KinectEngine
         public override void onCollisionExitDelegate(IGameObject otherGameObject)
         {
             throw new NotSupportedException();
+        }
+
+
+
+        private double mapValueToNewRange(double value, 
+                                          double oldLowerLimit, 
+                                          double oldHigherLimit, 
+                                          double newLowerLimit,
+                                          double newHigherLimit)
+        {
+
+            double oldRange = oldHigherLimit - oldLowerLimit;
+            double newRange = newHigherLimit - newLowerLimit;
+
+            return (((value - oldLowerLimit) * newRange) / oldRange) + newLowerLimit;
+
+
         }
 
     }

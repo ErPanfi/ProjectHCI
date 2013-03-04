@@ -58,7 +58,7 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <param name="mainWindowCanvas"></param>
-        public override void onRendererUpdateDelegate(Canvas mainWindowCanvas)
+        public override void onRendererUpdateDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow)
         {
             //TODO maybe bouncing icons...
         }
