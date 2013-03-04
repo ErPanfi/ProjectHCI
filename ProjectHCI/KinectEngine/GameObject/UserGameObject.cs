@@ -72,19 +72,50 @@ namespace ProjectHCI.KinectEngine
                 UIElement userUiElement = currentMainWindow.getUiElementByUid(_uid);
 
                 Joint headJoint = skeleton.Joints[JointType.Head];
+                Joint shoulderCenterJoint = skeleton.Joints[JointType.ShoulderCenter];
+
                 if (headJoint.TrackingState == JointTrackingState.Tracked)
                 {
 
                     double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0,  1.0, 0, mainWindowCanvas.RenderSize.Width);
                     double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y,  1.0, -1.0, 0, mainWindowCanvas.RenderSize.Height);
 
-                    TranslateTransform translateTransform = new TranslateTransform(xScreenPosition, yScreenPosition);
-                    userUiElement.RenderTransform = translateTransform;
+                    
+                    TransformGroup transformGroup = new TransformGroup();
+                    transformGroup.Children.Add(new TranslateTransform(xScreenPosition, yScreenPosition));
+
+
+                    if (shoulderCenterJoint.TrackingState == JointTrackingState.Tracked)
+                    {
+
+                        Vector shoulderCenterVector = new Vector(shoulderCenterJoint.Position.X, shoulderCenterJoint.Position.Y);
+                        Vector headVector = new Vector(headJoint.Position.X, headJoint.Position.Y);
+
+                        Vector shoulderCenterToHeadVector = Vector.Subtract(headVector, shoulderCenterVector);
+                        shoulderCenterToHeadVector.Normalize();
+
+                        Vector upVector = new Vector(0, 1.0);
+
+                        double rotationAngle = Vector.AngleBetween(upVector, shoulderCenterToHeadVector);
+
+                        double xRotationCenter = _geometry.Bounds.X + (_geometry.Bounds.Width * 0.5);
+                        double yRotationCenter = _geometry.Bounds.Y + (_geometry.Bounds.Height * 0.5);
+
+                        transformGroup.Children.Add(new RotateTransform(-1 * rotationAngle, xRotationCenter, yRotationCenter));
+
+                    }
+
+
+                    _geometry.Transform = transformGroup;
+                    userUiElement.RenderTransform = transformGroup;
+
+                    
+
 
 #if DEBUG
                     //********************* translateBoundingBox 
                     UIElement boundingBoxUiElement = currentMainWindow.getUiElementByUid("BB_" + _uid);
-                    boundingBoxUiElement.RenderTransform = translateTransform;
+                    boundingBoxUiElement.RenderTransform = transformGroup;
                     //*********************
 #endif
                     

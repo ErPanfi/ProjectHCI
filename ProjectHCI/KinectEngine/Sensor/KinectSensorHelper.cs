@@ -172,14 +172,14 @@ namespace ProjectHCI.KinectEngine
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public KinectSensor getKinectSensor()
-        {
-            return this.kinectSensor;
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
+        //public KinectSensor getKinectSensor()
+        //{
+        //    return this.kinectSensor;
+        //}
 
 
         //private void TrackedSkeletonJoints(JointCollection jointCollection)

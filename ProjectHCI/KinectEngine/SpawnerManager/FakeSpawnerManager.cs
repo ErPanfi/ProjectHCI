@@ -24,12 +24,12 @@ namespace ProjectHCI.KinectEngine
             this.sceneBrain = sceneBrain;
 
             Geometry geometry = new EllipseGeometry(new Point(100, 100), 100, 100);
-            geometry.Freeze();
+            //geometry.Freeze();
 
             ImageSource imageSource = new BitmapImage(new Uri(@"pack://application:,,,/Resources/shark.png"));
             imageSource.Freeze();
 
-            this.sceneBrain.addGameObject(new UserGameObject(geometry, imageSource, SkeletonSmoothingFilter.DEFAULT_SMOOTHING_LEVEL));
+            this.sceneBrain.addGameObject(new UserGameObject(geometry, imageSource, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL));
 
         }
 
