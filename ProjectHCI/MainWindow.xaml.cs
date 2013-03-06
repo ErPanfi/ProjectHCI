@@ -59,7 +59,8 @@ namespace ProjectHCI
 
 
 
-            ISpawnerManager spawnerManager = new FakeSpawnerManager(sceneBrain);
+            //ISpawnerManager spawnerManager = new FakeSpawnerManager(sceneBrain);
+            ISpawnerManager spawnerManager = new SpawnerManager(sceneBrain);
             ITimerManager timerManager = new TimerManager(sceneBrain);
 
             GameLoop gameLoop = new GameLoop(sceneBrain, spawnerManager, updateRenderer, timerManager, collisionManager);

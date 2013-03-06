@@ -63,6 +63,7 @@
     <Compile Include="KinectEngine\GameObject\UserFriendlyGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\UserGameObject.cs" />
     <Compile Include="KinectEngine\Sensor\KinectSensorHelper.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\SpawnerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\TimerManager.cs" />
     <Compile Include="KinectEngine\GameObject\GameObjectEventArgs.cs" />
@@ -117,6 +118,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\shark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\slash_horiz.png" />
+    <Resource Include="Resources\slash_vert.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

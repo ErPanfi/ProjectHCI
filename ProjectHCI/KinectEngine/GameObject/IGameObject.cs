@@ -9,6 +9,13 @@ using System.Windows.Controls;
 
 namespace ProjectHCI.KinectEngine
 {
+    public enum ObjectGameType
+    {
+        UserObject,
+        FriendlyObject,
+        UnfriendlyObject
+    }
+
     public interface IGameObject
     {
 
@@ -17,7 +24,6 @@ namespace ProjectHCI.KinectEngine
         int getCurrentTimeToLiveMillis();
         
         Geometry getGeometry();
-
         ImageSource getImageSource();
 
         String getUid();
