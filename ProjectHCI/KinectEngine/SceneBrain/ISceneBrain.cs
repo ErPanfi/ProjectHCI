@@ -14,7 +14,7 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        List<IGameObject> getCollaidableGameObjectList(Type gameObjectClassType);
+        List<IGameObject> getCollaidableGameObjectList(GameObjectTypeEnum gameObjectType);
 
         void cleanDeadGameObject();
 
@@ -22,9 +22,9 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        Dictionary<Type, List<IGameObject>> getAllGameObjectListMapByType();
+        Dictionary<GameObjectTypeEnum, List<IGameObject>> getAllGameObjectListMapByType();
 
-        Dictionary<Type, List<IGameObject>> getCollidableGameObjectListMapByType();
+        Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByType();
         
         int getMaxNumberOfChopAllowed();
 

@@ -41,10 +41,10 @@ namespace ProjectHCI.KinectEngine
         {
 
 
-            List<IGameObject> userFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(typeof(UserFriendlyGameObject));
+            List<IGameObject> userFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(GameObjectTypeEnum.FriendlyObject);
 
-            List<IGameObject> notUserFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(typeof(NotUserFriendlyGameObject));
-            List<IGameObject> userGameObjectList = this.sceneBrain.getCollaidableGameObjectList(typeof(UserGameObject));
+            List<IGameObject> notUserFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(GameObjectTypeEnum.UnfriendlyObject);
+            List<IGameObject> userGameObjectList = this.sceneBrain.getCollaidableGameObjectList(GameObjectTypeEnum.UserObject);
 
 
             IGameObject userGameObject = null;

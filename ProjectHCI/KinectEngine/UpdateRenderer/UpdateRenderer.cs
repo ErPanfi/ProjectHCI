@@ -15,7 +15,7 @@ namespace ProjectHCI.KinectEngine
     {
 
         private ISceneBrain sceneBrain;
-        private Dictionary<Type, List<IGameObject>> prevFrameGameObjectListMapByType;
+        private Dictionary<GameObjectTypeEnum, List<IGameObject>> prevFrameGameObjectListMapByType;
 
 
 
@@ -34,7 +34,7 @@ namespace ProjectHCI.KinectEngine
             Debug.Assert(sceneBrain != null, "expected sceneBrain != null");
 
             this.sceneBrain = sceneBrain;
-            this.prevFrameGameObjectListMapByType = new Dictionary<Type, List<IGameObject>>();
+            this.prevFrameGameObjectListMapByType = new Dictionary<GameObjectTypeEnum, List<IGameObject>>();
         }
 
 
@@ -45,15 +45,15 @@ namespace ProjectHCI.KinectEngine
         public void drawObject()
         {
 
-            Dictionary<Type, List<IGameObject>> gameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByType();
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByType();
             Debug.Assert(gameObjectListMapByType != null, "expected gameObjectListMapByType != null");
-            
-         
-            foreach (KeyValuePair<Type, List<IGameObject>> gameObjectListMapByTypeEntry0 in gameObjectListMapByType)
+
+
+            foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEntry0 in gameObjectListMapByType)
             {
 
 
-                Type gameObjectType0 = gameObjectListMapByTypeEntry0.Key;
+                GameObjectTypeEnum gameObjectType0 = gameObjectListMapByTypeEntry0.Key;
                 List<IGameObject> gameObjectList0 = gameObjectListMapByTypeEntry0.Value;
 
                 if (this.prevFrameGameObjectListMapByType.ContainsKey(gameObjectType0))

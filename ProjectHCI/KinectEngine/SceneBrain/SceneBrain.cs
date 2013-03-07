@@ -69,14 +69,14 @@ namespace ProjectHCI.KinectEngine
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="gameObjectClassType"></param>
+        /// <param name="gameObjectType"></param>
         /// <returns></returns>
-        public List<IGameObject> getCollaidableGameObjectList(Type gameObjectClassType)
+        public List<IGameObject> getCollaidableGameObjectList(GameObjectTypeEnum gameObjectType)
         {
-            Dictionary<Type, List<IGameObject>> collidableGameObjectListMapByType =  this.sceneManager.getCollidableGameObjectListMapByType();
-            if (collidableGameObjectListMapByType.ContainsKey(gameObjectClassType))
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByType = this.sceneManager.getCollidableGameObjectListMapByType();
+            if (collidableGameObjectListMapByType.ContainsKey(gameObjectType))
             {
-                return this.sceneManager.getCollidableGameObjectListMapByType()[gameObjectClassType];
+                return this.sceneManager.getCollidableGameObjectListMapByType()[gameObjectType];
             }
             else
             {
@@ -92,7 +92,7 @@ namespace ProjectHCI.KinectEngine
         public void cleanDeadGameObject()
         {
             List<IGameObject> deadGameObjectList = new List<IGameObject>(20);
-            foreach (KeyValuePair<Type, List<IGameObject>> gameObjectListMapByTypeEntry0 in this.sceneManager.getGameObjectListMapByType())
+            foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEntry0 in this.sceneManager.getGameObjectListMapByType())
             {
                 foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value)
                 {
@@ -128,13 +128,13 @@ namespace ProjectHCI.KinectEngine
             this.maxNumberOfChopAllowed = random.Next(1, 5);
 
 
-            Dictionary<Type, List<IGameObject>> allGameObjectListMapByType = this.getAllGameObjectListMapByType();
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> allGameObjectListMapByType = this.getAllGameObjectListMapByType();
 
-            if (allGameObjectListMapByType.ContainsKey(typeof(UserFriendlyGameObject)))
+            if (allGameObjectListMapByType.ContainsKey(GameObjectTypeEnum.FriendlyObject))
             {
-                if (allGameObjectListMapByType[typeof(UserFriendlyGameObject)].Count < 5)
+                if (allGameObjectListMapByType[GameObjectTypeEnum.FriendlyObject].Count < 5)
                 {
-                    this.maxNumberOfUserFriendlyGameObjectAllowed = 5 - allGameObjectListMapByType[typeof(UserFriendlyGameObject)].Count;
+                    this.maxNumberOfUserFriendlyGameObjectAllowed = 5 - allGameObjectListMapByType[GameObjectTypeEnum.FriendlyObject].Count;
                 }
                 else
                 {
@@ -161,7 +161,7 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <returns></returns>
-        public Dictionary<Type, List<IGameObject>> getAllGameObjectListMapByType()
+        public Dictionary<GameObjectTypeEnum, List<IGameObject>> getAllGameObjectListMapByType()
         {
             return this.sceneManager.getGameObjectListMapByType();
         }
@@ -171,7 +171,7 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <returns></returns>
-        public Dictionary<Type, List<IGameObject>> getCollidableGameObjectListMapByType()
+        public Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByType()
         {
             return this.sceneManager.getCollidableGameObjectListMapByType();
         }
@@ -213,23 +213,25 @@ namespace ProjectHCI.KinectEngine
         private class SceneManager
         {
 
-            private Dictionary<Type, List<IGameObject>> gameObjectListMapByType;
-            private Dictionary<Type, List<IGameObject>> collidableGameObjectListMapByType;
+            private Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType;
+            private Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByType;
 
 
             public SceneManager()
             {
-                this.gameObjectListMapByType = new Dictionary<Type, List<IGameObject>>(5);
-                this.collidableGameObjectListMapByType = new Dictionary<Type, List<IGameObject>>(5);
+                this.gameObjectListMapByType = new Dictionary<GameObjectTypeEnum, List<IGameObject>>(5);
+                this.collidableGameObjectListMapByType = new Dictionary<GameObjectTypeEnum, List<IGameObject>>(5);
             }
 
 
-            private void registerGameObject(IGameObject gameObject, Dictionary<Type, List<IGameObject>> targetGameObjectListMapByType)
+            private void registerGameObject(IGameObject gameObject, Dictionary<GameObjectTypeEnum, List<IGameObject>> targetGameObjectListMapByType)
             {
                 Debug.Assert(gameObject != null, "expected gameObject not null.");
                 Debug.Assert(targetGameObjectListMapByType != null, "expected targetGameObjectListMapByType not null");
 
-                Type gameObjectType = gameObject.GetType();
+                //Type gameObjectType = gameObject.GetType();
+                //switched to enum
+                GameObjectTypeEnum gameObjectType = gameObject.objectType;
 
 
                 if (!targetGameObjectListMapByType.ContainsKey(gameObjectType))
@@ -241,14 +243,15 @@ namespace ProjectHCI.KinectEngine
             }
 
 
-            private void deleteGameObject(IGameObject gameObject, Dictionary<Type, List<IGameObject>> targetGameObjectListMapByType)
+            private void deleteGameObject(IGameObject gameObject, Dictionary<GameObjectTypeEnum, List<IGameObject>> targetGameObjectListMapByType)
             {
                 Debug.Assert(gameObject != null, "expected gameObject not null.");
                 Debug.Assert(targetGameObjectListMapByType != null, "expected targetGameObjectListMapByType not null");
 
 
 
-                Type gameObjectType = gameObject.GetType();
+                //Type gameObjectType = gameObject.GetType();
+                GameObjectTypeEnum gameObjectType = gameObject.objectType;  //switched to enum value
 
                 if (targetGameObjectListMapByType.ContainsKey(gameObjectType)
                         && targetGameObjectListMapByType[gameObjectType].Contains(gameObject))
@@ -280,12 +283,12 @@ namespace ProjectHCI.KinectEngine
 
 
 
-            public Dictionary<Type, List<IGameObject>> getGameObjectListMapByType()
+            public Dictionary<GameObjectTypeEnum, List<IGameObject>> getGameObjectListMapByType()
             {
                 return this.gameObjectListMapByType;
             }
 
-            public Dictionary<Type, List<IGameObject>> getCollidableGameObjectListMapByType()
+            public Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByType()
             {
                 return this.collidableGameObjectListMapByType;
             }

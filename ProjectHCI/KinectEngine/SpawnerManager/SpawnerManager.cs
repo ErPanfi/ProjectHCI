@@ -43,21 +43,21 @@ namespace ProjectHCI.KinectEngine
         {
 
             //obtain generation parameters and object lists from scene brain
-            Dictionary<Type, List<IGameObject>> gameObjListMapByType = sceneBrain.getAllGameObjectListMapByType();
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjListMapByType = sceneBrain.getAllGameObjectListMapByType();
 
             List<IGameObject> userGameObjs = null;
-            if(gameObjListMapByType.ContainsKey(typeof(UserGameObject)))
-                userGameObjs = gameObjListMapByType[typeof(UserGameObject)];
+            if (gameObjListMapByType.ContainsKey(GameObjectTypeEnum.UserObject))
+                userGameObjs = gameObjListMapByType[GameObjectTypeEnum.UserObject];
 
             List<IGameObject> friendlyObjs;
-            if (gameObjListMapByType.ContainsKey(typeof(UserFriendlyGameObject)))       //if already present use it
-                friendlyObjs = gameObjListMapByType[typeof(UserFriendlyGameObject)];
+            if (gameObjListMapByType.ContainsKey(GameObjectTypeEnum.FriendlyObject))       //if already present use it
+                friendlyObjs = gameObjListMapByType[GameObjectTypeEnum.FriendlyObject];
             else
                 friendlyObjs = new List<IGameObject>();                                 //otherwise create an empty copy
 
             List<IGameObject> unfriendlyObjs;
-            if (gameObjListMapByType.ContainsKey(typeof(NotUserFriendlyGameObject)))
-                unfriendlyObjs = gameObjListMapByType[typeof(NotUserFriendlyGameObject)];
+            if (gameObjListMapByType.ContainsKey(GameObjectTypeEnum.UnfriendlyObject))
+                unfriendlyObjs = gameObjListMapByType[GameObjectTypeEnum.UnfriendlyObject];
             else
                 unfriendlyObjs = new List<IGameObject>();
 
@@ -84,8 +84,7 @@ namespace ProjectHCI.KinectEngine
         protected bool shouldSpawnNewFriendlyObject(int _presentObjectsNum, int _maxObjectsNum)
         {
             //currently use the same probability function of unfriendly objs
-            //return this.shouldSpawnNewUnfriendlyObject(_presentObjectsNum, _maxObjectsNum);
-            return false;
+            return this.shouldSpawnNewUnfriendlyObject(_presentObjectsNum, _maxObjectsNum);            
         }
 
         /// <summary> 
@@ -117,7 +116,7 @@ namespace ProjectHCI.KinectEngine
             int xPosition = random.Next(0, 800);
             int yPosition = random.Next(0, 800);
             
-            Geometry geometry = new EllipseGeometry(new Point(xPosition, yPosition), imageSource.Width, imageSource.Height);
+            Geometry geometry = new EllipseGeometry(new Point(xPosition, yPosition), 50, 50);
             geometry.Freeze();
 
             imageSource.Freeze();
@@ -138,10 +137,25 @@ namespace ProjectHCI.KinectEngine
 
             //locate the cut center point
             Rect bounds = new Rect();
-            targetObject.getGeometry().Dispatcher.Invoke((Action)(() =>
+
+            switch(targetObject.objectType)
             {
-                bounds = targetObject.getGeometry().Bounds;
-            }));
+                case GameObjectTypeEnum.FriendlyObject :
+                    if (targetObject.getGeometry().IsFrozen)    //freely accessible without dispatcher
+                    {
+                        bounds = targetObject.getGeometry().Bounds;
+                    }
+                    else //otherwise fall through next case
+                        goto case GameObjectTypeEnum.UserObject;
+                    break;
+                case GameObjectTypeEnum.UserObject :
+                    //use dispatcher to access object geometry
+                    targetObject.getGeometry().Dispatcher.Invoke((Action)(() =>
+                    {
+                        bounds = targetObject.getGeometry().Bounds;
+                    }));
+                break;
+            }
             Point targetCenter = new Point(bounds.TopLeft.X + (bounds.Width / 2), bounds.TopLeft.Y + (bounds.Height / 2));
 
             //decide if vertical or horizontal cut

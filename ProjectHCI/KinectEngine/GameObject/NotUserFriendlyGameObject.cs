@@ -30,7 +30,7 @@ namespace ProjectHCI.KinectEngine
             base._geometry = geometry;
             base._imageSource = imageSource;
             base._uid = base.generateUid();
-
+            base._objectType = GameObjectTypeEnum.UnfriendlyObject;
         }
 
 

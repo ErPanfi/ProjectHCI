@@ -9,8 +9,9 @@ using System.Windows.Controls;
 
 namespace ProjectHCI.KinectEngine
 {
-    public enum ObjectGameType
+    public enum GameObjectTypeEnum
     {
+        Unknown,
         UserObject,
         FriendlyObject,
         UnfriendlyObject
@@ -28,6 +29,7 @@ namespace ProjectHCI.KinectEngine
 
         String getUid();
 
+        GameObjectTypeEnum objectType { get; }
 
 
         void updateTimeToLive(int deltaTimeMillis);

@@ -28,17 +28,17 @@ namespace ProjectHCI.KinectEngine
         /// <param name="deltaTimeMillis"></param>
         public void tick(int deltaTimeMillis)
         {
-            Dictionary<Type, List<IGameObject>> allGameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByType();
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> allGameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByType();
             Debug.Assert(allGameObjectListMapByType != null, "expected allGameObjectListMapByType != null");
 
-            foreach (KeyValuePair<Type, List<IGameObject>> gameObjectListMapByTypeEntry0 in allGameObjectListMapByType)
+            foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEntry0 in allGameObjectListMapByType)
             {
                 foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value)
                 {
                     gameObject00.updateTimeToLive(deltaTimeMillis);
                                        
 
-                    if (gameObject00.isCollidable() && !this.sceneBrain.getCollaidableGameObjectList(gameObject00.GetType()).Contains(gameObject00))
+                    if (gameObject00.isCollidable() && !this.sceneBrain.getCollaidableGameObjectList(gameObject00.objectType).Contains(gameObject00))
                     {
                         this.sceneBrain.addCollidableGameObject(gameObject00);
                     }

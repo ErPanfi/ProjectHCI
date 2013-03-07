@@ -19,7 +19,16 @@ namespace ProjectHCI.KinectEngine
         protected Geometry _geometry = null;
         protected ImageSource _imageSource = null;
         protected String _uid = null;
-        
+
+        protected GameObjectTypeEnum _objectType;
+
+        public GameObjectTypeEnum objectType 
+        {
+            get
+            {
+                return _objectType;
+            }
+        }        
 
         public int getTimeToLiveMillis()
         {
@@ -45,10 +54,6 @@ namespace ProjectHCI.KinectEngine
         {
             return _uid;
         }
-
-
-
-
 
         protected String generateUid()
         {
