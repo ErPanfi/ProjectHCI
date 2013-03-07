@@ -20,7 +20,7 @@ namespace ProjectHCI.KinectEngine
     {
 
         private ISceneBrain sceneBrain;
-        private ISet<KeyValuePair<Type, Type>> typeCollidablePairSet; 
+        private ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet; 
 
 
         /// <summary>
@@ -127,9 +127,9 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <param name="typeCollidablePairSet"></param>
-        public void setCollisionToHandle(ISet<KeyValuePair<Type, Type>> typeCollidablePairSet)
+        public void setCollisionToHandle(ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet)
         {
-            this.typeCollidablePairSet = typeCollidablePairSet;
+            this.typeEnumCollidablePairSet = typeEnumCollidablePairSet;
         }
 
 

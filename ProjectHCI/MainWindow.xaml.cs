@@ -50,12 +50,12 @@ namespace ProjectHCI
 
             ICollisionManager collisionManager = new CollisionManager(sceneBrain);
 
-            HashSet<KeyValuePair<Type, Type>> collidableTypeHashSet = new HashSet<KeyValuePair<Type, Type>>();
-            collidableTypeHashSet.Add(new KeyValuePair<Type, Type>(typeof(UserGameObject), typeof(UserFriendlyGameObject)));
-            collidableTypeHashSet.Add(new KeyValuePair<Type, Type>(typeof(UserGameObject), typeof(NotUserFriendlyGameObject)));
-            collidableTypeHashSet.Add(new KeyValuePair<Type, Type>(typeof(NotUserFriendlyGameObject), typeof(UserFriendlyGameObject)));
+            HashSet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> collidableTypeEnumHashSet = new HashSet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>>();
+            collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UserObject, GameObjectTypeEnum.FriendlyObject));
+            collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UserObject, GameObjectTypeEnum.UnfriendlyObject));
+            collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UnfriendlyObject, GameObjectTypeEnum.FriendlyObject));
 
-            collisionManager.setCollisionToHandle(collidableTypeHashSet);
+            collisionManager.setCollisionToHandle(collidableTypeEnumHashSet);
 
 
 

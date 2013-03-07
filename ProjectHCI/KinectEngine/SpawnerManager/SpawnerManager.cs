@@ -27,12 +27,12 @@ namespace ProjectHCI.KinectEngine
         /// <summary>
         /// Default constructor
         /// </summary>
-        /// <param name="_sceneBrain">The active scene brain must be passed,in order to allow the spawner to reference it</param>
-        public SpawnerManager(ISceneBrain _sceneBrain)
+        /// <param name="sceneBrain">The active scene brain must be passed,in order to allow the spawner to reference it</param>
+        public SpawnerManager(ISceneBrain sceneBrain)
         {
-            sceneBrain = _sceneBrain;
+            this.sceneBrain = sceneBrain;
             random = new Random();
-            sceneBrain.addGameObject(this.spawnUserGameObject());
+            this.sceneBrain.addGameObject(this.spawnUserGameObject());
         }
 
         /// <summary>
@@ -93,29 +93,29 @@ namespace ProjectHCI.KinectEngine
         /// <summary> 
         /// This method evaluate if a new friendly object should be created
         /// </summary>
-        /// <param name="_presentObjectsNum">The number of current non-dead friendly objects in the scene.</param>
-        /// <param name="_maxObjectsNum">The maximum number of non-dead friendly objects allowed in the scene.</param>
+        /// <param name="presentObjectsNum">The number of current non-dead friendly objects in the scene.</param>
+        /// <param name="maxObjectsNum">The maximum number of non-dead friendly objects allowed in the scene.</param>
         /// <returns>Returns true iff a new friendly object must be spawned.</returns>
         /// <remarks>Only one object per cycle should spawn</remarks>
-        protected bool shouldSpawnNewFriendlyObject(int _presentObjectsNum, int _maxObjectsNum)
+        protected bool shouldSpawnNewFriendlyObject(int presentObjectsNum, int maxObjectsNum)
         {
             //currently use the same probability function of unfriendly objs
-            return this.shouldSpawnNewUnfriendlyObject(_presentObjectsNum, _maxObjectsNum);            
+            return this.shouldSpawnNewUnfriendlyObject(presentObjectsNum, maxObjectsNum);            
         }
 
         /// <summary> 
         /// This method evaluate if a new unfriendly object should be created
         /// </summary>
-        /// <param name="_presentObjectsNum">The number of current non-dead unfriendly objects in the scene.</param>
-        /// <param name="_maxObjectsNum">The maximum number of non-dead unfriendly objects allowed in the scene.</param>
+        /// <param name="presentObjectsNum">The number of current non-dead unfriendly objects in the scene.</param>
+        /// <param name="maxObjectsNum">The maximum number of non-dead unfriendly objects allowed in the scene.</param>
         /// <returns>Returns true iff a new unfriendly object must be spawned.</returns>
         /// <remarks>Only one object per cycle should spawn</remarks>
-        protected bool shouldSpawnNewUnfriendlyObject(int _presentObjectsNum, int _maxObjectsNum)
+        protected bool shouldSpawnNewUnfriendlyObject(int presentObjectsNum, int maxObjectsNum)
         {
             //it's more unlikely to spawn something if there's already many objs in the screen
             return (
-                        (_presentObjectsNum < _maxObjectsNum)                                   //if there's already the maximum obj num short-circuit next condition
-                    &&  (random.Next(_maxObjectsNum) < (_maxObjectsNum - _presentObjectsNum))   //note that this lead to certain object spawning if _presentObjectsNum == 0
+                        (presentObjectsNum < maxObjectsNum)                                   //if there's already the maximum obj num short-circuit next condition
+                    &&  (random.Next(maxObjectsNum) < (maxObjectsNum - presentObjectsNum))   //note that this lead to certain object spawning if presentObjectsNum == 0
                    );
         }
 
@@ -123,9 +123,9 @@ namespace ProjectHCI.KinectEngine
         /// <summary>
         /// Builds a new friendly object
         /// </summary>
-        /// <param name="_presentObjs">The currently existing non-dead friendly objects (users objects excluded)</param>
+        /// <param name="presentObjs">The currently existing non-dead friendly objects (users objects excluded)</param>
         /// <returns>The newly created friendly object</returns>
-        protected IGameObject spawnNewFriendlyObject(List<IGameObject> _presentObjs)
+        protected IGameObject spawnNewFriendlyObject(List<IGameObject> presentObjs)
         {
             ImageSource imageSource = new BitmapImage(new Uri(@"pack://application:,,,/Resources/skype.png"));
 
@@ -143,13 +143,13 @@ namespace ProjectHCI.KinectEngine
         /// <summary>
         /// Builds a new unfriendly object
         /// </summary>
-        /// <param name="_friendlyObjs">The non-dead friendly objects currently existing in the scene</param>
-        /// <param name="_userObjs">The non-dead user objects currently existing in the scene</param>
+        /// <param name="friendlyObjs">The non-dead friendly objects currently existing in the scene</param>
+        /// <param name="userObjs">The non-dead user objects currently existing in the scene</param>
         /// <returns>The newly created unfriendly object</returns>
-        protected IGameObject spawnNewUnfriendlyObject(List<IGameObject> _userObjs, List<IGameObject> _friendlyObjs)
+        protected IGameObject spawnNewUnfriendlyObject(List<IGameObject> userObjs, List<IGameObject> friendlyObjs)
         {
             //choose the target of the cut
-            IGameObject targetObject = this.extractRandomObjFromList((_friendlyObjs.Count == 0 || random.NextDouble() < TRY_TO_CUT_PLAYERS_PROBABILITY) ? _userObjs : _friendlyObjs);
+            IGameObject targetObject = this.extractRandomObjFromList((friendlyObjs.Count == 0 || random.NextDouble() < TRY_TO_CUT_PLAYERS_PROBABILITY) ? userObjs : friendlyObjs);
 
             //locate the cut center point
             Rect bounds = new Rect();
@@ -222,12 +222,12 @@ namespace ProjectHCI.KinectEngine
         /// <summary>
         /// Extract a random game object from a given list of game objects
         /// </summary>
-        /// <param name="_targetList">The list of game objects</param>
+        /// <param name="targetList">The list of game objects</param>
         /// <returns>One of the items of the list or null if the random extraction has failed</returns>
-        protected IGameObject extractRandomObjFromList(List<IGameObject> _targetList)
+        protected IGameObject extractRandomObjFromList(List<IGameObject> targetList)
         {
-            int x = random.Next(_targetList.Count) + 1;
-            List<IGameObject>.Enumerator enumerator = _targetList.GetEnumerator();
+            int x = random.Next(targetList.Count) + 1;
+            List<IGameObject>.Enumerator enumerator = targetList.GetEnumerator();
             bool hasNext = false;
             for (int y = 0; y < x; y++)
             {

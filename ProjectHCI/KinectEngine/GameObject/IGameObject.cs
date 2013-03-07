@@ -11,7 +11,7 @@ namespace ProjectHCI.KinectEngine
 {
     public enum GameObjectTypeEnum
     {
-        Unknown,
+        DebugObject,
         UserObject,
         FriendlyObject,
         UnfriendlyObject
