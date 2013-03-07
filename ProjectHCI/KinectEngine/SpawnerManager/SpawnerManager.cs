@@ -43,23 +43,35 @@ namespace ProjectHCI.KinectEngine
         {
 
             //obtain generation parameters and object lists from scene brain
-            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjListMapByType = sceneBrain.getAllGameObjectListMapByType();
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjListMapByType = sceneBrain.getAllGameObjectListMapByTypeEnum();
 
             List<IGameObject> userGameObjs = null;
             if (gameObjListMapByType.ContainsKey(GameObjectTypeEnum.UserObject))
+            {
                 userGameObjs = gameObjListMapByType[GameObjectTypeEnum.UserObject];
+            }
+                
 
             List<IGameObject> friendlyObjs;
             if (gameObjListMapByType.ContainsKey(GameObjectTypeEnum.FriendlyObject))       //if already present use it
+            {
                 friendlyObjs = gameObjListMapByType[GameObjectTypeEnum.FriendlyObject];
-            else
-                friendlyObjs = new List<IGameObject>();                                 //otherwise create an empty copy
+            }
+            else //otherwise create an empty copy
+            {
+                friendlyObjs = new List<IGameObject>();
+            }
+
 
             List<IGameObject> unfriendlyObjs;
             if (gameObjListMapByType.ContainsKey(GameObjectTypeEnum.UnfriendlyObject))
+            {
                 unfriendlyObjs = gameObjListMapByType[GameObjectTypeEnum.UnfriendlyObject];
+            }
             else
+            {
                 unfriendlyObjs = new List<IGameObject>();
+            }
 
             int maxNumberOfChopAllowed = this.sceneBrain.getMaxNumberOfChopAllowed();
             int maxNumberOfUserFriendlyGameObjectAllowed = this.sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed();
@@ -67,11 +79,15 @@ namespace ProjectHCI.KinectEngine
 
             //spawn a new unfriendly obj
             if (this.shouldSpawnNewUnfriendlyObject(unfriendlyObjs.Count, maxNumberOfChopAllowed))
+            {
                 sceneBrain.addGameObject(this.spawnNewUnfriendlyObject(userGameObjs, friendlyObjs));
+            }
 
             //spawn new friendly obj
             if (this.shouldSpawnNewFriendlyObject(friendlyObjs.Count, maxNumberOfUserFriendlyGameObjectAllowed))
+            {
                 sceneBrain.addGameObject(this.spawnNewFriendlyObject(friendlyObjs));
+            }
         }
 
         /// <summary> 
@@ -138,7 +154,7 @@ namespace ProjectHCI.KinectEngine
             //locate the cut center point
             Rect bounds = new Rect();
 
-            switch(targetObject.objectType)
+            switch(targetObject.getObjectTypeEnum())
             {
                 case GameObjectTypeEnum.FriendlyObject :
                     if (targetObject.getGeometry().IsFrozen)    //freely accessible without dispatcher
@@ -146,15 +162,23 @@ namespace ProjectHCI.KinectEngine
                         bounds = targetObject.getGeometry().Bounds;
                     }
                     else //otherwise fall through next case
+                    {
                         goto case GameObjectTypeEnum.UserObject;
+                    }
+
                     break;
+
                 case GameObjectTypeEnum.UserObject :
                     //use dispatcher to access object geometry
                     targetObject.getGeometry().Dispatcher.Invoke((Action)(() =>
                     {
                         bounds = targetObject.getGeometry().Bounds;
                     }));
+
                 break;
+
+                default:
+                    throw new Exception("Unexpected objectType");
             }
             Point targetCenter = new Point(bounds.TopLeft.X + (bounds.Width / 2), bounds.TopLeft.Y + (bounds.Height / 2));
 
@@ -206,12 +230,18 @@ namespace ProjectHCI.KinectEngine
             List<IGameObject>.Enumerator enumerator = _targetList.GetEnumerator();
             bool hasNext = false;
             for (int y = 0; y < x; y++)
+            {
                 hasNext = enumerator.MoveNext();
+            }
 
             if (hasNext)
+            {
                 return enumerator.Current;
+            }
             else
+            {
                 return null;
+            }
         }
 
     }

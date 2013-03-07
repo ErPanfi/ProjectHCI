@@ -45,7 +45,7 @@ namespace ProjectHCI.KinectEngine
         public void drawObject()
         {
 
-            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByType();
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByTypeEnum();
             Debug.Assert(gameObjectListMapByType != null, "expected gameObjectListMapByType != null");
 
 

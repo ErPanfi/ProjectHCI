@@ -25,11 +25,12 @@ namespace ProjectHCI.KinectEngine
         int getCurrentTimeToLiveMillis();
         
         Geometry getGeometry();
+
         ImageSource getImageSource();
 
         String getUid();
 
-        GameObjectTypeEnum objectType { get; }
+        GameObjectTypeEnum getObjectTypeEnum();
 
 
         void updateTimeToLive(int deltaTimeMillis);

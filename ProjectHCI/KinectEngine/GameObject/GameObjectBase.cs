@@ -22,12 +22,9 @@ namespace ProjectHCI.KinectEngine
 
         protected GameObjectTypeEnum _objectType;
 
-        public GameObjectTypeEnum objectType 
+        public GameObjectTypeEnum getObjectTypeEnum()
         {
-            get
-            {
-                return _objectType;
-            }
+            return _objectType;
         }        
 
         public int getTimeToLiveMillis()
