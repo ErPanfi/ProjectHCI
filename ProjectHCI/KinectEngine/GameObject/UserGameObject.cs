@@ -70,7 +70,7 @@ namespace ProjectHCI.KinectEngine
             if (skeleton != null)
             {
 
-                UIElement userUiElement = currentMainWindow.getUiElementByUid(_uid);
+                UIElement userUiElement = currentMainWindow.getUiElementByUid(base._uid);
 
                 Joint headJoint = skeleton.Joints[JointType.Head];
                 Joint shoulderCenterJoint = skeleton.Joints[JointType.ShoulderCenter];
@@ -99,15 +99,15 @@ namespace ProjectHCI.KinectEngine
 
                         double rotationAngle = Vector.AngleBetween(upVector, shoulderCenterToHeadVector);
 
-                        double xRotationCenter = _geometry.Bounds.X + (_geometry.Bounds.Width * 0.5);
-                        double yRotationCenter = _geometry.Bounds.Y + (_geometry.Bounds.Height * 0.5);
+                        double xRotationCenter = base._geometry.Bounds.X + (base._geometry.Bounds.Width * 0.5);
+                        double yRotationCenter = base._geometry.Bounds.Y + (base._geometry.Bounds.Height * 0.5);
 
                         transformGroup.Children.Add(new RotateTransform(-1 * rotationAngle, xRotationCenter, yRotationCenter));
 
                     }
 
 
-                    _geometry.Transform = transformGroup;
+                    base._geometry.Transform = transformGroup;
                     userUiElement.RenderTransform = transformGroup;
 
                     
@@ -115,7 +115,7 @@ namespace ProjectHCI.KinectEngine
 
 #if DEBUG
                     //********************* translateBoundingBox 
-                    UIElement boundingBoxUiElement = currentMainWindow.getUiElementByUid("BB_" + _uid);
+                    UIElement boundingBoxUiElement = currentMainWindow.getUiElementByUid("BB_" + base._uid);
                     boundingBoxUiElement.RenderTransform = transformGroup;
                     //*********************
 #endif
