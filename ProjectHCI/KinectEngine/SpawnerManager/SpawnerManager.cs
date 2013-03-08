@@ -15,11 +15,6 @@ namespace ProjectHCI.KinectEngine
     public class SpawnerManager : ISpawnerManager
     {
 
-        /// <summary>
-        /// reference to the scene brain, in order to fetch the current scene data
-        /// </summary>
-        //private ISceneBrain sceneBrain;
-
         private Random random;
 
         private const double TRY_TO_CUT_PLAYERS_PROBABILITY = 0.6;
@@ -33,12 +28,9 @@ namespace ProjectHCI.KinectEngine
         /// <param name="sceneBrain">The active scene brain must be passed,in order to allow the spawner to reference it</param>
         public SpawnerManager()
         {
-            //this.sceneBrain = GameLoop.getSceneBrain();
             this.userSpawned = false;
 
             this.random = new Random();
-
-            //this.sceneBrain.addGameObject(this.spawnUserGameObject());
         }
 
         /// <summary>
