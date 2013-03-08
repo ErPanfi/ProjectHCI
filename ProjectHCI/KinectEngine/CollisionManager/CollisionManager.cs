@@ -41,6 +41,11 @@ namespace ProjectHCI.KinectEngine
         {
 
 
+            foreach (KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum> gameObjectKeyValuePair in typeEnumCollidablePairSet)
+            {
+                
+            }
+
             List<IGameObject> userFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(GameObjectTypeEnum.FriendlyObject);
 
             List<IGameObject> notUserFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(GameObjectTypeEnum.UnfriendlyObject);
@@ -124,9 +129,9 @@ namespace ProjectHCI.KinectEngine
 
 
         /// <summary>
-        /// 
+        /// initialize set of object's pair inside collision manager
         /// </summary>
-        /// <param name="typeCollidablePairSet"></param>
+        /// <param name="typeCollidablePairSet">set of object's pair</param>
         public void setCollisionToHandle(ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet)
         {
             this.typeEnumCollidablePairSet = typeEnumCollidablePairSet;
