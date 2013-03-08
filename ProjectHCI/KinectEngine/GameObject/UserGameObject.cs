@@ -33,7 +33,7 @@ namespace ProjectHCI.KinectEngine
             base._objectType = GameObjectTypeEnum.UserObject;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
-            this.kinectSensorHelper.initializeKinect();
+            //this.kinectSensorHelper.initializeKinect();
 
         }
 
@@ -61,8 +61,11 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <param name="mainWindowCanvas"></param>
-        public override void onRendererUpdateDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow)
+        public override void onRendererUpdateDelegate()
         {
+
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
 
 
             Skeleton skeleton = this.kinectSensorHelper.getTrackedSkeleton();
@@ -70,7 +73,7 @@ namespace ProjectHCI.KinectEngine
             if (skeleton != null)
             {
 
-                UIElement userUiElement = currentMainWindow.getUiElementByUid(base._uid);
+                UIElement userUiElement = sceneManager.getUiElementByUid(base._uid);
 
                 Joint headJoint = skeleton.Joints[JointType.Head];
                 Joint shoulderCenterJoint = skeleton.Joints[JointType.ShoulderCenter];
@@ -78,8 +81,11 @@ namespace ProjectHCI.KinectEngine
                 if (headJoint.TrackingState == JointTrackingState.Tracked)
                 {
 
-                    double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0,  1.0, 0, mainWindowCanvas.RenderSize.Width);
-                    double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y,  1.0, -1.0, 0, mainWindowCanvas.RenderSize.Height);
+                    double canvasWidth = sceneManager.getTargetCanvas().RenderSize.Width;
+                    double canvasHeight = sceneManager.getTargetCanvas().RenderSize.Height;
+
+                    double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0,  1.0, 0, canvasWidth);
+                    double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y,  1.0, -1.0, 0, canvasHeight);
 
                     
                     TransformGroup transformGroup = new TransformGroup();
@@ -115,7 +121,7 @@ namespace ProjectHCI.KinectEngine
 
 #if DEBUG
                     //********************* translateBoundingBox 
-                    UIElement boundingBoxUiElement = currentMainWindow.getUiElementByUid("BB_" + base._uid);
+                    UIElement boundingBoxUiElement = sceneManager.getUiElementByUid("BB_" + base._uid);
                     boundingBoxUiElement.RenderTransform = transformGroup;
                     //*********************
 #endif

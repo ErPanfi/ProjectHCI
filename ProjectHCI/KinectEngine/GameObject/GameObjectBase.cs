@@ -78,40 +78,66 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public virtual void onRendererDisplayDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow)
+        public virtual void onRendererDisplayDelegate()
         {
-            Debug.Assert(mainWindowCanvas != null, "expected mainWindowCanvas != null");
 
-            Image image = new Image();
-            image.Source = _imageSource;
-            image.Uid = _uid;
-            image.Height = _geometry.Bounds.Height;
-            image.Width = _geometry.Bounds.Width;
+            ISceneManager sceneManager = GameLoop.getSceneManager();
 
-            mainWindowCanvas.Children.Add(image);
-            currentMainWindow.registerUiElement(image);
-            
-            Canvas.SetTop(image, _geometry.Bounds.Y);
-            Canvas.SetLeft(image, _geometry.Bounds.X);
+            Canvas mainWindowCanvas = sceneManager.getTargetCanvas();
+
+
+            double boundingBoxHeight = _geometry.Bounds.Height;
+            double boundingBoxWidth = _geometry.Bounds.Width;
+            double yPositionBoundingBox = _geometry.Bounds.Y;
+            double xPositionBoundingBox = _geometry.Bounds.X;
+
+
+            if (Application.Current == null)
+            {
+                return;
+            }
+
+
+            Application.Current.Dispatcher.Invoke(new Action(
+                delegate()
+                {
+                    
+
+                    Image image = new Image();
+                    image.Source = _imageSource;
+                    image.Uid = _uid;
+                    image.Height = boundingBoxHeight;
+                    image.Width = boundingBoxWidth;
+
+                    mainWindowCanvas.Children.Add(image);
+                    sceneManager.registerUiElement(image);
+
+                    Canvas.SetTop(image, yPositionBoundingBox);
+                    Canvas.SetLeft(image, xPositionBoundingBox);
 
 
 #if DEBUG
-            //********************* display boundingBox
-            GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(Brushes.Red, 1.0), _geometry);
-            DrawingImage boundingBoxDrawingImage = new DrawingImage(geometryDrawing);
+                    //********************* display boundingBox
 
-            Image boundingBoxImage = new Image();
-            boundingBoxImage.Source = boundingBoxDrawingImage;
-            boundingBoxImage.Uid = "BB_" + _uid;
+                    GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(Brushes.Red, 1.0), _geometry);
+                    DrawingImage boundingBoxDrawingImage = new DrawingImage(geometryDrawing);
 
-            mainWindowCanvas.Children.Add(boundingBoxImage);
-            currentMainWindow.registerUiElement(boundingBoxImage);
+                    Image boundingBoxImage = new Image();
+                    boundingBoxImage.Source = boundingBoxDrawingImage;
+                    boundingBoxImage.Uid = "BB_" + _uid;
 
-            Canvas.SetTop(boundingBoxImage, _geometry.Bounds.Y);
-            Canvas.SetLeft(boundingBoxImage, _geometry.Bounds.X);
-            Canvas.SetZIndex(boundingBoxImage, 100);
-            //*********************
+                    mainWindowCanvas.Children.Add(boundingBoxImage);
+                    sceneManager.registerUiElement(boundingBoxImage);
+
+                    Canvas.SetTop(boundingBoxImage, yPositionBoundingBox);
+                    Canvas.SetLeft(boundingBoxImage, xPositionBoundingBox);
+                    Canvas.SetZIndex(boundingBoxImage, 100);
+                    //*********************
 #endif
+
+                }
+            )); 
+
             
         }
 
@@ -119,30 +145,48 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public virtual void onRendererRemoveDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow)
+        public virtual void onRendererRemoveDelegate()
         {
-            Debug.Assert(mainWindowCanvas != null, "expected mainWindowCanvas != null");
 
-            UIElement uiElement = currentMainWindow.getUiElementByUid(_uid);
-            mainWindowCanvas.Children.Remove(uiElement);
-            currentMainWindow.deregisterUiElement(uiElement);
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+
+            Canvas mainWindowCanvas = sceneManager.getTargetCanvas();
+
+
+            if (Application.Current == null)
+            {
+                return;
+            }
+
+
+
+            Application.Current.Dispatcher.Invoke(new Action(
+                delegate()
+                {
+
+                    UIElement uiElement = sceneManager.getUiElementByUid(_uid);
+                    mainWindowCanvas.Children.Remove(uiElement);
+                    sceneManager.unregisterUiElement(uiElement);
 
 #if DEBUG
-            //********************* hide boundingbox 
-            String boundingBoxUid = "BB_" + _uid;
+                    //********************* hide boundingbox 
+                    String boundingBoxUid = "BB_" + _uid;
 
-            UIElement boundingBoxUiElement = currentMainWindow.getUiElementByUid(boundingBoxUid);
-            mainWindowCanvas.Children.Remove(boundingBoxUiElement);
-            currentMainWindow.deregisterUiElement(boundingBoxUiElement);
-            //*********************
+                    UIElement boundingBoxUiElement = sceneManager.getUiElementByUid(boundingBoxUid);
+                    mainWindowCanvas.Children.Remove(boundingBoxUiElement);
+                    sceneManager.unregisterUiElement(boundingBoxUiElement);
+                    //*********************
 #endif
+
+                }
+            ));
 
         }
 
 
 
 
-        public abstract void onRendererUpdateDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow);
+        public abstract void onRendererUpdateDelegate();
 
         public abstract void onCollisionEnterDelegate(IGameObject otherGameObject);
 

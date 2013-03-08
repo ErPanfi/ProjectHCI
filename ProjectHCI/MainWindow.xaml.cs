@@ -27,7 +27,7 @@ namespace ProjectHCI
     {
 
         private Canvas targetCanvas;
-        private Dictionary<String, UIElement> uiElementMapByUid;
+        //private Dictionary<String, UIElement> uiElementMapByUid;
 
 
         public MainWindow()
@@ -35,76 +35,82 @@ namespace ProjectHCI
             InitializeComponent();
 
             targetCanvas = windowsCanvas; //windowsCanvas is defined in the xaml.
-            uiElementMapByUid = new Dictionary<String, UIElement>();
+            //uiElementMapByUid = new Dictionary<String, UIElement>();
 
 
-            ISceneBrain sceneBrain = new SceneBrain();
-            
 
-            IUpdateRenderer updateRenderer = new UpdateRenderer(sceneBrain);
+            ISceneManager sceneManager = new SceneManager(targetCanvas);
 
-            updateRenderer.setDisplayGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.displayGameObject));
-            updateRenderer.setRemoveGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.removeGameObject));
-            updateRenderer.setUpdateGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.updateGameObject));
+            ISceneBrain sceneBrain = new SceneBrain();            
 
+            IUpdateRenderer updateRenderer = new UpdateRenderer();
+            //updateRenderer.setDisplayGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.displayGameObject));
+            //updateRenderer.setRemoveGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.removeGameObject));
+            //updateRenderer.setUpdateGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.updateGameObject));
 
-            ICollisionManager collisionManager = new CollisionManager(sceneBrain);
-
+            ICollisionManager collisionManager = new CollisionManager();
             HashSet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> collidableTypeEnumHashSet = new HashSet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>>();
             collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UserObject, GameObjectTypeEnum.FriendlyObject));
             collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UserObject, GameObjectTypeEnum.UnfriendlyObject));
             collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UnfriendlyObject, GameObjectTypeEnum.FriendlyObject));
-
             collisionManager.setCollisionToHandle(collidableTypeEnumHashSet);
 
+            ISpawnerManager spawnerManager = new SpawnerManager();
+
+            ITimerManager timerManager = new TimerManager();
 
 
-            //ISpawnerManager spawnerManager = new FakeSpawnerManager(sceneBrain);
-            ISpawnerManager spawnerManager = new SpawnerManager(sceneBrain);
-            ITimerManager timerManager = new TimerManager(sceneBrain);
 
-            GameLoop gameLoop = new GameLoop(sceneBrain, spawnerManager, updateRenderer, timerManager, collisionManager);
+            GameLoop gameLoop = GameLoop.getGameLoopSingleton();
+            gameLoop.setCollisionManager(collisionManager);
+            gameLoop.setSceneBrain(sceneBrain);
+            gameLoop.setSceneManager(sceneManager);
+            gameLoop.setSpawnerManager(spawnerManager);
+            gameLoop.setTimerManager(timerManager);
+            gameLoop.setUpdateRenderer(updateRenderer);
+            
+
             gameLoop.start();
 
        
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="uiElement"></param>
-        public void registerUiElement(UIElement uiElement)
-        {
-            Debug.Assert(!this.uiElementMapByUid.ContainsKey(uiElement.Uid), "uiElement already present in uiElementListMapByUid");
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="uiElement"></param>
+        //public void registerUiElement(UIElement uiElement)
+        //{
+        //    Debug.Assert(!this.uiElementMapByUid.ContainsKey(uiElement.Uid), "uiElement already present in uiElementListMapByUid");
 
-            this.uiElementMapByUid.Add(uiElement.Uid, uiElement);
+        //    this.uiElementMapByUid.Add(uiElement.Uid, uiElement);
 
-        }
+        //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="uid"></param>
-        /// <returns></returns>
-        public UIElement getUiElementByUid(String uid)
-        {
-            Debug.Assert(this.uiElementMapByUid.ContainsKey(uid), "unkown uiElement");
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="uid"></param>
+        ///// <returns></returns>
+        //public UIElement getUiElementByUid(String uid)
+        //{
+        //    Debug.Assert(this.uiElementMapByUid.ContainsKey(uid), "unkown uiElement");
 
-            return this.uiElementMapByUid[uid];
-        }
+        //    return this.uiElementMapByUid[uid];
+        //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="uiElement"></param>
-        public void deregisterUiElement(UIElement uiElement)
-        {
-            Debug.Assert(this.uiElementMapByUid.ContainsKey(uiElement.Uid), "unkown uiElement");
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="uiElement"></param>
+        //public void deregisterUiElement(UIElement uiElement)
+        //{
+        //    Debug.Assert(this.uiElementMapByUid.ContainsKey(uiElement.Uid), "unkown uiElement");
 
-            this.uiElementMapByUid.Remove(uiElement.Uid);
+        //    this.uiElementMapByUid.Remove(uiElement.Uid);
 
-        }
+        //}
 
 
         //public enum RGB
@@ -115,88 +121,88 @@ namespace ProjectHCI
         //};
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameObject"></param>
-        public void displayGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
-        {
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="gameObject"></param>
+        //public void displayGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
+        //{
             
-            Dispatcher.Invoke(new Action(
-                delegate()
-                {
+        //    Dispatcher.Invoke(new Action(
+        //        delegate()
+        //        {
 
-                    IGameObject gameObject = gameObjectEventArgs.getGameObject();
-                    gameObject.onRendererDisplayDelegate(targetCanvas, this);
-
-
-                    //IGameObject gameObject = gameObjectEventArgs.getGameObject();
-
-                    ////******fake change color
-                    //RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)gameObject.getImageSource());
-
-                    //for (int i = 0; i < rgbData.dataLength; i += 4)
-                    //{
-                    //    rgbData.rawRgbByteArray[i + (int)RGB.Blue] = 0;	 //blue
-                    //    rgbData.rawRgbByteArray[i + (int)RGB.Green] = 0; //green;
-                    //}
-                    //BitmapSource bitmapSource = BitmapUtility.createBitmapSource(rgbData);
-                    ////********
+        //            IGameObject gameObject = gameObjectEventArgs.getGameObject();
+        //            gameObject.onRendererDisplayDelegate();
 
 
-                    //Image image = new Image();
-                    //image.Source = bitmapSource;
-                    //image.Uid = gameObject.getUid();
+        //            //IGameObject gameObject = gameObjectEventArgs.getGameObject();
 
-                    //this.targetCanvas.Children.Add(image);
+        //            ////******fake change color
+        //            //RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)gameObject.getImageSource());
 
-                    //Canvas.SetTop(image, gameObject.getGeometry().Bounds.X);
-                    //Canvas.SetLeft(image, gameObject.getGeometry().Bounds.Y);
-                }
-            ));
-
-
-        }
-
+        //            //for (int i = 0; i < rgbData.dataLength; i += 4)
+        //            //{
+        //            //    rgbData.rawRgbByteArray[i + (int)RGB.Blue] = 0;	 //blue
+        //            //    rgbData.rawRgbByteArray[i + (int)RGB.Green] = 0; //green;
+        //            //}
+        //            //BitmapSource bitmapSource = BitmapUtility.createBitmapSource(rgbData);
+        //            ////********
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameObject"></param>
-        public void updateGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
-        {
-            Dispatcher.Invoke(new Action(
-                delegate()
-                {
+        //            //Image image = new Image();
+        //            //image.Source = bitmapSource;
+        //            //image.Uid = gameObject.getUid();
 
-                    IGameObject gameObject = gameObjectEventArgs.getGameObject();
-                    gameObject.onRendererUpdateDelegate(targetCanvas, this);
+        //            //this.targetCanvas.Children.Add(image);
 
-                }
-            ));
-        }
+        //            //Canvas.SetTop(image, gameObject.getGeometry().Bounds.X);
+        //            //Canvas.SetLeft(image, gameObject.getGeometry().Bounds.Y);
+        //        }
+        //    ));
+
+
+        //}
 
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameObject"></param>
-        public void removeGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
-        {
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="gameObject"></param>
+        //public void updateGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
+        //{
+        //    Dispatcher.Invoke(new Action(
+        //        delegate()
+        //        {
+
+        //            IGameObject gameObject = gameObjectEventArgs.getGameObject();
+        //            gameObject.onRendererUpdateDelegate();
+
+        //        }
+        //    ));
+        //}
+
+
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="gameObject"></param>
+        //public void removeGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
+        //{
             
-            Dispatcher.Invoke(new Action(
-                delegate()
-                {
+        //    Dispatcher.Invoke(new Action(
+        //        delegate()
+        //        {
 
-                    IGameObject gameObject = gameObjectEventArgs.getGameObject();
-                    gameObject.onRendererRemoveDelegate(targetCanvas, this);
+        //            IGameObject gameObject = gameObjectEventArgs.getGameObject();
+        //            gameObject.onRendererRemoveDelegate();
                     
-                }
-            ));
+        //        }
+        //    ));
 
-        }
+        //}
 
     }
 }

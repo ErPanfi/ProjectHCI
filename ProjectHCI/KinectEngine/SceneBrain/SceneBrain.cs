@@ -11,7 +11,7 @@ namespace ProjectHCI.KinectEngine
     public class SceneBrain : ISceneBrain
     {
 
-        private SceneBrain.SceneManager sceneManager;
+        //private ISceneManager sceneManager;
 
         private int maxNumberOfChopAllowed;
         private int maxNumberOfUserFriendlyGameObjectAllowed;
@@ -27,7 +27,7 @@ namespace ProjectHCI.KinectEngine
         /// </summary>
         public SceneBrain()
         {
-            this.sceneManager = new SceneBrain.SceneManager();
+            //this.sceneManager = sceneManager;
 
             this.maxNumberOfChopAllowed = 0;
             this.maxNumberOfUserFriendlyGameObjectAllowed = 0;
@@ -39,50 +39,50 @@ namespace ProjectHCI.KinectEngine
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameObject"></param>
-        public void addGameObject(IGameObject gameObject)
-        {
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="gameObject"></param>
+        //public void addGameObject(IGameObject gameObject)
+        //{
 
-            //System.Diagnostics.Debug.WriteLine("************ add gameObj:" 
-            //                                                + " geometryX=" + gameObject.getGeometry().Bounds.X 
-            //                                                + " geometryY=" + gameObject.getGeometry().Bounds.Y
-            //                                                + " type=" + gameObject.GetType());
+        //    //System.Diagnostics.Debug.WriteLine("************ add gameObj:" 
+        //    //                                                + " geometryX=" + gameObject.getGeometry().Bounds.X 
+        //    //                                                + " geometryY=" + gameObject.getGeometry().Bounds.Y
+        //    //                                                + " type=" + gameObject.GetType());
 
-            //this.objectLiveCount++;
-            this.sceneManager.addGameObject(gameObject);
-        }
+        //    //this.objectLiveCount++;
+        //    this.sceneManager.addGameObject(gameObject);
+        //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="collidableGameObject"></param>
-        public void addCollidableGameObject(IGameObject collidableGameObject)
-        {
-            this.sceneManager.addCollidableGameObject(collidableGameObject);
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="collidableGameObject"></param>
+        //public void addCollidableGameObject(IGameObject collidableGameObject)
+        //{
+        //    this.sceneManager.registerAsCollidableGameObject(collidableGameObject);
+        //}
 
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameObjectTypeEnum"></param>
-        /// <returns></returns>
-        public List<IGameObject> getCollaidableGameObjectList(GameObjectTypeEnum gameObjectTypeEnum)
-        {
-            Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByTypeEnum = this.sceneManager.getCollidableGameObjectListMapByTypeEnum();
-            if (collidableGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum))
-            {
-                return this.sceneManager.getCollidableGameObjectListMapByTypeEnum()[gameObjectTypeEnum];
-            }
-            else
-            {
-                return new List<IGameObject>();
-            }
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="gameObjectTypeEnum"></param>
+        ///// <returns></returns>
+        //public List<IGameObject> getCollaidableGameObjectList(GameObjectTypeEnum gameObjectTypeEnum)
+        //{
+        //    Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByTypeEnum = this.sceneManager.getCollidableGameObjectListMapByTypeEnum();
+        //    if (collidableGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum))
+        //    {
+        //        return this.sceneManager.getCollidableGameObjectListMapByTypeEnum()[gameObjectTypeEnum];
+        //    }
+        //    else
+        //    {
+        //        return new List<IGameObject>();
+        //    }
+        //}
 
 
 
@@ -91,8 +91,11 @@ namespace ProjectHCI.KinectEngine
         /// </summary>
         public void cleanDeadGameObject()
         {
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+
             List<IGameObject> deadGameObjectList = new List<IGameObject>(20);
-            foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEntry0 in this.sceneManager.getGameObjectListMapByTypeEnum())
+            foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEntry0 in sceneManager.getGameObjectListMapByTypeEnum())
             {
                 foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value)
                 {
@@ -106,7 +109,7 @@ namespace ProjectHCI.KinectEngine
 
             foreach (IGameObject gameObject0 in deadGameObjectList)
             {
-                this.sceneManager.removeGameObject(gameObject0);
+                sceneManager.removeGameObject(gameObject0);
                 //this.objectLiveCount--;
             }
 
@@ -119,6 +122,10 @@ namespace ProjectHCI.KinectEngine
         /// </summary>
         public void think(int deltaTimeMillis, List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList)
         {
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+
+
+
             this.gameTotalTimeMillis += deltaTimeMillis;
 
             
@@ -128,7 +135,7 @@ namespace ProjectHCI.KinectEngine
             this.maxNumberOfChopAllowed = random.Next(1, 5);
 
 
-            Dictionary<GameObjectTypeEnum, List<IGameObject>> allGameObjectListMapByType = this.getAllGameObjectListMapByTypeEnum();
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> allGameObjectListMapByType = sceneManager.getGameObjectListMapByTypeEnum();
 
             if (allGameObjectListMapByType.ContainsKey(GameObjectTypeEnum.FriendlyObject))
             {
@@ -157,24 +164,24 @@ namespace ProjectHCI.KinectEngine
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<GameObjectTypeEnum, List<IGameObject>> getAllGameObjectListMapByTypeEnum()
-        {
-            return this.sceneManager.getGameObjectListMapByTypeEnum();
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
+        //public Dictionary<GameObjectTypeEnum, List<IGameObject>> getAllGameObjectListMapByTypeEnum()
+        //{
+        //    return this.sceneManager.getGameObjectListMapByTypeEnum();
+        //}
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByTypeEnum()
-        {
-            return this.sceneManager.getCollidableGameObjectListMapByTypeEnum();
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
+        //public Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByTypeEnum()
+        //{
+        //    return this.sceneManager.getCollidableGameObjectListMapByTypeEnum();
+        //}
 
 
         /// <summary>
@@ -210,90 +217,90 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        private class SceneManager
-        {
+        //private class SceneManager
+        //{
 
-            private Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEnum;
-            private Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByTypeEnum;
-
-
-            public SceneManager()
-            {
-                this.gameObjectListMapByTypeEnum = new Dictionary<GameObjectTypeEnum, List<IGameObject>>(5);
-                this.collidableGameObjectListMapByTypeEnum = new Dictionary<GameObjectTypeEnum, List<IGameObject>>(5);
-            }
+        //    private Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEnum;
+        //    private Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByTypeEnum;
 
 
-            private void registerGameObject(IGameObject gameObject, Dictionary<GameObjectTypeEnum, List<IGameObject>> targetGameObjectListMapByTypeEnum)
-            {
-                Debug.Assert(gameObject != null, "expected gameObject not null.");
-                Debug.Assert(targetGameObjectListMapByTypeEnum != null, "expected targetGameObjectListMapByTypeEnum not null");
-
-                //Type gameObjectType = gameObject.GetType();
-                //switched to enum
-                GameObjectTypeEnum gameObjectTypeEnum = gameObject.getObjectTypeEnum();
+        //    public SceneManager()
+        //    {
+        //        this.gameObjectListMapByTypeEnum = new Dictionary<GameObjectTypeEnum, List<IGameObject>>(5);
+        //        this.collidableGameObjectListMapByTypeEnum = new Dictionary<GameObjectTypeEnum, List<IGameObject>>(5);
+        //    }
 
 
-                if (!targetGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum))
-                {
-                    targetGameObjectListMapByTypeEnum.Add(gameObjectTypeEnum, new List<IGameObject>(20));
-                }
-                targetGameObjectListMapByTypeEnum[gameObjectTypeEnum].Add(gameObject);
+        //    private void registerGameObject(IGameObject gameObject, Dictionary<GameObjectTypeEnum, List<IGameObject>> targetGameObjectListMapByTypeEnum)
+        //    {
+        //        Debug.Assert(gameObject != null, "expected gameObject not null.");
+        //        Debug.Assert(targetGameObjectListMapByTypeEnum != null, "expected targetGameObjectListMapByTypeEnum not null");
 
-            }
-
-
-            private void deleteGameObject(IGameObject gameObject, Dictionary<GameObjectTypeEnum, List<IGameObject>> targetGameObjectListMapByTypeEnum)
-            {
-                Debug.Assert(gameObject != null, "expected gameObject not null.");
-                Debug.Assert(targetGameObjectListMapByTypeEnum != null, "expected targetGameObjectListMapByTypeEnum not null");
+        //        //Type gameObjectType = gameObject.GetType();
+        //        //switched to enum
+        //        GameObjectTypeEnum gameObjectTypeEnum = gameObject.getObjectTypeEnum();
 
 
+        //        if (!targetGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum))
+        //        {
+        //            targetGameObjectListMapByTypeEnum.Add(gameObjectTypeEnum, new List<IGameObject>(20));
+        //        }
+        //        targetGameObjectListMapByTypeEnum[gameObjectTypeEnum].Add(gameObject);
 
-                //Type gameObjectType = gameObject.GetType();
-                GameObjectTypeEnum gameObjectTypeEnum = gameObject.getObjectTypeEnum();  //switched to enum value
+        //    }
 
-                if (targetGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum)
-                        && targetGameObjectListMapByTypeEnum[gameObjectTypeEnum].Contains(gameObject))
-                {
-                    targetGameObjectListMapByTypeEnum[gameObjectTypeEnum].Remove(gameObject);
-                }
+
+        //    private void deleteGameObject(IGameObject gameObject, Dictionary<GameObjectTypeEnum, List<IGameObject>> targetGameObjectListMapByTypeEnum)
+        //    {
+        //        Debug.Assert(gameObject != null, "expected gameObject not null.");
+        //        Debug.Assert(targetGameObjectListMapByTypeEnum != null, "expected targetGameObjectListMapByTypeEnum not null");
+
+
+
+        //        //Type gameObjectType = gameObject.GetType();
+        //        GameObjectTypeEnum gameObjectTypeEnum = gameObject.getObjectTypeEnum();  //switched to enum value
+
+        //        if (targetGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum)
+        //                && targetGameObjectListMapByTypeEnum[gameObjectTypeEnum].Contains(gameObject))
+        //        {
+        //            targetGameObjectListMapByTypeEnum[gameObjectTypeEnum].Remove(gameObject);
+        //        }
  
-            }
+        //    }
 
 
 
-            public void addGameObject(IGameObject gameObject)
-            {
-                this.registerGameObject(gameObject, this.gameObjectListMapByTypeEnum);
-            }
+        //    public void addGameObject(IGameObject gameObject)
+        //    {
+        //        this.registerGameObject(gameObject, this.gameObjectListMapByTypeEnum);
+        //    }
 
-            public void addCollidableGameObject(IGameObject collidableGameObject)
-            {
-                this.registerGameObject(collidableGameObject, this.collidableGameObjectListMapByTypeEnum);
-            }
-
-
-
-            public void removeGameObject(IGameObject gameObject)
-            {
-                this.deleteGameObject(gameObject, this.gameObjectListMapByTypeEnum);
-                this.deleteGameObject(gameObject, this.collidableGameObjectListMapByTypeEnum);
-            }
+        //    public void addCollidableGameObject(IGameObject collidableGameObject)
+        //    {
+        //        this.registerGameObject(collidableGameObject, this.collidableGameObjectListMapByTypeEnum);
+        //    }
 
 
 
-            public Dictionary<GameObjectTypeEnum, List<IGameObject>> getGameObjectListMapByTypeEnum()
-            {
-                return this.gameObjectListMapByTypeEnum;
-            }
+        //    public void removeGameObject(IGameObject gameObject)
+        //    {
+        //        this.deleteGameObject(gameObject, this.gameObjectListMapByTypeEnum);
+        //        this.deleteGameObject(gameObject, this.collidableGameObjectListMapByTypeEnum);
+        //    }
 
-            public Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByTypeEnum()
-            {
-                return this.collidableGameObjectListMapByTypeEnum;
-            }
 
-        }
+
+        //    public Dictionary<GameObjectTypeEnum, List<IGameObject>> getGameObjectListMapByTypeEnum()
+        //    {
+        //        return this.gameObjectListMapByTypeEnum;
+        //    }
+
+        //    public Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByTypeEnum()
+        //    {
+        //        return this.collidableGameObjectListMapByTypeEnum;
+        //    }
+
+        //}
 
 
     }

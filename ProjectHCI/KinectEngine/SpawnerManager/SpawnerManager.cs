@@ -18,21 +18,27 @@ namespace ProjectHCI.KinectEngine
         /// <summary>
         /// reference to the scene brain, in order to fetch the current scene data
         /// </summary>
-        private ISceneBrain sceneBrain;
+        //private ISceneBrain sceneBrain;
 
         private Random random;
 
         private const double TRY_TO_CUT_PLAYERS_PROBABILITY = 0.6;
 
+        private bool userSpawned;
+
+
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="sceneBrain">The active scene brain must be passed,in order to allow the spawner to reference it</param>
-        public SpawnerManager(ISceneBrain sceneBrain)
+        public SpawnerManager()
         {
-            this.sceneBrain = sceneBrain;
-            random = new Random();
-            this.sceneBrain.addGameObject(this.spawnUserGameObject());
+            //this.sceneBrain = GameLoop.getSceneBrain();
+            this.userSpawned = false;
+
+            this.random = new Random();
+
+            //this.sceneBrain.addGameObject(this.spawnUserGameObject());
         }
 
         /// <summary>
@@ -41,9 +47,22 @@ namespace ProjectHCI.KinectEngine
         /// </summary>
         public void awaken()
         {
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            ISceneBrain sceneBrain = GameLoop.getSceneBrain();
+
+
+            if(!this.userSpawned)
+            {
+                sceneManager.addGameObject(this.spawnUserGameObject());
+                this.userSpawned = true;
+            }
+
+
+
+
 
             //obtain generation parameters and object lists from scene brain
-            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjListMapByType = sceneBrain.getAllGameObjectListMapByTypeEnum();
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjListMapByType = sceneManager.getGameObjectListMapByTypeEnum(); //.getAllGameObjectListMapByTypeEnum();
 
             List<IGameObject> userGameObjs = null;
             if (gameObjListMapByType.ContainsKey(GameObjectTypeEnum.UserObject))
@@ -73,20 +92,20 @@ namespace ProjectHCI.KinectEngine
                 unfriendlyObjs = new List<IGameObject>();
             }
 
-            int maxNumberOfChopAllowed = this.sceneBrain.getMaxNumberOfChopAllowed();
-            int maxNumberOfUserFriendlyGameObjectAllowed = this.sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed();
-            float bonusPercentiage = this.sceneBrain.getBonusPercentiege();
+            int maxNumberOfChopAllowed = sceneBrain.getMaxNumberOfChopAllowed();
+            int maxNumberOfUserFriendlyGameObjectAllowed = sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed();
+            float bonusPercentiage = sceneBrain.getBonusPercentiege();
 
             //spawn a new unfriendly obj
             if (this.shouldSpawnNewUnfriendlyObject(unfriendlyObjs.Count, maxNumberOfChopAllowed))
             {
-                sceneBrain.addGameObject(this.spawnNewUnfriendlyObject(userGameObjs, friendlyObjs));
+                sceneManager.addGameObject(this.spawnNewUnfriendlyObject(userGameObjs, friendlyObjs));
             }
 
             //spawn new friendly obj
             if (this.shouldSpawnNewFriendlyObject(friendlyObjs.Count, maxNumberOfUserFriendlyGameObjectAllowed))
             {
-                sceneBrain.addGameObject(this.spawnNewFriendlyObject(friendlyObjs));
+                sceneManager.addGameObject(this.spawnNewFriendlyObject(friendlyObjs));
             }
         }
 

@@ -14,26 +14,24 @@ namespace ProjectHCI.KinectEngine
     public class UpdateRenderer : IUpdateRenderer
     {
 
-        private ISceneBrain sceneBrain;
+        //private ISceneBrain sceneBrain;
         private Dictionary<GameObjectTypeEnum, List<IGameObject>> prevFrameGameObjectListMapByType;
 
 
 
-        public event EventHandler<GameObjectEventArgs> displayGameObjectEventHandler;
-        public event EventHandler<GameObjectEventArgs> updateGameObjectEventHandler;
-        public event EventHandler<GameObjectEventArgs> removeGameObjectEventHandler;
-
+        //public event EventHandler<GameObjectEventArgs> displayGameObjectEventHandler;
+        //public event EventHandler<GameObjectEventArgs> updateGameObjectEventHandler;
+        //public event EventHandler<GameObjectEventArgs> removeGameObjectEventHandler;
 
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sceneBrain"></param>
-        public UpdateRenderer(ISceneBrain sceneBrain)
+        public UpdateRenderer()
         {
-            Debug.Assert(sceneBrain != null, "expected sceneBrain != null");
+            //Debug.Assert(sceneBrain != null, "expected sceneBrain != null");
 
-            this.sceneBrain = sceneBrain;
+            //this.sceneBrain = sceneBrain;
             this.prevFrameGameObjectListMapByType = new Dictionary<GameObjectTypeEnum, List<IGameObject>>();
         }
 
@@ -45,7 +43,7 @@ namespace ProjectHCI.KinectEngine
         public void drawObject()
         {
 
-            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByTypeEnum();
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType = GameLoop.getSceneManager().getGameObjectListMapByTypeEnum();
             Debug.Assert(gameObjectListMapByType != null, "expected gameObjectListMapByType != null");
 
 
@@ -72,10 +70,13 @@ namespace ProjectHCI.KinectEngine
                     //display new gameObject to GUI
                     foreach (IGameObject newGameObject00 in newGameObjectEnumerable0)
                     {
-                        if (displayGameObjectEventHandler != null)
-                        {
-                            displayGameObjectEventHandler(this, new GameObjectEventArgs(newGameObject00));
-                        }
+                        //if (displayGameObjectEventHandler != null)
+                        //{
+                        //    displayGameObjectEventHandler(this, new GameObjectEventArgs(newGameObject00));
+                        //}
+
+                        newGameObject00.onRendererDisplayDelegate();
+
                         //prepare the structure for the next frame
                         this.prevFrameGameObjectListMapByType[gameObjectType0].Add(newGameObject00);
                     }
@@ -83,10 +84,13 @@ namespace ProjectHCI.KinectEngine
                     //remove deadGameObject from GUI
                     foreach (IGameObject deadGameObject00 in deadGameObjecEnumerable0)
                     {
-                        if (removeGameObjectEventHandler != null)
-                        {
-                            removeGameObjectEventHandler(this, new GameObjectEventArgs(deadGameObject00));
-                        }
+                        //if (removeGameObjectEventHandler != null)
+                        //{
+                        //    removeGameObjectEventHandler(this, new GameObjectEventArgs(deadGameObject00));
+                        //}
+
+                        deadGameObject00.onRendererRemoveDelegate();
+
                         //prepare the structure for the next frame
                         this.prevFrameGameObjectListMapByType[gameObjectType0].Remove(deadGameObject00);
                     }
@@ -94,10 +98,13 @@ namespace ProjectHCI.KinectEngine
                     //update gameObject in the GUI
                     foreach (IGameObject updatableGameObject00 in updatableGameObjectEnumerable0)
                     {
-                        if (updateGameObjectEventHandler != null)
-                        {
-                            updateGameObjectEventHandler(this, new GameObjectEventArgs(updatableGameObject00));
-                        }
+                        //if (updateGameObjectEventHandler != null)
+                        //{
+                        //    updateGameObjectEventHandler(this, new GameObjectEventArgs(updatableGameObject00));
+                        //}
+
+                        updatableGameObject00.onRendererUpdateDelegate();
+
                     }
 
 
@@ -111,10 +118,13 @@ namespace ProjectHCI.KinectEngine
                     //display new gameObject to GUI
                     foreach (IGameObject gameObject00 in gameObjectList0)
                     {
-                        if (displayGameObjectEventHandler != null)
-                        {
-                            displayGameObjectEventHandler(this, new GameObjectEventArgs(gameObject00));
-                        }
+                        //if (displayGameObjectEventHandler != null)
+                        //{
+                        //    displayGameObjectEventHandler(this, new GameObjectEventArgs(gameObject00));
+                        //}
+
+                        gameObject00.onRendererDisplayDelegate();
+
                         //prepare the structure for the next frame
                         this.prevFrameGameObjectListMapByType[gameObjectType0].Add(gameObject00);
                     }
@@ -129,32 +139,32 @@ namespace ProjectHCI.KinectEngine
         
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="eventHandler"></param>
-        public void setDisplayGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler)
-        {
-            this.displayGameObjectEventHandler += eventHandler;
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="eventHandler"></param>
+        //public void setDisplayGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler)
+        //{
+        //    this.displayGameObjectEventHandler += eventHandler;
+        //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="eventHandler"></param>
-        public void setUpdateGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler)
-        {
-            this.updateGameObjectEventHandler += eventHandler;
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="eventHandler"></param>
+        //public void setUpdateGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler)
+        //{
+        //    this.updateGameObjectEventHandler += eventHandler;
+        //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="eventHandler"></param>
-        public void setRemoveGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler)
-        {
-            this.removeGameObjectEventHandler += eventHandler;
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="eventHandler"></param>
+        //public void setRemoveGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler)
+        //{
+        //    this.removeGameObjectEventHandler += eventHandler;
+        //}
 
 
 

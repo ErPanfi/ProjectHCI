@@ -9,16 +9,15 @@ namespace ProjectHCI.KinectEngine
 {
     public class TimerManager : ITimerManager
     {
-        private ISceneBrain sceneBrain;
+       // private ISceneBrain sceneBrain;
 
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sceneBrain"></param>
-        public TimerManager(ISceneBrain sceneBrain)
+        public TimerManager()
         {
-            this.sceneBrain = sceneBrain;
         }
 
 
@@ -28,7 +27,11 @@ namespace ProjectHCI.KinectEngine
         /// <param name="deltaTimeMillis"></param>
         public void tick(int deltaTimeMillis)
         {
-            Dictionary<GameObjectTypeEnum, List<IGameObject>> allGameObjectListMapByType = this.sceneBrain.getAllGameObjectListMapByTypeEnum();
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+
+
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> allGameObjectListMapByType = sceneManager.getGameObjectListMapByTypeEnum(); 
             Debug.Assert(allGameObjectListMapByType != null, "expected allGameObjectListMapByType != null");
 
             foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEntry0 in allGameObjectListMapByType)
@@ -36,11 +39,17 @@ namespace ProjectHCI.KinectEngine
                 foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value)
                 {
                     gameObject00.updateTimeToLive(deltaTimeMillis);
-                                       
 
-                    if (gameObject00.isCollidable() && !this.sceneBrain.getCollaidableGameObjectList(gameObject00.getObjectTypeEnum()).Contains(gameObject00))
-                    {
-                        this.sceneBrain.addCollidableGameObject(gameObject00);
+
+                    Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByType00 = sceneManager.getCollidableGameObjectListMapByTypeEnum();
+
+                    
+
+                    if (gameObject00.isCollidable()
+                        && !sceneManager.getCollaidableGameObjectList(gameObject00.getObjectTypeEnum()).Contains(gameObject00)){
+    
+                        sceneManager.registerAsCollidableGameObject(gameObject00);
+
                     }
 
                 }

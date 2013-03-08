@@ -57,7 +57,7 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <param name="mainWindowCanvas"></param>
-        public override void onRendererUpdateDelegate(Canvas mainWindowCanvas, MainWindow currentMainWindow)
+        public override void onRendererUpdateDelegate()
         {
             //TODO interpolate color
         }
