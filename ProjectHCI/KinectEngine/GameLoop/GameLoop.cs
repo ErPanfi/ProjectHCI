@@ -94,8 +94,8 @@ namespace ProjectHCI.KinectEngine
 
                 this.spawnerManager.awaken();
                 this.timerManager.tick(deltaTimeMillis);
-                //List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList = this.collisionManager.createCollisionList();
-                List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList = null;
+                List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList = this.collisionManager.createCollisionList();
+                //List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList = null;
                 this.sceneBrain.think(deltaTimeMillis, collidedGameObjectPairList);
                 this.updateRenderer.drawObject();
 

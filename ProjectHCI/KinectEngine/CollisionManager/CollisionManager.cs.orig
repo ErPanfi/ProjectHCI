@@ -20,15 +20,13 @@ namespace ProjectHCI.KinectEngine
     {
 
         //private ISceneBrain sceneBrain;
-        private ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet;
-        private List<KeyValuePair<IGameObject, IGameObject>> gameObjectKeyValuePairList;
+        private ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet; 
 
         /// <summary>
         /// 
         /// </summary>
         public CollisionManager()
         {
-            this.gameObjectKeyValuePairList = new List<KeyValuePair<IGameObject, IGameObject>>();
         }
 
 
@@ -38,29 +36,67 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public List<KeyValuePair<IGameObject, IGameObject>> createCollisionList()
         {
-            ISceneManager sceneManager = GameLoop.getSceneManager();
-            if (gameObjectKeyValuePairList.Count > 0)
-            {
-                gameObjectKeyValuePairList.Clear();
-            }
 
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+
+
+<<<<<<< HEAD
             foreach (KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum> gameObjectKeyValuePair in typeEnumCollidablePairSet)
             {
-                List<IGameObject> firstGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectKeyValuePair.Key);
-                List<IGameObject> secondGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectKeyValuePair.Value);
-                firstGameObjectList.ForEach(delegate(IGameObject gameObjectInFirstList)
+                
+            }
+
+            List<IGameObject> userFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(GameObjectTypeEnum.FriendlyObject);
+=======
+            List<IGameObject> userFriendlyGameObjectList = sceneManager.getCollaidableGameObjectList(GameObjectTypeEnum.FriendlyObject);
+>>>>>>> d14aef90e946a34ac7f460f8c36e1c7a5c808e3a
+
+            List<IGameObject> notUserFriendlyGameObjectList = sceneManager.getCollaidableGameObjectList(GameObjectTypeEnum.UnfriendlyObject);
+            List<IGameObject> userGameObjectList = sceneManager.getCollaidableGameObjectList(GameObjectTypeEnum.UserObject);
+
+
+            IGameObject userGameObject = null;
+            if (userGameObjectList.Count > 0)
+            {
+                Debug.Assert(userGameObjectList.Count == 1, "expected exactly one userGameObject into the scene, multiplayer not supported yet");
+                userGameObject = userGameObjectList.ElementAt(0);
+            }
+            
+
+
+
+            /*return object*/
+            List<KeyValuePair<IGameObject, IGameObject>> gameObjectKeyValuePairList = new List<KeyValuePair<IGameObject, IGameObject>>();
+
+            notUserFriendlyGameObjectList.ForEach(delegate(IGameObject notUserFriendlyGameObject)
+            {
+                //manage collision <user, not user friendly>
+                Point[] p = collisionDetect(userGameObject.getGeometry(), notUserFriendlyGameObject.getGeometry());
+                if (p.Length > 0)
                 {
-                    secondGameObjectList.ForEach(delegate(IGameObject gameObjectInSecondList)
+                    gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, notUserFriendlyGameObject));
+                }
+
+                //manage collision <user friendly, not user friendly>
+                userFriendlyGameObjectList.ForEach(delegate(IGameObject userFriendlyGameObject)
+                {
+                    Point[] p2 = collisionDetect(userFriendlyGameObject.getGeometry(), notUserFriendlyGameObject.getGeometry());
+                    if (p2.Length > 0)
                     {
-                        Point[] p = collisionDetect(gameObjectInFirstList.getGeometry(), gameObjectInSecondList.getGeometry());
-                        if (p.Length > 0)
-                        {
-                            gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObjectInFirstList, gameObjectInSecondList));
-                        }
-                    });
+                        gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, userFriendlyGameObject));
+                    }
                 });
 
-            }
+            });
+            //manage collision <user, user friendly>
+            userFriendlyGameObjectList.ForEach(delegate(IGameObject userFriendlyGameObject)
+            {          
+                Point[] p = collisionDetect(userGameObject.getGeometry(), userFriendlyGameObject.getGeometry());
+                if (p.Length > 0)
+                {
+                    gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, userFriendlyGameObject));
+                }
+            });
             return gameObjectKeyValuePairList;
         }
 
