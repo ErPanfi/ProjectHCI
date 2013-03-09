@@ -81,21 +81,17 @@ namespace ProjectHCI.KinectEngine
         public virtual void onRendererDisplayDelegate()
         {
 
-            ISceneManager sceneManager = GameLoop.getSceneManager();
-
-            Canvas mainWindowCanvas = sceneManager.getTargetCanvas();
-
-
-            double boundingBoxHeight = _geometry.Bounds.Height;
-            double boundingBoxWidth = _geometry.Bounds.Width;
-            double yPositionBoundingBox = _geometry.Bounds.Y;
-            double xPositionBoundingBox = _geometry.Bounds.X;
-
-
             if (Application.Current == null)
             {
                 return;
             }
+
+
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+                       
+
+            Geometry boundingBoxAsFrozen = (Geometry) _geometry.GetAsFrozen();
 
 
             Application.Current.Dispatcher.Invoke(new Action(
@@ -106,31 +102,31 @@ namespace ProjectHCI.KinectEngine
                     Image image = new Image();
                     image.Source = _imageSource;
                     image.Uid = _uid;
-                    image.Height = boundingBoxHeight;
-                    image.Width = boundingBoxWidth;
+                    image.Height = boundingBoxAsFrozen.Bounds.Height;
+                    image.Width = boundingBoxAsFrozen.Bounds.Width;
 
-                    mainWindowCanvas.Children.Add(image);
+                    sceneManager.getTargetCanvas().Children.Add(image);
                     sceneManager.registerUiElement(image);
 
-                    Canvas.SetTop(image, yPositionBoundingBox);
-                    Canvas.SetLeft(image, xPositionBoundingBox);
+                    Canvas.SetTop(image, boundingBoxAsFrozen.Bounds.Y);
+                    Canvas.SetLeft(image, boundingBoxAsFrozen.Bounds.X);
 
 
 #if DEBUG
                     //********************* display boundingBox
 
-                    GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(Brushes.Red, 1.0), _geometry);
+                    GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(Brushes.Red, 1.0), boundingBoxAsFrozen);
                     DrawingImage boundingBoxDrawingImage = new DrawingImage(geometryDrawing);
 
                     Image boundingBoxImage = new Image();
                     boundingBoxImage.Source = boundingBoxDrawingImage;
                     boundingBoxImage.Uid = "BB_" + _uid;
 
-                    mainWindowCanvas.Children.Add(boundingBoxImage);
+                    sceneManager.getTargetCanvas().Children.Add(boundingBoxImage);
                     sceneManager.registerUiElement(boundingBoxImage);
 
-                    Canvas.SetTop(boundingBoxImage, yPositionBoundingBox);
-                    Canvas.SetLeft(boundingBoxImage, xPositionBoundingBox);
+                    Canvas.SetTop(boundingBoxImage, boundingBoxAsFrozen.Bounds.Y);
+                    Canvas.SetLeft(boundingBoxImage, boundingBoxAsFrozen.Bounds.X);
                     Canvas.SetZIndex(boundingBoxImage, 100);
                     //*********************
 #endif
@@ -150,7 +146,6 @@ namespace ProjectHCI.KinectEngine
 
             ISceneManager sceneManager = GameLoop.getSceneManager();
 
-            Canvas mainWindowCanvas = sceneManager.getTargetCanvas();
 
 
             if (Application.Current == null)
@@ -165,7 +160,7 @@ namespace ProjectHCI.KinectEngine
                 {
 
                     UIElement uiElement = sceneManager.getUiElementByUid(_uid);
-                    mainWindowCanvas.Children.Remove(uiElement);
+                    sceneManager.getTargetCanvas().Children.Remove(uiElement);
                     sceneManager.unregisterUiElement(uiElement);
 
 #if DEBUG
@@ -173,7 +168,7 @@ namespace ProjectHCI.KinectEngine
                     String boundingBoxUid = "BB_" + _uid;
 
                     UIElement boundingBoxUiElement = sceneManager.getUiElementByUid(boundingBoxUid);
-                    mainWindowCanvas.Children.Remove(boundingBoxUiElement);
+                    sceneManager.getTargetCanvas().Children.Remove(boundingBoxUiElement);
                     sceneManager.unregisterUiElement(boundingBoxUiElement);
                     //*********************
 #endif

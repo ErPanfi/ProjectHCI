@@ -67,6 +67,7 @@
     <Compile Include="KinectEngine\Sensor\KinectSensorHelper.cs" />
     <Compile Include="KinectEngine\SpawnerManager\SpawnerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />
+    <Compile Include="KinectEngine\TimerManager\Time.cs" />
     <Compile Include="KinectEngine\TimerManager\TimerManager.cs" />
     <Compile Include="KinectEngine\GameObject\GameObjectEventArgs.cs" />
     <Compile Include="Utility\BitmapUtility.cs" />
