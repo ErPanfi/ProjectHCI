@@ -140,8 +140,11 @@ namespace ProjectHCI.KinectEngine
         {
             ImageSource imageSource = new BitmapImage(new Uri(@"pack://application:,,,/Resources/skype.png"));
 
-            int xPosition = random.Next(0, 800);
-            int yPosition = random.Next(0, 800);
+            int canvasWidth = (int) GameLoop.getSceneManager().getTargetCanvas().RenderSize.Width;
+            int canvasHeight = (int) GameLoop.getSceneManager().getTargetCanvas().RenderSize.Height;
+
+            int xPosition = random.Next(0, canvasWidth);
+            int yPosition = random.Next(0, canvasHeight);
             
             Geometry geometry = new EllipseGeometry(new Point(xPosition, yPosition), 50, 50);
             geometry.Freeze();
