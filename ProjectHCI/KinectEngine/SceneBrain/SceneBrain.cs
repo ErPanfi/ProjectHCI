@@ -16,9 +16,7 @@ namespace ProjectHCI.KinectEngine
         private int maxNumberOfUserFriendlyGameObjectAllowed;
         private float bonusPercentiege;
 
-        private int gameTotalTimeMillis;
-
-
+        
 
         /// <summary>
         /// 
@@ -30,7 +28,6 @@ namespace ProjectHCI.KinectEngine
             this.maxNumberOfUserFriendlyGameObjectAllowed = 0;
             this.bonusPercentiege = 0.0f;
 
-            this.gameTotalTimeMillis = 0;
 
         }
 
@@ -69,13 +66,14 @@ namespace ProjectHCI.KinectEngine
         /// <summary>
         /// 
         /// </summary>
-        public void think(int deltaTimeMillis, List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList)
+        public void think(List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList)
         {
             ISceneManager sceneManager = GameLoop.getSceneManager();
 
 
 
-            this.gameTotalTimeMillis += deltaTimeMillis;
+            //Time.getDeltaTimeMillis();
+            //Time.getTotalTimeMillis();
 
             
 

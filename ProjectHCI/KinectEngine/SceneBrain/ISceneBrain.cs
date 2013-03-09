@@ -18,7 +18,7 @@ namespace ProjectHCI.KinectEngine
 
         void cleanDeadGameObject();
 
-        void think(int deltaTimeMillis, List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList);
+        void think(List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList);
 
 
 

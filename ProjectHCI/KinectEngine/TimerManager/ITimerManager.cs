@@ -7,6 +7,6 @@ namespace ProjectHCI.KinectEngine
 {
     public interface ITimerManager
     {
-        void tick(int deltaTimeMillis);
+        void tick();
     }
 }

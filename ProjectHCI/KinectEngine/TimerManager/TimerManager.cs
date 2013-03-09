@@ -23,7 +23,7 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <param name="deltaTimeMillis"></param>
-        public void tick(int deltaTimeMillis)
+        public void tick()
         {
 
             ISceneManager sceneManager = GameLoop.getSceneManager();
@@ -36,7 +36,7 @@ namespace ProjectHCI.KinectEngine
             {
                 foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value)
                 {
-                    gameObject00.updateTimeToLive(deltaTimeMillis);
+                    gameObject00.updateTimeToLive(Time.getDeltaTimeMillis());
 
 
                     Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByType00 = sceneManager.getCollidableGameObjectListMapByTypeEnum();

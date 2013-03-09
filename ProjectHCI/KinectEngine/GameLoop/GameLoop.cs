@@ -17,9 +17,8 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        
+
         private bool gameStillRunning;
-        private int lastTimeMillis;
 
         private ISceneManager sceneManager;
         private ISceneBrain sceneBrain;
@@ -37,7 +36,6 @@ namespace ProjectHCI.KinectEngine
         private GameLoop()
         {
             this.gameStillRunning = true;
-            this.lastTimeMillis = 0;
 
             this.sceneManager = null;
             this.sceneBrain = null;
@@ -50,7 +48,7 @@ namespace ProjectHCI.KinectEngine
             gameLoopThread = new Thread(new ThreadStart(this.runLoop));
             gameLoopThread.Name = "GameLoopThread";
             gameLoopThread.IsBackground = true; //ensures that will be terminated on application close
-         
+
         }
 
         /// <summary>
@@ -58,11 +56,11 @@ namespace ProjectHCI.KinectEngine
         /// </summary>
         public void start()
         {
-            Debug.Assert(GameLoop.gameLoopSingleton.sceneManager     != null, "expected sceneManager != null");
-            Debug.Assert(GameLoop.gameLoopSingleton.sceneBrain       != null, "expected sceneBrain != null");
-            Debug.Assert(GameLoop.gameLoopSingleton.spawnerManager   != null, "expected spawnerManager != null");
-            Debug.Assert(GameLoop.gameLoopSingleton.updateRenderer   != null, "expected updateRenderer != null");
-            Debug.Assert(GameLoop.gameLoopSingleton.timerManager     != null, "expected timerManager != null");
+            Debug.Assert(GameLoop.gameLoopSingleton.sceneManager != null, "expected sceneManager != null");
+            Debug.Assert(GameLoop.gameLoopSingleton.sceneBrain != null, "expected sceneBrain != null");
+            Debug.Assert(GameLoop.gameLoopSingleton.spawnerManager != null, "expected spawnerManager != null");
+            Debug.Assert(GameLoop.gameLoopSingleton.updateRenderer != null, "expected updateRenderer != null");
+            Debug.Assert(GameLoop.gameLoopSingleton.timerManager != null, "expected timerManager != null");
             Debug.Assert(GameLoop.gameLoopSingleton.collisionManager != null, "expected collisionManager != null");
 
 
@@ -77,26 +75,21 @@ namespace ProjectHCI.KinectEngine
         private void runLoop()
         {
 
-            this.gameStillRunning = true;
-            this.lastTimeMillis = System.Environment.TickCount;
-           
+            Time time = Time.getTimeSingleton();
+            time.start();
+
 
             while (gameStillRunning)
-            //for(int i = 0; i < 100; i++)
             {
 
-                int currentTimeMillis = System.Environment.TickCount;
-                int deltaTimeMillis = currentTimeMillis - this.lastTimeMillis; 
-
-                this.lastTimeMillis = currentTimeMillis;
-
+                time.tick();
 
 
                 this.spawnerManager.awaken();
-                this.timerManager.tick(deltaTimeMillis);
+                this.timerManager.tick();
                 List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList = this.collisionManager.createCollisionList();
                 //List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList = null;
-                this.sceneBrain.think(deltaTimeMillis, collidedGameObjectPairList);
+                this.sceneBrain.think(collidedGameObjectPairList);
                 this.updateRenderer.drawObject();
 
             }
@@ -125,7 +118,7 @@ namespace ProjectHCI.KinectEngine
                 }
 
                 return GameLoop.gameLoopSingleton;
-                
+
             }
         }
 
@@ -154,7 +147,7 @@ namespace ProjectHCI.KinectEngine
         }
 
 
-         /// <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>

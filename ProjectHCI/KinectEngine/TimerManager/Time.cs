@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.Diagnostics;
+
 namespace ProjectHCI.KinectEngine
 {
 
@@ -11,17 +13,68 @@ namespace ProjectHCI.KinectEngine
     {
 
         static private Time timeSingleton;
-        
+
+        static private object staticLock = new object();
+
+
+
+        private int startingTimeMillis;
+        private int lastTickCount;
+        private bool isRunning;
+
+        private int deltaTimeMillis;
+
+
+
+
 
         private Time()
         {
+            startingTimeMillis = 0;
+            lastTickCount = 0;
+
+            deltaTimeMillis = 0;
+
+            isRunning = false;
+        }
+
+
+        public void start()
+        {
+            this.isRunning = true;
+
+            this.startingTimeMillis = System.Environment.TickCount;
+            this.lastTickCount = System.Environment.TickCount;
+
         }
 
 
         public void tick()
         {
-            throw new NotSupportedException();
+            Debug.Assert(isRunning, "the timer was not started!");
+
+            int currentTickCount = System.Environment.TickCount;
+
+            this.deltaTimeMillis = currentTickCount - this.lastTickCount;
+            this.lastTickCount = currentTickCount;
+
         }
+
+
+        public static Time getTimeSingleton()
+        {
+            lock (staticLock)
+            {
+                if (Time.timeSingleton == null)
+                {
+                    Time.timeSingleton = new Time();
+                }
+
+                return Time.timeSingleton;
+            }
+        }
+
+
 
         public void pause()
         {
@@ -33,22 +86,28 @@ namespace ProjectHCI.KinectEngine
             throw new NotSupportedException();
         }
 
-
-        static Time getTimeSingleton()
+        public void stop()
         {
-            throw new NotSupportedException();
+            this.isRunning = false;
+            this.deltaTimeMillis = 0;
+            this.lastTickCount = -1;
+            this.startingTimeMillis = -1;
         }
 
 
-        static int getDeltaTime()
+
+
+        public static int getDeltaTimeMillis()
         {
-            throw new NotSupportedException();
+            Debug.Assert(Time.timeSingleton.isRunning, "the timer must be running!");
+            return Time.timeSingleton.deltaTimeMillis;
         }
 
 
-        static int getTotalTime()
+        public static int getTotalTimeMillis()
         {
-            throw new NotSupportedException();
+            Debug.Assert(Time.timeSingleton.isRunning, "the timer must be running!");
+            return System.Environment.TickCount - Time.timeSingleton.startingTimeMillis;
         }
 
 
