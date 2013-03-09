@@ -33,7 +33,7 @@ namespace ProjectHCI.KinectEngine
             base._objectType = GameObjectTypeEnum.UserObject;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
-            //this.kinectSensorHelper.initializeKinect();
+            this.kinectSensorHelper.initializeKinect();
 
         }
 

@@ -9,8 +9,6 @@ namespace ProjectHCI.KinectEngine
 {
     public class TimerManager : ITimerManager
     {
-       // private ISceneBrain sceneBrain;
-
 
         /// <summary>
         /// 

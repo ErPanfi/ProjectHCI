@@ -44,8 +44,6 @@ namespace ProjectHCI.KinectEngine
             Debug.Assert(gameObject != null, "expected gameObject not null.");
             Debug.Assert(targetGameObjectListMapByTypeEnum != null, "expected targetGameObjectListMapByTypeEnum not null");
 
-            //Type gameObjectType = gameObject.GetType();
-            //switched to enum
             GameObjectTypeEnum gameObjectTypeEnum = gameObject.getObjectTypeEnum();
 
 
@@ -69,9 +67,7 @@ namespace ProjectHCI.KinectEngine
             Debug.Assert(targetGameObjectListMapByTypeEnum != null, "expected targetGameObjectListMapByTypeEnum not null");
 
 
-
-            //Type gameObjectType = gameObject.GetType();
-            GameObjectTypeEnum gameObjectTypeEnum = gameObject.getObjectTypeEnum();  //switched to enum value
+            GameObjectTypeEnum gameObjectTypeEnum = gameObject.getObjectTypeEnum(); 
 
             if (targetGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum)
                     && targetGameObjectListMapByTypeEnum[gameObjectTypeEnum].Contains(gameObject))
