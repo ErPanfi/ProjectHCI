@@ -46,6 +46,12 @@ namespace ProjectHCI.KinectEngine
                     if (gameObject00.isCollidable()
                         && !sceneManager.getCollaidableGameObjectList(gameObject00.getObjectTypeEnum()).Contains(gameObject00)){
     
+                        //if( gameObject00.GetType() == typeof(NotUserFriendlyGameObject) )
+                        //{
+                        //    System.Diagnostics.Debug.WriteLine("time to kill");
+                        //}
+
+
                         sceneManager.registerAsCollidableGameObject(gameObject00);
 
                     }
