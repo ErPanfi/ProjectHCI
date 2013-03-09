@@ -8,13 +8,13 @@ namespace ProjectHCI.KinectEngine
     public interface ISceneBrain
     {
 
-        void addGameObject(IGameObject gameObject);
+        //void addGameObject(IGameObject gameObject);
 
-        void addCollidableGameObject(IGameObject collidableGameObject);
+        //void addCollidableGameObject(IGameObject collidableGameObject);
 
 
 
-        List<IGameObject> getCollaidableGameObjectList(GameObjectTypeEnum gameObjectTypeEnum);
+        //List<IGameObject> getCollaidableGameObjectList(GameObjectTypeEnum gameObjectTypeEnum);
 
         void cleanDeadGameObject();
 
@@ -22,9 +22,9 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        Dictionary<GameObjectTypeEnum, List<IGameObject>> getAllGameObjectListMapByTypeEnum();
+        //Dictionary<GameObjectTypeEnum, List<IGameObject>> getAllGameObjectListMapByTypeEnum();
 
-        Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByTypeEnum();
+        //Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByTypeEnum();
         
         int getMaxNumberOfChopAllowed();
 

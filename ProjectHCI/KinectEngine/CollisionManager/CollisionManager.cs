@@ -19,17 +19,15 @@ namespace ProjectHCI.KinectEngine
     public class CollisionManager : ICollisionManager
     {
 
-        private ISceneBrain sceneBrain;
+        //private ISceneBrain sceneBrain;
         private ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet; 
 
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sceneBrain"></param>
-        public CollisionManager(ISceneBrain sceneBrain)
+        public CollisionManager()
         {
-            this.sceneBrain = sceneBrain;
         }
 
 
@@ -40,13 +38,13 @@ namespace ProjectHCI.KinectEngine
         public List<KeyValuePair<IGameObject, IGameObject>> createCollisionList()
         {
 
+            ISceneManager sceneManager = GameLoop.getSceneManager();
 
             foreach (KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum> gameObjectKeyValuePair in typeEnumCollidablePairSet)
             {
                 
             }
 
-            List<IGameObject> userFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(GameObjectTypeEnum.FriendlyObject);
 
             List<IGameObject> notUserFriendlyGameObjectList = this.sceneBrain.getCollaidableGameObjectList(GameObjectTypeEnum.UnfriendlyObject);
             List<IGameObject> userGameObjectList = this.sceneBrain.getCollaidableGameObjectList(GameObjectTypeEnum.UserObject);

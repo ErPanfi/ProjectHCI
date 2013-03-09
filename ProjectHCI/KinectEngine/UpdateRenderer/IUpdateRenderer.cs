@@ -10,9 +10,9 @@ namespace ProjectHCI.KinectEngine
         
         void drawObject();
 
-        void setDisplayGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler);
-        void setUpdateGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler);
-        void setRemoveGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler);
+        //void setDisplayGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler);
+        //void setUpdateGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler);
+        //void setRemoveGameObjectEventHandler(EventHandler<GameObjectEventArgs> eventHandler);
 
 
     }
