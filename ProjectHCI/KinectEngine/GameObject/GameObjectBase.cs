@@ -115,7 +115,18 @@ namespace ProjectHCI.KinectEngine
 #if DEBUG
                     //********************* display boundingBox
 
-                    GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(Brushes.Red, 1.0), boundingBoxAsFrozen);
+                    GeometryDrawing geometryDrawing;
+                    
+
+                    if(this.isCollidable())
+                    {
+                        geometryDrawing = new GeometryDrawing(null, new Pen(Brushes.Red, 1.0), boundingBoxAsFrozen);
+                    }
+                    else
+                    {
+                        geometryDrawing = new GeometryDrawing(null, new Pen(Brushes.Yellow, 1.0), boundingBoxAsFrozen);
+                    }
+
                     DrawingImage boundingBoxDrawingImage = new DrawingImage(geometryDrawing);
 
                     Image boundingBoxImage = new Image();
