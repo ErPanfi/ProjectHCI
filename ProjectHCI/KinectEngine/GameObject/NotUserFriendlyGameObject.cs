@@ -12,18 +12,25 @@ namespace ProjectHCI.KinectEngine
     public class NotUserFriendlyGameObject : GameObjectBase
     {
 
+        private int notCollidableTimeMillis;
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="geometry"></param>
         /// <param name="imageSource"></param>
         /// <param name="timeToLiveMillis"></param>
+        /// <param name="chopDurationMillis"></param>
         public NotUserFriendlyGameObject(Geometry geometry,
                                          ImageSource imageSource,
-                                         int timeToLiveMillis)
+                                         int timeToLiveMillis,
+                                         int notCollidableTimeMillis)
         {
             Debug.Assert(geometry != null, "expected geometry != null");
             Debug.Assert(imageSource != null, "expected imageSource != null");
+            Debug.Assert(timeToLiveMillis > 0, "expected timeToLiveMillis > 0");
+            Debug.Assert(notCollidableTimeMillis > 0, "expected notCollidableTimeMillis > 0");
+            Debug.Assert(notCollidableTimeMillis <= timeToLiveMillis, "expected notCollidableTimeMillis <= timeToLiveMillis");
 
             base._timeToLiveMillis = timeToLiveMillis;
             base._currentTimeToLiveMillis = timeToLiveMillis;
@@ -31,6 +38,8 @@ namespace ProjectHCI.KinectEngine
             base._imageSource = imageSource;
             base._uid = base.generateUid();
             base._objectType = GameObjectTypeEnum.UnfriendlyObject;
+
+            this.notCollidableTimeMillis = notCollidableTimeMillis;
         }
 
 
@@ -40,7 +49,8 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public override bool isCollidable()
         {
-            return base._currentTimeToLiveMillis <= 0;
+            int collidableTimeMillis = base._timeToLiveMillis - this.notCollidableTimeMillis;
+            return base._currentTimeToLiveMillis <= collidableTimeMillis;
         }
 
         /// <summary>
@@ -49,18 +59,18 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public override bool isDead()
         {
-            return this.isCollidable();
+            return base._currentTimeToLiveMillis <= 0;
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mainWindowCanvas"></param>
-        public override void onRendererUpdateDelegate()
-        {
-            //TODO interpolate color
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="mainWindowCanvas"></param>
+        //public override void onRendererUpdateDelegate()
+        //{
+        //    //TODO interpolate color
+        //}
 
 
         /// <summary>

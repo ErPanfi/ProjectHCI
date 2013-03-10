@@ -78,6 +78,7 @@ namespace ProjectHCI.KinectEngine
                 Joint headJoint = skeleton.Joints[JointType.Head];
                 Joint shoulderCenterJoint = skeleton.Joints[JointType.ShoulderCenter];
 
+                
                 if (headJoint.TrackingState == JointTrackingState.Tracked)
                 {
 
@@ -89,6 +90,7 @@ namespace ProjectHCI.KinectEngine
 
                     
                     TransformGroup transformGroup = new TransformGroup();
+                    //translate component
                     transformGroup.Children.Add(new TranslateTransform(xScreenPosition, yScreenPosition));
 
 
@@ -108,23 +110,35 @@ namespace ProjectHCI.KinectEngine
                         double xRotationCenter = base._geometry.Bounds.X + (base._geometry.Bounds.Width * 0.5);
                         double yRotationCenter = base._geometry.Bounds.Y + (base._geometry.Bounds.Height * 0.5);
 
+                        //rotation component
                         transformGroup.Children.Add(new RotateTransform(-1 * rotationAngle, xRotationCenter, yRotationCenter));
 
                     }
 
 
-                    base._geometry.Transform = transformGroup;
-                    userUiElement.RenderTransform = transformGroup;
+                    transformGroup.Freeze();
 
+
+                    base._geometry.Transform = transformGroup;
+
+
+                    Application.Current.Dispatcher.Invoke(new Action(
+                        delegate()
+                        {
+                            userUiElement.RenderTransform = transformGroup;
+ #if DEBUG
+                            //********************* translateBoundingBox 
+                            UIElement boundingBoxUiElement = sceneManager.getUiElementByUid("BB_" + base._uid);
+                            boundingBoxUiElement.RenderTransform = transformGroup;
+                            //*********************
+ #endif
+
+                        }
+                    ));
                     
 
 
-#if DEBUG
-                    //********************* translateBoundingBox 
-                    UIElement boundingBoxUiElement = sceneManager.getUiElementByUid("BB_" + base._uid);
-                    boundingBoxUiElement.RenderTransform = transformGroup;
-                    //*********************
-#endif
+
                     
                 }
             }

@@ -22,44 +22,80 @@ namespace ProjectHCI.KinectEngine
 
         protected GameObjectTypeEnum _objectType;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public GameObjectTypeEnum getObjectTypeEnum()
         {
             return _objectType;
         }        
+        
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int getTimeToLiveMillis()
         {
             return _timeToLiveMillis;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int getCurrentTimeToLiveMillis()
         {
             return _currentTimeToLiveMillis;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Geometry getGeometry()
         {
             return _geometry;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public ImageSource getImageSource()
         {
             return _imageSource;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public String getUid()
         {
             return _uid;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected String generateUid()
         {
             return Guid.NewGuid().ToString();
         }
 
 
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deltaTimeMillis"></param>
         public virtual void updateTimeToLive(int deltaTimeMillis)
         {
             if (_currentTimeToLiveMillis >= 0)
@@ -69,15 +105,25 @@ namespace ProjectHCI.KinectEngine
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public abstract bool isCollidable();
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public abstract bool isDead();
 
 
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void onRendererDisplayDelegate()
         {
 
@@ -89,8 +135,6 @@ namespace ProjectHCI.KinectEngine
 
 
             ISceneManager sceneManager = GameLoop.getSceneManager();
-                       
-
             Geometry boundingBoxAsFrozen = (Geometry) _geometry.GetAsFrozen();
 
 
@@ -115,17 +159,9 @@ namespace ProjectHCI.KinectEngine
 #if DEBUG
                     //********************* display boundingBox
 
-                    GeometryDrawing geometryDrawing;
-                    
 
-                    if(this.isCollidable())
-                    {
-                        geometryDrawing = new GeometryDrawing(null, new Pen(Brushes.Red, 1.0), boundingBoxAsFrozen);
-                    }
-                    else
-                    {
-                        geometryDrawing = new GeometryDrawing(null, new Pen(Brushes.Yellow, 1.0), boundingBoxAsFrozen);
-                    }
+                    Brush boundingBoxBrush = this.isCollidable() ? Brushes.Red : Brushes.Yellow;
+                    GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(boundingBoxBrush, 1.0), boundingBoxAsFrozen);
 
                     DrawingImage boundingBoxDrawingImage = new DrawingImage(geometryDrawing);
 
@@ -151,19 +187,18 @@ namespace ProjectHCI.KinectEngine
 
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void onRendererRemoveDelegate()
         {
-
-            ISceneManager sceneManager = GameLoop.getSceneManager();
-
-
-
             if (Application.Current == null)
             {
                 return;
             }
 
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
 
 
             Application.Current.Dispatcher.Invoke(new Action(
@@ -192,10 +227,85 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public abstract void onRendererUpdateDelegate();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void onRendererUpdateDelegate()
+        {
+
+#if DEBUG
+            //********************* update boundingbox 
+            if (Application.Current == null)
+            {
+                return;
+            }
+
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            Geometry boundingBoxAsFrozen = (Geometry)_geometry.GetAsFrozen();
+
+
+            
+            Application.Current.Dispatcher.Invoke(new Action(
+                delegate()
+                {
+
+                    Brush boundingBoxBrush = this.isCollidable() ? Brushes.Red : Brushes.Yellow;
+                    GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(boundingBoxBrush, 1.0), boundingBoxAsFrozen);
+                    DrawingImage boundingBoxDrawingImage = new DrawingImage(geometryDrawing);
+
+                    String boundingBoxUid = "BB_" + _uid;
+                    UIElement boundingBoxUiElement = sceneManager.getUiElementByUid(boundingBoxUid);
+
+                    Debug.Assert(boundingBoxUiElement.GetType() == typeof(Image), "expected boundingBoxUiElement typeof Image");
+
+                    Image boundingBoxImage = (Image)boundingBoxUiElement;
+
+                    //if gameObject change its "isCollidable" state then change its bounding-box color
+                    if (!boundingBoxImage.Source.Equals(boundingBoxDrawingImage))
+                    {
+
+                        sceneManager.getTargetCanvas().Children.Remove(boundingBoxUiElement);
+                        sceneManager.unregisterUiElement(boundingBoxUiElement);
+
+
+                        Image newBoundingBoxImage = new Image();
+                        newBoundingBoxImage.Source = boundingBoxDrawingImage;
+                        newBoundingBoxImage.Uid = "BB_" + _uid;
+
+                        sceneManager.getTargetCanvas().Children.Add(newBoundingBoxImage);
+                        sceneManager.registerUiElement(newBoundingBoxImage);
+
+                        Canvas.SetTop(newBoundingBoxImage, boundingBoxAsFrozen.Bounds.Y);
+                        Canvas.SetLeft(newBoundingBoxImage, boundingBoxAsFrozen.Bounds.X);
+                        Canvas.SetZIndex(newBoundingBoxImage, 100);
+
+                    }
+
+
+
+
+                }
+            ));
+            //********************* 
+#endif
+        }
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="otherGameObject"></param>
         public abstract void onCollisionEnterDelegate(IGameObject otherGameObject);
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="otherGameObject"></param>
         public abstract void onCollisionExitDelegate(IGameObject otherGameObject);
 
     }
