@@ -55,8 +55,8 @@ namespace ProjectHCI
             collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UnfriendlyObject, GameObjectTypeEnum.FriendlyObject));
             collisionManager.setCollisionToHandle(collidableTypeEnumHashSet);
 
-            ISpawnerManager spawnerManager = new SpawnerManager();
-
+            //ISpawnerManager spawnerManager = new SpawnerManager();
+            ISpawnerManager spawnerManager = new SpawnerTestForCollisionManager();
             ITimerManager timerManager = new TimerManager();
 
 
