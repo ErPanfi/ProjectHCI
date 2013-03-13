@@ -16,6 +16,7 @@ namespace ProjectHCI.KinectEngine
 
 
         private KinectSensorHelper kinectSensorHelper;
+        private bool dead;
 
 
         public UserGameObject(Geometry geometry,
@@ -31,11 +32,13 @@ namespace ProjectHCI.KinectEngine
             base._imageSource = imageSource;
             base._uid = base.generateUid();
             base._objectType = GameObjectTypeEnum.UserObject;
+            this.dead = false;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
             this.kinectSensorHelper.initializeKinect();
 
         }
+
 
 
         /// <summary>
@@ -53,9 +56,13 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public override bool isDead()
         {
-            return false;
+            return dead;
         }
 
+        public void setDead(bool _dead)
+        {
+            this.dead = _dead;
+        }
 
         /// <summary>
         /// 
@@ -121,21 +128,22 @@ namespace ProjectHCI.KinectEngine
 
                     base._geometry.Transform = transformGroup;
 
+                    if (Application.Current != null && Application.Current.Dispatcher != null)
+                    {
+                        Application.Current.Dispatcher.Invoke(new Action(
+                            delegate()
+                            {
+                                userUiElement.RenderTransform = transformGroup;
+#if DEBUG
+                                //********************* translateBoundingBox 
+                                UIElement boundingBoxUiElement = sceneManager.getUiElementByUid("BB_" + base._uid);
+                                boundingBoxUiElement.RenderTransform = transformGroup;
+                                //*********************
+#endif
 
-                    Application.Current.Dispatcher.Invoke(new Action(
-                        delegate()
-                        {
-                            userUiElement.RenderTransform = transformGroup;
- #if DEBUG
-                            //********************* translateBoundingBox 
-                            UIElement boundingBoxUiElement = sceneManager.getUiElementByUid("BB_" + base._uid);
-                            boundingBoxUiElement.RenderTransform = transformGroup;
-                            //*********************
- #endif
-
-                        }
-                    ));
-                    
+                            }
+                        ));
+                    }
 
 
 

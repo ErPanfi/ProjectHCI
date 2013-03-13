@@ -125,5 +125,11 @@ namespace ProjectHCI.KinectEngine
 
             return new UserFriendlyGameObject(geometry, imageSource, random.Next(100, 100000));
         }
+
+
+        public List<IGameObject> getSpawnedObjects()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

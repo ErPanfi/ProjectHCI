@@ -12,7 +12,7 @@ namespace ProjectHCI.KinectEngine
     /// This class implements the spawner mechanism of the game.
     /// In order to generate a constant object flow the spawner must check the objects currently present in the scene and, if needed, create & add a new object to it.
     /// </summary>
-    public class SpawnerManager : ISpawnerManager
+    public class GameSpawnerManager : ISpawnerManager
     {
 
         private Random random;
@@ -21,16 +21,23 @@ namespace ProjectHCI.KinectEngine
 
         private bool userSpawned;
 
+        private List<IGameObject> spawnedObjs;
+
 
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="sceneBrain">The active scene brain must be passed,in order to allow the spawner to reference it</param>
-        public SpawnerManager()
+        public GameSpawnerManager()
         {
             this.userSpawned = false;
 
             this.random = new Random();
+        }
+
+        public List<IGameObject> getSpawnedObjects()
+        {
+            return spawnedObjs.ToList<IGameObject>();
         }
 
         /// <summary>
@@ -42,10 +49,13 @@ namespace ProjectHCI.KinectEngine
             ISceneManager sceneManager = GameLoop.getSceneManager();
             ISceneBrain sceneBrain = GameLoop.getSceneBrain();
 
+            spawnedObjs = new List<IGameObject>();
 
             if(!this.userSpawned)
             {
-                sceneManager.addGameObject(this.spawnUserGameObject());
+                IGameObject gameObj = this.spawnUserGameObject();
+                spawnedObjs.Add(gameObj);
+                sceneManager.addGameObject(gameObj);
                 this.userSpawned = true;
             }
 
@@ -91,13 +101,17 @@ namespace ProjectHCI.KinectEngine
             //spawn a new unfriendly obj
             if (this.shouldSpawnNewUnfriendlyObject(unfriendlyObjs.Count, maxNumberOfChopAllowed))
             {
-                sceneManager.addGameObject(this.spawnNewUnfriendlyObject(userGameObjs, friendlyObjs));
+                IGameObject gameObj = this.spawnNewUnfriendlyObject(userGameObjs, friendlyObjs);
+                spawnedObjs.Add(gameObj);
+                sceneManager.addGameObject(gameObj);
             }
 
             //spawn new friendly obj
             if (this.shouldSpawnNewFriendlyObject(friendlyObjs.Count, maxNumberOfUserFriendlyGameObjectAllowed))
             {
-                sceneManager.addGameObject(this.spawnNewFriendlyObject(friendlyObjs));
+                IGameObject gameObj = this.spawnNewFriendlyObject(friendlyObjs);
+                spawnedObjs.Add(gameObj);
+                sceneManager.addGameObject(gameObj);
             }
         }
 
