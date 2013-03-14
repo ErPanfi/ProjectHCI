@@ -94,7 +94,8 @@ namespace ProjectHCI.KinectEngine
             cutGeometry.Freeze();
             cutImage.Freeze();
 
-            return new NotUserFriendlyGameObject(cutGeometry, cutImage, random.Next(100, 10000));
+            return new NotUserFriendlyGameObject(cutGeometry, cutImage, random.Next(100, 10000),3000);
+
         }
 
         protected IGameObject spawnUserGameObject()
