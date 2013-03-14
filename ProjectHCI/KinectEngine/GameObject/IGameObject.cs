@@ -14,7 +14,8 @@ namespace ProjectHCI.KinectEngine
         DebugObject,
         UserObject,
         FriendlyObject,
-        UnfriendlyObject
+        UnfriendlyObject,
+        UIObject
     }
 
     public interface IGameObject
@@ -38,7 +39,6 @@ namespace ProjectHCI.KinectEngine
         bool isCollidable();
 
         bool isDead();
-
 
 
         void onRendererUpdateDelegate();
