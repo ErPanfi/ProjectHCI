@@ -22,6 +22,7 @@ namespace ProjectHCI.KinectEngine
         //private ISceneBrain sceneBrain;
         private ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet;
         private List<KeyValuePair<IGameObject, IGameObject>> gameObjectKeyValuePairList;
+        private CollisionRecorder collisionRecorder;
 
         /// <summary>
         /// 
@@ -29,13 +30,14 @@ namespace ProjectHCI.KinectEngine
         public CollisionManager()
         {
             this.gameObjectKeyValuePairList = new List<KeyValuePair<IGameObject, IGameObject>>();
+            this.collisionRecorder = new CollisionRecorder();
         }
 
 
         /// <summary>
-        /// 
+        /// create temporary list of collidable IGameObject's pair for current frame 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>collision list</returns>
         public List<KeyValuePair<IGameObject, IGameObject>> createCollisionList()
         {
             ISceneManager sceneManager = GameLoop.getSceneManager();
@@ -44,6 +46,8 @@ namespace ProjectHCI.KinectEngine
                 gameObjectKeyValuePairList.Clear();
             }
 
+            collisionRecorder.initializeTest();
+            
             foreach (KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum> gameObjectKeyValuePair in typeEnumCollidablePairSet)
             {
                 List<IGameObject> firstGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectKeyValuePair.Key);
@@ -52,9 +56,11 @@ namespace ProjectHCI.KinectEngine
                 {
                     secondGameObjectList.ForEach(delegate(IGameObject gameObjectInSecondList)
                     {
+
                         Point[] p = collisionDetect(gameObjectInFirstList.getGeometry(), gameObjectInSecondList.getGeometry());
                         if (p.Length > 0)
                         {
+                            collisionRecorder.storeOrConfirmCollision(new KeyValuePair<IGameObject, IGameObject>(gameObjectInFirstList,gameObjectInSecondList));
                             gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObjectInFirstList, gameObjectInSecondList));
                         }
                     });
@@ -93,8 +99,6 @@ namespace ProjectHCI.KinectEngine
         }
 
 
-
-
         /// <summary>
         /// initialize set of object's pair inside collision manager
         /// </summary>
@@ -104,6 +108,77 @@ namespace ProjectHCI.KinectEngine
             this.typeEnumCollidablePairSet = typeEnumCollidablePairSet;
         }
 
+        /// <summary>
+        /// repository for collided IgameObject
+        /// </summary>
+        private class CollisionRecorder
+        {
+            Dictionary<KeyValuePair<IGameObject, IGameObject>, bool> collisionRecordDictionary;
+
+            public CollisionRecorder()
+            {
+                collisionRecordDictionary = new Dictionary<KeyValuePair<IGameObject, IGameObject>, bool>();
+            }
+
+            /// <summary>
+            /// prepare collisionRecorder object for current frame
+            /// </summary>
+            public void initializeTest()
+            {
+                if (collisionRecordDictionary.Count > 0)
+                {
+                    //TODO:foreach è in sola lettura non va bene
+                    //foreach (KeyValuePair<KeyValuePair<IGameObject, IGameObject>, bool> dictionaryElement in collisionRecordDictionary)
+                    //foreach (KeyValuePair<IGameObject, IGameObject> dictionaryElement in collisionRecordDictionary.Keys)
+                    for (int i=0; i < collisionRecordDictionary.Count; i++ )
+                    {
+                        //collisionRecordDictionary.Remove(dictionaryElement.Key);
+                        //collisionRecordDictionary.Add(dictionaryElement.Key, false);
+                        //collisionRecordDictionary[dictionaryElement] = false;
+                        collisionRecordDictionary[collisionRecordDictionary.ElementAt(i).Key] = false;
+                    }
+                }
+            }
+
+            /// <summary>
+            /// remove IGameObject's pair are no longer in collision
+            /// </summary>
+            public void removeNotCollidableElementsInCurrentFrame()
+            {
+                if (collisionRecordDictionary.Count > 0)
+                {
+                    foreach (KeyValuePair<KeyValuePair<IGameObject, IGameObject>, bool> dictionaryElement in collisionRecordDictionary)
+                    {
+                        if (collisionRecordDictionary[dictionaryElement.Key] == false)
+                        {
+                            collisionRecordDictionary.Remove(dictionaryElement.Key);
+                            dictionaryElement.Key.Key.onCollisionExitDelegate(dictionaryElement.Key.Value);
+                            dictionaryElement.Key.Value.onCollisionExitDelegate(dictionaryElement.Key.Key);
+                        }
+                    }
+                }
+            }
+
+            /// <summary>
+            /// add or confirm collidable game objects in repository
+            /// </summary>
+            /// <param name="currentGameObjectPair">IGameobject's pair</param>
+            public void storeOrConfirmCollision(KeyValuePair<IGameObject, IGameObject> currentGameObjectPair)
+            {
+                if (collisionRecordDictionary.ContainsKey(currentGameObjectPair))
+                {
+                    collisionRecordDictionary[currentGameObjectPair] = true;
+                }
+                else
+                {
+                    collisionRecordDictionary.Add(currentGameObjectPair, true);
+                    // chiama l'enterCollisionDelegate su ogni oggetto di currentGameObjectPair
+                    currentGameObjectPair.Key.onCollisionEnterDelegate(currentGameObjectPair.Value);
+                    currentGameObjectPair.Value.onCollisionEnterDelegate(currentGameObjectPair.Key);
+                }
+
+            }
+        }
 
 
     }

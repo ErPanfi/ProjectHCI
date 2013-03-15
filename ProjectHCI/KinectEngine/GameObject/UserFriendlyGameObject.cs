@@ -70,7 +70,7 @@ namespace ProjectHCI.KinectEngine
         /// <param name="otherGameObject"></param>
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
-            throw new NotSupportedException();
+            //throw new NotSupportedException();
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace ProjectHCI.KinectEngine
         /// <param name="otherGameObject"></param>
         public override void onCollisionExitDelegate(IGameObject otherGameObject)
         {
-            throw new NotSupportedException();
+            //throw new NotSupportedException();
         }
 
     }
