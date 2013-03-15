@@ -23,7 +23,6 @@ namespace ProjectHCI.KinectEngine
         private ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet;
         private List<KeyValuePair<IGameObject, IGameObject>> gameObjectKeyValuePairList;
         private CollisionRecorder collisionRecorder;
-
         /// <summary>
         /// 
         /// </summary>
@@ -67,6 +66,8 @@ namespace ProjectHCI.KinectEngine
                 });
 
             }
+            collisionRecorder.removeNotCollidableElementsInCurrentFrame(sceneManager);
+
             return gameObjectKeyValuePairList;
         }
 
@@ -143,18 +144,40 @@ namespace ProjectHCI.KinectEngine
             /// <summary>
             /// remove IGameObject's pair are no longer in collision
             /// </summary>
-            public void removeNotCollidableElementsInCurrentFrame()
+            public void removeNotCollidableElementsInCurrentFrame(ISceneManager sceneManager)
             {
                 if (collisionRecordDictionary.Count > 0)
                 {
-                    foreach (KeyValuePair<KeyValuePair<IGameObject, IGameObject>, bool> dictionaryElement in collisionRecordDictionary)
+                    
+                    for (int i=0; i < collisionRecordDictionary.Count; i++ )
                     {
-                        if (collisionRecordDictionary[dictionaryElement.Key] == false)
+                    //foreach (KeyValuePair<KeyValuePair<IGameObject, IGameObject>, bool> dictionaryElement in collisionRecordDictionary)
+                    //{
+                        //if (collisionRecordDictionary[dictionaryElement.Key] == false)
+                        //{
+                        //    collisionRecordDictionary.Remove(dictionaryElement.Key);
+                        //    dictionaryElement.Key.Key.onCollisionExitDelegate(dictionaryElement.Key.Value);
+                        //    dictionaryElement.Key.Value.onCollisionExitDelegate(dictionaryElement.Key.Key);
+                        //}
+                        KeyValuePair<IGameObject, IGameObject> tempKey = collisionRecordDictionary.ElementAt(i).Key;
+                        if (collisionRecordDictionary[tempKey] == false)
                         {
-                            collisionRecordDictionary.Remove(dictionaryElement.Key);
-                            dictionaryElement.Key.Key.onCollisionExitDelegate(dictionaryElement.Key.Value);
-                            dictionaryElement.Key.Value.onCollisionExitDelegate(dictionaryElement.Key.Key);
+                            
+                            List<IGameObject> keyGameObjectList = sceneManager.getCollaidableGameObjectList(tempKey.Key.getObjectTypeEnum());
+                            List<IGameObject> valueGameObjectList = sceneManager.getCollaidableGameObjectList(tempKey.Value.getObjectTypeEnum());
+
+                            if(keyGameObjectList.Contains(tempKey.Key)){
+                                tempKey.Key.onCollisionExitDelegate(tempKey.Value);
+                            }
+                            if (valueGameObjectList.Contains(tempKey.Value))
+                            {
+                                tempKey.Value.onCollisionExitDelegate(tempKey.Key);
+                            }
+                            
+                            //remove element from dictionary
+                            collisionRecordDictionary.Remove(tempKey);
                         }
+
                     }
                 }
             }
