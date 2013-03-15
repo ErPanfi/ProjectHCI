@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace ProjectHCI.KinectEngine
 {
-    public abstract class UIGameObjectBase : GameObjectBase
+    public class UIGameObjectBase : GameObjectBase
     {
 
         public const int USER_INTERACTION_DELAY = 3000;
@@ -48,29 +48,36 @@ namespace ProjectHCI.KinectEngine
         private bool pointedByUser;
         private int internalCountDown;
 
+        /// <summary>
+        /// This will be invoked if the user pointers has stayed long enough into object boundaries
+        /// </summary>
+        public delegate void ActivationDelegate();
+
+        protected ActivationDelegate _activationDelegate;
+
         private void initUserInteractionCounters()
         {
             pointedByUser = false;
             internalCountDown = USER_INTERACTION_DELAY;
         }
 
-        /// <summary>
-        /// This will be invoked if the user pointers has stayed long enough into object boundaries
-        /// </summary>
-        protected abstract void activate();
+        //protected abstract void activate();
 
         #endregion
 
         #region ctors and dtors
 
-        public UIGameObjectBase(Geometry geometry, ImageSource imageSource)
+        public UIGameObjectBase(Geometry geometry, ImageSource imageSource, ActivationDelegate activationDelegate)
         {
             this.initUserInteractionCounters();
             this._geometry = geometry;
             this._imageSource = imageSource;
+            this._imageSource.Freeze();
             this._objectType = GameObjectTypeEnum.UIObject;
             this._uid = base.generateUid();
             this.rendered = true;
+            this._activationDelegate = activationDelegate;
+
         }
 
         #endregion
@@ -151,6 +158,11 @@ namespace ProjectHCI.KinectEngine
                         this.activate();
                     }
             }
+        }
+
+        public virtual void activate()
+        {
+            this._activationDelegate();
         }
 
         #endregion

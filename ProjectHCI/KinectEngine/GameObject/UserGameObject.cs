@@ -18,7 +18,6 @@ namespace ProjectHCI.KinectEngine
         private KinectSensorHelper kinectSensorHelper;
         private bool dead;
 
-
         public UserGameObject(Geometry geometry,
                               ImageSource imageSource,
                               SkeletonSmoothingFilter skeletonSmoothingFilter)
@@ -35,7 +34,7 @@ namespace ProjectHCI.KinectEngine
             this.dead = false;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
-            this.kinectSensorHelper.initializeKinect();
+            //this.kinectSensorHelper.initializeKinect();
 
         }
 

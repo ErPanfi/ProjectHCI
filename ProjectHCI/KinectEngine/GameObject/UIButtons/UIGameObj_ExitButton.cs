@@ -11,27 +11,24 @@ namespace ProjectHCI.KinectEngine
     {
         #region ctors and dtors
 
-        public UIGameObj_ExitButton(Geometry geometry)
-            : base(geometry, null)
+        public UIGameObj_ExitButton(Geometry geometry, ActivationDelegate _actDelegate)
+            : base(geometry, null, _actDelegate)
         {
             this._imageSource = new BitmapImage(new Uri(@"pack://application:,,,/Resources/ExitButton.png"));
             this._imageSource.Freeze();
-        }
-
-        public UIGameObj_ExitButton()
-            : this(null)
-        {
         }
 
         #endregion
 
         #region UIGameObjectBase members
 
+        /*
         protected override void activate()
         {
             //stop game loop
             GameLoop.getGameLoopSingleton().stop();
         }
+         */ 
 
         #endregion
     }
