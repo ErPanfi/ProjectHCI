@@ -8,11 +8,15 @@ namespace ProjectHCI.KinectEngine
 {
     public interface ISceneManager
     {
-        void registerAsCollidableGameObject(IGameObject collidableGameObject);
 
-        void addGameObject(IGameObject gameObject);
+
+        void promoteToCollidableGameObject(IGameObject collidableGameObject);
+
+        void addGameObject(IGameObject gameObject, IGameObject parentGameObject);
 
         void removeGameObject(IGameObject gameObject);
+
+
 
 
         Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByTypeEnum();
@@ -22,14 +26,30 @@ namespace ProjectHCI.KinectEngine
         List<IGameObject> getCollaidableGameObjectList(GameObjectTypeEnum gameObjectTypeEnum);
 
 
-        void registerUiElement(UIElement uiElement);
-
-        void unregisterUiElement(UIElement uiElement);
-
-        UIElement getUiElementByUid(String uid);
 
 
-        Canvas getTargetCanvas();
+        void canvasDisplayImage(IGameObject gameObject, int zIndex);
+
+        void canvasUpdateImage(IGameObject gameObject, int zIndex);
+
+        void canvasRemoveImage(IGameObject gameObject);
+
+
+
+
+        //void boundUiElementToGameObject(UIElement uiElement, IGameObject targetGameObject);
+
+        //void unboundAllUiElementFromGameObject(IGameObject targetGameObject);
+
+        //void unboundUiElementFromGameObject(IGameObject targetGameObject, UIElement targetUiElement);
+
+
+
+        //List<UIElement> getUiElementListBoundToGameObject(IGameObject gameObject);
+
+
+
+        //Canvas getTargetCanvas();
 
     }
 }

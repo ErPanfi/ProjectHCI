@@ -20,24 +20,63 @@ namespace ProjectHCI.KinectEngine
     public interface IGameObject
     {
 
-        int getTimeToLiveMillis();
+ 
+        void setPosition(double xPosition, double yPosition);
 
-        int getCurrentTimeToLiveMillis();
-        
-        Geometry getGeometry();
+        double getXPosition();
 
-        ImageSource getImageSource();
+        double getYPosition();
+
+
+
+
+
+        void setBoundingBoxGeometry(Geometry boundingBoxGeometry);
+
+        Geometry getBoundingBoxGeometry();
+
+
+
+
+        void setImage(Image image);
+
+        Image getImage();
+
+       
+
+
+
+        void setExtraData(object extraData);
+
+        object getExtraData();
+
+
+
+
+        void setUid(String uid);
 
         String getUid();
 
-        GameObjectTypeEnum getObjectTypeEnum();
 
 
-        void updateTimeToLive(int deltaTimeMillis);
+
+        void setGameObjectTypeEnum(GameObjectTypeEnum gameObjectTypeEnum);
+
+        GameObjectTypeEnum getGameObjectTypeEnum();
+
+
+
+
+        void update(int deltaTimeMillis);
+
+
+
 
         bool isCollidable();
 
         bool isDead();
+
+
 
 
 
@@ -46,6 +85,9 @@ namespace ProjectHCI.KinectEngine
         void onRendererDisplayDelegate();
 
         void onRendererRemoveDelegate();
+
+
+
 
         void onCollisionEnterDelegate(IGameObject otherGameObject);
 

@@ -11,30 +11,41 @@ using System.Windows;
 
 namespace ProjectHCI.KinectEngine
 {
-    class UserGameObject : GameObjectBase
+    class UserGameObject : GameObject
     {
 
 
         private KinectSensorHelper kinectSensorHelper;
 
 
-        public UserGameObject(Geometry geometry,
-                              ImageSource imageSource,
+        public UserGameObject(double xPosition,
+                              double yPosition,
+                              Geometry boundingBoxGeometry,
+                              Image image,
                               SkeletonSmoothingFilter skeletonSmoothingFilter)
         {
-            Debug.Assert(geometry != null, "expected geometry != null");
-            Debug.Assert(imageSource != null, "expected imageSource != null");
-
-            base._timeToLiveMillis = -1;
-            base._currentTimeToLiveMillis = -1;
-            base._geometry = geometry;
-            base._imageSource = imageSource;
-            base._uid = base.generateUid();
-            base._objectType = GameObjectTypeEnum.UserObject;
+            
+            base._xPosition = xPosition;
+            base._yPosition = yPosition;
+            base._boundingBoxGeometry = boundingBoxGeometry;
+            base._extraData = null;
+            base._uid = Guid.NewGuid().ToString();
+            base._gameObjectTypeEnum = GameObjectTypeEnum.UserObject;
+            base._image = image;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
-            this.kinectSensorHelper.initializeKinect();
+            //this.kinectSensorHelper.initializeKinect();
 
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deltaTimeMillis"></param>
+        public override void update(int deltaTimeMillis)
+        {
+            //do nothing
         }
 
 
@@ -60,6 +71,19 @@ namespace ProjectHCI.KinectEngine
         /// <summary>
         /// 
         /// </summary>
+        public override void onRendererDisplayDelegate()
+        {
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.canvasDisplayImage(this, 10);
+
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="mainWindowCanvas"></param>
         public override void onRendererUpdateDelegate()
         {
@@ -70,80 +94,101 @@ namespace ProjectHCI.KinectEngine
 
             Skeleton skeleton = this.kinectSensorHelper.getTrackedSkeleton();
 
-            if (skeleton != null)
-            {
-
-                UIElement userUiElement = sceneManager.getUiElementByUid(base._uid);
-
-                Joint headJoint = skeleton.Joints[JointType.Head];
-                Joint shoulderCenterJoint = skeleton.Joints[JointType.ShoulderCenter];
-
-                
-                if (headJoint.TrackingState == JointTrackingState.Tracked)
-                {
-
-                    double canvasWidth = sceneManager.getTargetCanvas().RenderSize.Width;
-                    double canvasHeight = sceneManager.getTargetCanvas().RenderSize.Height;
-
-                    double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0,  1.0, 0, canvasWidth);
-                    double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y,  1.0, -1.0, 0, canvasHeight);
-
-                    
-                    TransformGroup transformGroup = new TransformGroup();
-                    //translate component
-                    transformGroup.Children.Add(new TranslateTransform(xScreenPosition, yScreenPosition));
-
-
-                    if (shoulderCenterJoint.TrackingState == JointTrackingState.Tracked)
-                    {
-
-                        Vector shoulderCenterVector = new Vector(shoulderCenterJoint.Position.X, shoulderCenterJoint.Position.Y);
-                        Vector headVector = new Vector(headJoint.Position.X, headJoint.Position.Y);
-
-                        Vector shoulderCenterToHeadVector = Vector.Subtract(headVector, shoulderCenterVector);
-                        shoulderCenterToHeadVector.Normalize();
-
-                        Vector upVector = new Vector(0, 1.0);
-
-                        double rotationAngle = Vector.AngleBetween(upVector, shoulderCenterToHeadVector);
-
-                        double xRotationCenter = base._geometry.Bounds.X + (base._geometry.Bounds.Width * 0.5);
-                        double yRotationCenter = base._geometry.Bounds.Y + (base._geometry.Bounds.Height * 0.5);
-
-                        //rotation component
-                        transformGroup.Children.Add(new RotateTransform(-1 * rotationAngle, xRotationCenter, yRotationCenter));
-
-                    }
-
-
-                    transformGroup.Freeze();
-
-
-                    base._geometry.Transform = transformGroup;
-
-
-                    Application.Current.Dispatcher.Invoke(new Action(
-                        delegate()
-                        {
-                            userUiElement.RenderTransform = transformGroup;
- #if DEBUG
-                            //********************* translateBoundingBox 
-                            UIElement boundingBoxUiElement = sceneManager.getUiElementByUid("BB_" + base._uid);
-                            boundingBoxUiElement.RenderTransform = transformGroup;
-                            //*********************
- #endif
-
-                        }
-                    ));
-                    
-
-
-
-                    
-                }
-            }
+//             if (skeleton != null)
+//             {
+// 
+//                 foreach (UIElement uiElement0 in sceneManager.getUiElementListBoundToGameObject(this))
+//                 {
+// 
+//                     //UIElement userUiElement = sceneManager.getUiElementByUid(base._uid);
+// 
+// 
+//                     Joint headJoint = skeleton.Joints[JointType.Head];
+//                     Joint shoulderCenterJoint = skeleton.Joints[JointType.ShoulderCenter];
+// 
+// 
+//                     if (headJoint.TrackingState == JointTrackingState.Tracked)
+//                     {
+// 
+//                         double canvasWidth = sceneManager.getTargetCanvas().RenderSize.Width;
+//                         double canvasHeight = sceneManager.getTargetCanvas().RenderSize.Height;
+// 
+//                         double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0, 1.0, 0, canvasWidth);
+//                         double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y, 1.0, -1.0, 0, canvasHeight);
+// 
+// 
+//                         TransformGroup transformGroup = new TransformGroup();
+//                         //translate component
+//                         transformGroup.Children.Add(new TranslateTransform(xScreenPosition, yScreenPosition));
+// 
+// 
+//                         if (shoulderCenterJoint.TrackingState == JointTrackingState.Tracked)
+//                         {
+// 
+//                             Vector shoulderCenterVector = new Vector(shoulderCenterJoint.Position.X, shoulderCenterJoint.Position.Y);
+//                             Vector headVector = new Vector(headJoint.Position.X, headJoint.Position.Y);
+// 
+//                             Vector shoulderCenterToHeadVector = Vector.Subtract(headVector, shoulderCenterVector);
+//                             shoulderCenterToHeadVector.Normalize();
+// 
+//                             Vector upVector = new Vector(0, 1.0);
+// 
+//                             double rotationAngle = Vector.AngleBetween(upVector, shoulderCenterToHeadVector);
+// 
+//                             double xRotationCenter = base._boundingBoxGeometry.Bounds.X + (base._boundingBoxGeometry.Bounds.Width * 0.5);
+//                             double yRotationCenter = base._boundingBoxGeometry.Bounds.Y + (base._boundingBoxGeometry.Bounds.Height * 0.5);
+// 
+//                             //rotation component
+//                             transformGroup.Children.Add(new RotateTransform(-1 * rotationAngle, xRotationCenter, yRotationCenter));
+// 
+//                         }
+// 
+// 
+//                         transformGroup.Freeze();
+// 
+// 
+//                         base._boundingBoxGeometry.Transform = transformGroup;
+// 
+// 
+//                         Application.Current.Dispatcher.Invoke(new Action(
+//                             delegate()
+//                             {
+//                                 uiElement0.RenderTransform = transformGroup;
+//                                 //#if DEBUG
+//                                 //                                //********************* translateBoundingBox 
+//                                 //                                UIElement boundingBoxUiElement = sceneManager.getUiElementByUid("BB_" + base._uid);
+//                                 //                                boundingBoxUiElement.RenderTransform = transformGroup;
+//                                 //                                //*********************
+//                                 //#endif
+// 
+//                             }
+//                         ));
+// 
+// 
+// 
+// 
+// 
+//                     }
+//                 }
+//             }
 
         }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void onRendererRemoveDelegate()
+        {
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.canvasRemoveImage(this);
+
+
+        }
+
+
 
 
         /// <summary>
@@ -166,9 +211,9 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        private double mapValueToNewRange(double value, 
-                                          double oldLowerLimit, 
-                                          double oldHigherLimit, 
+        private double mapValueToNewRange(double value,
+                                          double oldLowerLimit,
+                                          double oldHigherLimit,
                                           double newLowerLimit,
                                           double newHigherLimit)
         {

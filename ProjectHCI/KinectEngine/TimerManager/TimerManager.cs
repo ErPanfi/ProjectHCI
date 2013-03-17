@@ -36,7 +36,7 @@ namespace ProjectHCI.KinectEngine
             {
                 foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value)
                 {
-                    gameObject00.updateTimeToLive(Time.getDeltaTimeMillis());
+                    gameObject00.update(Time.getDeltaTimeMillis());
 
 
                     Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByType00 = sceneManager.getCollidableGameObjectListMapByTypeEnum();
@@ -44,7 +44,7 @@ namespace ProjectHCI.KinectEngine
                     
 
                     if (gameObject00.isCollidable()
-                        && !sceneManager.getCollaidableGameObjectList(gameObject00.getObjectTypeEnum()).Contains(gameObject00)){
+                        && !sceneManager.getCollaidableGameObjectList(gameObject00.getGameObjectTypeEnum()).Contains(gameObject00)){
     
                         //if( gameObject00.GetType() == typeof(NotUserFriendlyGameObject) )
                         //{
@@ -52,7 +52,7 @@ namespace ProjectHCI.KinectEngine
                         //}
 
 
-                        sceneManager.registerAsCollidableGameObject(gameObject00);
+                        sceneManager.promoteToCollidableGameObject(gameObject00);
 
                     }
 

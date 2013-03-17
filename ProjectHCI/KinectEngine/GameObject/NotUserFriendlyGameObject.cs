@@ -6,13 +6,15 @@ using System.Text;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Diagnostics;
+using System.Windows;
 
 namespace ProjectHCI.KinectEngine
 {
-    public class NotUserFriendlyGameObject : GameObjectBase
+    public class NotUserFriendlyGameObject : GameObject
     {
 
-        private int notCollidableTimeMillis;
+        private int collidableTimeMillis;
+        private int timeToLiveMillis;
 
         /// <summary>
         /// 
@@ -21,27 +23,40 @@ namespace ProjectHCI.KinectEngine
         /// <param name="imageSource"></param>
         /// <param name="timeToLiveMillis"></param>
         /// <param name="chopDurationMillis"></param>
-        public NotUserFriendlyGameObject(Geometry geometry,
-                                         ImageSource imageSource,
+        public NotUserFriendlyGameObject(double xPosition,
+                                         double yPosition,
+                                         Geometry boundingBoxGeometry,
+                                         Image image,
                                          int timeToLiveMillis,
                                          int notCollidableTimeMillis)
         {
-            Debug.Assert(geometry != null, "expected geometry != null");
-            Debug.Assert(imageSource != null, "expected imageSource != null");
             Debug.Assert(timeToLiveMillis > 0, "expected timeToLiveMillis > 0");
             Debug.Assert(notCollidableTimeMillis > 0, "expected notCollidableTimeMillis > 0");
             Debug.Assert(notCollidableTimeMillis <= timeToLiveMillis, "expected notCollidableTimeMillis <= timeToLiveMillis");
 
-            base._timeToLiveMillis = timeToLiveMillis;
-            base._currentTimeToLiveMillis = timeToLiveMillis;
-            base._geometry = geometry;
-            base._imageSource = imageSource;
-            base._uid = base.generateUid();
-            base._objectType = GameObjectTypeEnum.UnfriendlyObject;
+           
 
-            this.notCollidableTimeMillis = notCollidableTimeMillis;
+            base._xPosition = xPosition;
+            base._yPosition = yPosition;
+            base._boundingBoxGeometry = boundingBoxGeometry;
+            base._extraData = null;
+            base._uid = Guid.NewGuid().ToString();
+            base._gameObjectTypeEnum = GameObjectTypeEnum.UnfriendlyObject;
+            base._image = image;
+
+            this.timeToLiveMillis = timeToLiveMillis;
+            this.collidableTimeMillis = this.timeToLiveMillis - notCollidableTimeMillis;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deltaTimeMillis"></param>
+        public override void update(int deltaTimeMillis)
+        {
+            this.timeToLiveMillis -= deltaTimeMillis;
+        }
 
         /// <summary>
         /// 
@@ -49,8 +64,7 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public override bool isCollidable()
         {
-            int collidableTimeMillis = base._timeToLiveMillis - this.notCollidableTimeMillis;
-            return base._currentTimeToLiveMillis <= collidableTimeMillis;
+            return this.timeToLiveMillis <= collidableTimeMillis;
         }
 
         /// <summary>
@@ -59,18 +73,50 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public override bool isDead()
         {
-            return base._currentTimeToLiveMillis <= 0;
+            return this.timeToLiveMillis <= 0;
         }
 
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="mainWindowCanvas"></param>
-        //public override void onRendererUpdateDelegate()
-        //{
-        //    //TODO interpolate color
-        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void onRendererDisplayDelegate()
+        {
+
+            if (this.getImage() == null)
+            {
+                return;
+            }
+
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.canvasDisplayImage(this, 0);
+
+
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void onRendererUpdateDelegate()
+        {
+            //do nothing... maybe change color
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void onRendererRemoveDelegate()
+        {
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.canvasRemoveImage(this);
+
+        }
+
+
 
 
         /// <summary>

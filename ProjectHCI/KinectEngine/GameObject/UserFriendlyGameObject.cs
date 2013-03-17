@@ -6,31 +6,52 @@ using System.Text;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Diagnostics;
+using System.Windows;
 
 namespace ProjectHCI.KinectEngine
 {
-    public class UserFriendlyGameObject : GameObjectBase
+    public class UserFriendlyGameObject : GameObject
     {
-        
+
+        private int timeToLiveMillis;
+
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="geometry"></param>
-        /// <param name="imageSource"></param>
+        /// <param name="xPosition"></param>
+        /// <param name="yPosition"></param>
+        /// <param name="boundingBoxGeometry"></param>
+        /// <param name="image"></param>
         /// <param name="timeToLiveMillis"></param>
-        public UserFriendlyGameObject(Geometry geometry,
-                                      ImageSource imageSource,
+        public UserFriendlyGameObject(double xPosition,
+                                      double yPosition,
+                                      Geometry boundingBoxGeometry,
+                                      Image image,
                                       int timeToLiveMillis)
         {
-            Debug.Assert(geometry != null, "expected geometry != null");
-            Debug.Assert(imageSource != null, "expected imageSource != null");
 
-            base._timeToLiveMillis = timeToLiveMillis;
-            base._currentTimeToLiveMillis = timeToLiveMillis;
-            base._geometry = geometry;
-            base._imageSource = imageSource;
-            base._uid = base.generateUid();
-            base._objectType = GameObjectTypeEnum.FriendlyObject;
+            Debug.Assert(timeToLiveMillis > 0, "expected timeToLiveMillis > 0");
+
+            base._xPosition = xPosition;
+            base._yPosition = yPosition;
+            base._boundingBoxGeometry = boundingBoxGeometry;
+            base._extraData = null;
+            base._uid = Guid.NewGuid().ToString();
+            base._gameObjectTypeEnum = GameObjectTypeEnum.FriendlyObject;
+            base._image = image;
+
+            this.timeToLiveMillis = timeToLiveMillis;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deltaTimeMillis"></param>
+        public override void update(int deltaTimeMillis)
+        {
+            this.timeToLiveMillis -= deltaTimeMillis;
         }
 
 
@@ -41,7 +62,7 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public override bool isCollidable()
         {
-            return base._currentTimeToLiveMillis >= 0;
+            return this.timeToLiveMillis >= 0;
         }
 
         /// <summary>
@@ -50,20 +71,52 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         public override bool isDead()
         {
-            return base._currentTimeToLiveMillis <= 0;
+            return this.timeToLiveMillis <= 0;
         }
 
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="mainWindowCanvas"></param>
-        //public override void onRendererUpdateDelegate()
-        //{
-        //    //TODO maybe bouncing icons...
-        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void onRendererDisplayDelegate()
+        {
+
+            if (this.getImage() == null)
+            {
+                return;
+            }
+
+
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.canvasDisplayImage(this, 1);
+
+        }
 
         
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void onRendererUpdateDelegate()
+        {
+            //do nothing, maybe bounching icon
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void onRendererRemoveDelegate()
+        {
+
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.canvasRemoveImage(this);
+
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
