@@ -70,11 +70,18 @@ namespace ProjectHCI.KinectEngine
             SceneNode targetSceneNode = SceneNode.getSceneNodeByGameObject(this.sceneNodeTree, parentGameObject);
             Debug.Assert(targetSceneNode != null, "no specified parentGameObject found in SceneNode tree");
 
+            //set position relative to the parent.
             if (parentGameObject != null)
             {
                 double xPositionRelativeToParent = parentGameObject.getXPosition() + gameObject.getXPosition();
                 double yPositionRelativeToParent = parentGameObject.getYPosition() + gameObject.getYPosition();
                 gameObject.setPosition(xPositionRelativeToParent, yPositionRelativeToParent);
+            }
+
+            //update the geometry position relative to the gameObject position.
+            if (gameObject.getBoundingBoxGeometry() != null)
+            {
+                gameObject.getBoundingBoxGeometry().Transform = new TranslateTransform(gameObject.getXPosition(), gameObject.getYPosition());
             }
             
 
@@ -169,9 +176,13 @@ namespace ProjectHCI.KinectEngine
             
 
             Image nonUiThreadImage = gameObject.getImage();
+
             ImageSource imageSourceFrozen = (ImageSource) nonUiThreadImage.Source.GetAsFrozen();
             double imageWidth = nonUiThreadImage.Width;
             double imageHeight = nonUiThreadImage.Height;
+            Stretch streachImage = nonUiThreadImage.Stretch;
+            StretchDirection streachDirection = nonUiThreadImage.StretchDirection;
+            Transform renderTransformFrozen = (Transform)nonUiThreadImage.RenderTransform.GetAsFrozen();
 
             String uid = Guid.NewGuid().ToString();
 
@@ -183,12 +194,13 @@ namespace ProjectHCI.KinectEngine
                     uiThreadImage.Source = imageSourceFrozen;
                     uiThreadImage.Width = imageWidth;
                     uiThreadImage.Height = imageHeight;
+                    uiThreadImage.Stretch = streachImage;
+                    uiThreadImage.StretchDirection = streachDirection;
+                    uiThreadImage.RenderTransform = renderTransformFrozen;
 
                     this.targetCanvas.Children.Add(uiThreadImage);
+                    this.uiThreadSetCanvasPosition(uiThreadImage, gameObject.getXPosition(), gameObject.getYPosition(), zIndex);
 
-                    Canvas.SetTop(uiThreadImage, gameObject.getYPosition());
-                    Canvas.SetLeft(uiThreadImage, gameObject.getXPosition());
-                    Canvas.SetZIndex(uiThreadImage, zIndex);
 
                 }
              ));
@@ -203,16 +215,46 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <param name="gameObject"></param>
-        public void canvasUpdateImage(IGameObject gameObject, int zIndex)
+        public void canvasUpdateImage(IGameObject gameObject)
         {
 
             Debug.Assert(gameObject != null, "expected gameObject != null");
             Debug.Assert(this.uiThreadImageUidMapByGameObject.ContainsKey(gameObject), "you must display this gameObject before try to update it.");
 
-            this.canvasRemoveImage(gameObject);
-            this.canvasDisplayImage(gameObject, zIndex);
+            String uiThreadImageUid = this.uiThreadImageUidMapByGameObject[gameObject];
 
+            ImageSource imageSourceFrozen = (ImageSource)gameObject.getImage().Source.GetAsFrozen();
+            double imageWidth = gameObject.getImage().Width;
+            double imageHeight = gameObject.getImage().Height;
+            Stretch streachImage = gameObject.getImage().Stretch;
+            StretchDirection streachDirection = gameObject.getImage().StretchDirection;
+            Transform renderTransformFrozen = (Transform)gameObject.getImage().RenderTransform.GetAsFrozen();
 
+            
+
+            this.targetCanvas.Dispatcher.Invoke(new Action(
+                delegate()
+                {
+                    UIElement uiElement = this.uiThreadGetUiElement(uiThreadImageUid);
+                    int zIndex = Canvas.GetZIndex(uiElement);
+                    
+                    this.targetCanvas.Children.Remove(uiElement);
+
+                    Image uiThreadImage = new Image();
+                    uiThreadImage.Uid = uiThreadImageUid;
+                    uiThreadImage.Source = imageSourceFrozen;
+                    uiThreadImage.Width = imageWidth;
+                    uiThreadImage.Height = imageHeight;
+                    uiThreadImage.Stretch = streachImage;
+                    uiThreadImage.StretchDirection = streachDirection;
+                    uiThreadImage.RenderTransform = renderTransformFrozen;
+
+                    this.targetCanvas.Children.Add(uiThreadImage);
+                    this.uiThreadSetCanvasPosition(uiThreadImage, gameObject.getXPosition(), gameObject.getYPosition(), zIndex);
+
+                }
+             ));
+ 
         }
 
 
@@ -234,18 +276,7 @@ namespace ProjectHCI.KinectEngine
                delegate()
                {
 
-                   UIElement uiElementToRemove = null;
-                   foreach (UIElement uiElement0 in this.targetCanvas.Children)
-                   {
-                       if (uiElement0.Uid.Equals(uiThreadImageUid))
-                       {
-                           uiElementToRemove = uiElement0;
-                           break;
-                       }
-                   }
-
-                   Debug.Assert(uiElementToRemove != null, "the specified gameObject is no longer present into the canvas! unexpected remove! use ISceneManager.removeFromCanvas for a safety remove.");
-                   this.targetCanvas.Children.Remove(uiElementToRemove);
+                   this.targetCanvas.Children.Remove(this.uiThreadGetUiElement(uiThreadImageUid));
                }
             ));
 
@@ -253,6 +284,71 @@ namespace ProjectHCI.KinectEngine
             this.uiThreadImageUidMapByGameObject.Remove(gameObject);
 
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <param name="xCanvasPosition"></param>
+        /// <param name="yCanvasPosition"></param>
+        public void applyTranslation(IGameObject gameObject, double xOffset, double yOffset)
+        {
+
+            Debug.Assert(gameObject != null, "expected gameObject != null");
+            SceneNode targetSceneNode = SceneNode.getSceneNodeByGameObject(this.sceneNodeTree, gameObject);
+            Debug.Assert(targetSceneNode != null, "gameObject not found in the scene node tree");
+
+
+            this.recursiveApplyTranslation(targetSceneNode, xOffset, yOffset);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <param name="clockwiseDegreeAngle"></param>
+        /// <param name="xRelativeRotationCenter"></param>
+        /// <param name="yRelativeRotationCenter"></param>
+        public void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRelativeRotationCenter, double yRelativeRotationCenter)
+        {
+            Debug.Assert(gameObject != null, "expected gameObject != null");
+            SceneNode targetSceneNode = SceneNode.getSceneNodeByGameObject(this.sceneNodeTree, gameObject);
+            Debug.Assert(targetSceneNode != null, "gameObject not found in the scene node tree");
+
+            this.recursiveApplyRotation(targetSceneNode, clockwiseDegreeAngle, xRelativeRotationCenter, yRelativeRotationCenter);
+
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public double getCanvasWidth()
+        {
+            return this.targetCanvas.RenderSize.Width;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public double getCanvasHeight()
+        {
+            return this.targetCanvas.RenderSize.Height;
+        }
+
+
+
+
+
+
+
+
 
 
 
@@ -277,6 +373,90 @@ namespace ProjectHCI.KinectEngine
 
             sceneNode.getParent().removeChild(sceneNode);
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sceneNode"></param>
+        /// <param name="transformGroup"></param>
+        /// <param name="zIndex"></param>
+        private void recursiveApplyTranslation(SceneNode sceneNode, double xOffset, double yOffset)
+        {
+            IGameObject gameObject = sceneNode.getSceneNodeGameObject();
+            gameObject.setPosition(gameObject.getXPosition() + xOffset, gameObject.getYPosition() + yOffset);
+
+            if (gameObject.getBoundingBoxGeometry() != null)
+            {
+                gameObject.getBoundingBoxGeometry().Transform = new TranslateTransform(gameObject.getXPosition(), 
+                                                                                       gameObject.getYPosition());
+            }
+
+
+            if (this.uiThreadImageUidMapByGameObject.ContainsKey(gameObject))
+            {
+                this.canvasUpdateImage(gameObject);
+            }
+
+
+            foreach (SceneNode childSceneNode0 in sceneNode.getChildList())
+            {
+                this.recursiveApplyTranslation(childSceneNode0, xOffset, yOffset);
+            }
+
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="targetSceneNode"></param>
+        /// <param name="clockwiseDegreeAngle"></param>
+        /// <param name="xRelativeRotationCenter"></param>
+        /// <param name="yRelativeRotationCenter"></param>
+        public void recursiveApplyRotation(SceneNode targetSceneNode, double clockwiseDegreeAngle, double xRelativeRotationCenter, double yRelativeRotationCenter)
+        {
+
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uiElementUid"></param>
+        /// <returns></returns>
+        private UIElement uiThreadGetUiElement(String uiElementUid)
+        {
+            UIElement uiElement = null;
+            foreach (UIElement uiElement0 in this.targetCanvas.Children)
+            {
+                if (uiElement0.Uid.Equals(uiElementUid))
+                {
+                    uiElement = uiElement0;
+                    break;
+                }
+            }
+            Debug.Assert(uiElement != null, "no uiElement found with the specified uid");
+
+            return uiElement;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uiElement"></param>
+        /// <param name="xPosition"></param>
+        /// <param name="yPosition"></param>
+        /// <param name="zIndex"></param>
+        private void uiThreadSetCanvasPosition(UIElement uiElement, double xPosition, double yPosition, int zIndex)
+        {
+            Canvas.SetTop(uiElement, yPosition);
+            Canvas.SetLeft(uiElement, xPosition);
+            Canvas.SetZIndex(uiElement, zIndex);
+        }
+
+
 
 
         /// <summary>
@@ -323,167 +503,6 @@ namespace ProjectHCI.KinectEngine
             }
 
         }
-
-        
-
-
-        
-
-
-
-        
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="uiElement"></param>
-        //public void registerUiElement(UIElement uiElement)
-        //{
-        //    Debug.Assert(!this.uiElementMapByUid.ContainsKey(uiElement.Uid), "uiElement already present in uiElementListMapByUid");
-
-        //    this.uiElementMapByUid.Add(uiElement.Uid, uiElement);
-
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="uid"></param>
-        ///// <returns></returns>
-        //public UIElement getUiElementByUid(String uid)
-        //{
-        //    Debug.Assert(this.uiElementMapByGameObjectUid.ContainsKey(uid), "unkown uiElement");
-
-        //    return this.uiElementMapByGameObjectUid[uid];
-        //}
-
-
-
-        
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="uiElement"></param>
-        ///// <param name="targetGameObject"></param>
-        //public void boundUiElementToGameObject(UIElement uiElement, IGameObject targetGameObject)
-        //{
-
-        //    if (!this.uiElementListMapByGameObjectUid.ContainsKey(targetGameObject.getUid()))
-        //    {
-        //        this.uiElementListMapByGameObjectUid.Add(targetGameObject.getUid(), new List<UIElement>(5));
-        //    }
-
-        //    this.uiElementListMapByGameObjectUid[targetGameObject.getUid()].Add(uiElement);
-
-        //}
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="targetGameObject"></param>
-        //public void unboundAllUiElementFromGameObject(IGameObject targetGameObject)
-        //{
-        //    Debug.Assert(this.uiElementListMapByGameObjectUid.ContainsKey(targetGameObject.getUid()), "this gameObject is not bound to any uiElement");
-
-        //    this.uiElementListMapByGameObjectUid.Remove(targetGameObject.getUid());
-
-        //}
-
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="targetGameObject"></param>
-        ///// <param name="targetUiElement"></param>
-        //public void unboundUiElementFromGameObject(IGameObject targetGameObject, UIElement targetUiElement)
-        //{
-        //    Debug.Assert(this.uiElementListMapByGameObjectUid.ContainsKey(targetGameObject.getUid()), "this gameObject is not bound to any uiElement");
-
-        //    List<UIElement> boundedUiElementList = this.uiElementListMapByGameObjectUid[targetGameObject.getUid()];
-        //    Debug.Assert(boundedUiElementList.Contains(targetUiElement), "the specified uiElement is not bound to the specified gameObject");
-
-        //    boundedUiElementList.Remove(targetUiElement);
-        //}
-
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="gameObject"></param>
-        ///// <returns></returns>
-        //public List<UIElement> getUiElementListBoundToGameObject(IGameObject gameObject)
-        //{
-        //    Debug.Assert(this.uiElementListMapByGameObjectUid.ContainsKey(gameObject.getUid()), "this gameObject is not bound to any uiElement");
-
-        //    return new List<UIElement>(this.uiElementListMapByGameObjectUid[gameObject.getUid()]);
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="uiElement"></param>
-        //public void unregisterUiElement(UIElement uiElement)
-        //{
-        //    Debug.Assert(this.uiElementMapByUid.ContainsKey(uiElement.Uid), "unkown uiElement");
-
-        //    this.uiElementMapByUid.Remove(uiElement.Uid);
-
-        //}
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="gameObject"></param>
-        //public void removeGameObject(IGameObject gameObject)
-        //{
-        //    this.deleteGameObject(gameObject, this.gameObjectListMapByTypeEnum);
-        //    this.deleteGameObject(gameObject, this.collidableGameObjectListMapByTypeEnum);
-
-        //    //if (this.uiElementListMapByGameObjectUid.ContainsKey(gameObject.getUid()))
-        //    //{
-        //    //    this.unboundAllUiElementFromGameObject(gameObject);
-        //    //}
-
-        //}
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
-        //public Dictionary<GameObjectTypeEnum, List<IGameObject>> getGameObjectListMapByTypeEnum()
-        //{
-        //    return this.gameObjectListMapByTypeEnum;
-        //}
-
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
-        //public Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByTypeEnum()
-        //{
-        //    return this.collidableGameObjectListMapByTypeEnum;
-        //}
-
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
-        //public Canvas getTargetCanvas()
-        //{
-        //    return this.targetCanvas;
-        //}
-
 
 
     }

@@ -21,9 +21,9 @@ namespace ProjectHCI.KinectEngine
 
             Debug.Assert(gameObject.getBoundingBoxGeometry() != null, "expected gameObject.getBoundingBoxGeometry() != null");
 
-            base._xPosition = gameObject.getBoundingBoxGeometry().Bounds.X;
-            base._yPosition = gameObject.getBoundingBoxGeometry().Bounds.Y;
-            base._boundingBoxGeometry = gameObject.getBoundingBoxGeometry();
+            base._xPosition = gameObject.getBoundingBoxGeometry().Bounds.X - gameObject.getXPosition();
+            base._yPosition = gameObject.getBoundingBoxGeometry().Bounds.Y - gameObject.getYPosition();
+            base._boundingBoxGeometry = null;
             base._extraData = null;
             base._uid = Guid.NewGuid().ToString();
             base._gameObjectTypeEnum = GameObjectTypeEnum.DebugObject;
@@ -85,6 +85,12 @@ namespace ProjectHCI.KinectEngine
         /// </summary>
         public override void onRendererUpdateDelegate()
         {
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+
+            base._xPosition = gameObject.getBoundingBoxGeometry().Bounds.X;
+            base._yPosition = gameObject.getBoundingBoxGeometry().Bounds.Y;
+
+
             if (this.previousCollidableState != this.gameObject.isCollidable())
             {
                 Brush boundingBoxBrush = gameObject.isCollidable() ? Brushes.Red : Brushes.Yellow;
@@ -95,13 +101,12 @@ namespace ProjectHCI.KinectEngine
                 boundingBoxImage.Source = boundingBoxDrawingImage;
 
                 base._image = boundingBoxImage;
-
-                ISceneManager sceneManager = GameLoop.getSceneManager();
-                sceneManager.canvasUpdateImage(this, 100);
-
+                
                 this.previousCollidableState = gameObject.isCollidable();
 
             }
+
+            sceneManager.canvasUpdateImage(this);
         }
 
         /// <summary>

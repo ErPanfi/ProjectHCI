@@ -94,7 +94,12 @@ namespace ProjectHCI.KinectEngine
             cutGeometry.Freeze();
             cutImage.Freeze();
 
+<<<<<<< HEAD
+            return new NotUserFriendlyGameObject(cutGeometry, cutImage, random.Next(100, 10000),3000);
+
+=======
             return new NotUserFriendlyGameObject(cutGeometry, cutImage, 4000, 3500);
+>>>>>>> 3478ac262c8726b019443bcfd75d6199706bf15e
         }
 
         protected IGameObject spawnUserGameObject()
@@ -124,6 +129,12 @@ namespace ProjectHCI.KinectEngine
             imageSource.Freeze();
 
             return new UserFriendlyGameObject(geometry, imageSource, random.Next(100, 100000));
+        }
+
+
+        public List<IGameObject> getSpawnedObjects()
+        {
+            throw new NotImplementedException();
         }
     }
 }

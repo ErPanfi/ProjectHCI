@@ -22,20 +22,21 @@ namespace ProjectHCI.KinectEngine
         //private ISceneBrain sceneBrain;
         private ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet;
         private List<KeyValuePair<IGameObject, IGameObject>> gameObjectKeyValuePairList;
-
+        private CollisionRecorder collisionRecorder;
         /// <summary>
         /// 
         /// </summary>
         public CollisionManager()
         {
             this.gameObjectKeyValuePairList = new List<KeyValuePair<IGameObject, IGameObject>>();
+            this.collisionRecorder = new CollisionRecorder();
         }
 
 
         /// <summary>
-        /// 
+        /// create temporary list of collidable IGameObject's pair for current frame 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>collision list</returns>
         public List<KeyValuePair<IGameObject, IGameObject>> createCollisionList()
         {
             ISceneManager sceneManager = GameLoop.getSceneManager();
@@ -44,6 +45,8 @@ namespace ProjectHCI.KinectEngine
                 gameObjectKeyValuePairList.Clear();
             }
 
+            collisionRecorder.initializeTest();
+            
             foreach (KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum> gameObjectKeyValuePair in typeEnumCollidablePairSet)
             {
                 List<IGameObject> firstGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectKeyValuePair.Key);
@@ -52,15 +55,19 @@ namespace ProjectHCI.KinectEngine
                 {
                     secondGameObjectList.ForEach(delegate(IGameObject gameObjectInSecondList)
                     {
-                        Point[] p = collisionDetect(gameObjectInFirstList.getGeometry(), gameObjectInSecondList.getGeometry());
-                        if (p.Length > 0)
+
+                        Point[] collisionPointArray = collisionDetect(gameObjectInFirstList.getBoundingBoxGeometry(), gameObjectInSecondList.getBoundingBoxGeometry());
+                        if (collisionPointArray.Length > 0)
                         {
+                            collisionRecorder.storeOrConfirmCollision(new KeyValuePair<IGameObject, IGameObject>(gameObjectInFirstList,gameObjectInSecondList));
                             gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObjectInFirstList, gameObjectInSecondList));
                         }
                     });
                 });
 
             }
+            collisionRecorder.removeNotCollidableElementsInCurrentFrame(sceneManager);
+
             return gameObjectKeyValuePairList;
         }
 
@@ -93,8 +100,6 @@ namespace ProjectHCI.KinectEngine
         }
 
 
-
-
         /// <summary>
         /// initialize set of object's pair inside collision manager
         /// </summary>
@@ -104,6 +109,99 @@ namespace ProjectHCI.KinectEngine
             this.typeEnumCollidablePairSet = typeEnumCollidablePairSet;
         }
 
+        /// <summary>
+        /// repository for collided IgameObject
+        /// </summary>
+        private class CollisionRecorder
+        {
+            Dictionary<KeyValuePair<IGameObject, IGameObject>, bool> collisionStateMapByGameObjectPair;
+
+            public CollisionRecorder()
+            {
+                collisionStateMapByGameObjectPair = new Dictionary<KeyValuePair<IGameObject, IGameObject>, bool>();
+            }
+
+            /// <summary>
+            /// prepare collisionRecorder object for current frame
+            /// </summary>
+            public void initializeTest()
+            {
+                if (collisionStateMapByGameObjectPair.Count > 0)
+                {
+                    //TODO:foreach è in sola lettura non va bene
+                    //foreach (KeyValuePair<KeyValuePair<IGameObject, IGameObject>, bool> dictionaryElement in collisionRecordDictionary)
+                    //foreach (KeyValuePair<IGameObject, IGameObject> dictionaryElement in collisionRecordDictionary.Keys)
+                    for (int i=0; i < collisionStateMapByGameObjectPair.Count; i++ )
+                    {
+                        //collisionRecordDictionary.Remove(dictionaryElement.Key);
+                        //collisionRecordDictionary.Add(dictionaryElement.Key, false);
+                        //collisionRecordDictionary[dictionaryElement] = false;
+                        collisionStateMapByGameObjectPair[collisionStateMapByGameObjectPair.ElementAt(i).Key] = false;
+                    }
+                }
+            }
+
+            /// <summary>
+            /// remove IGameObject's pair are no longer in collision
+            /// </summary>
+            public void removeNotCollidableElementsInCurrentFrame(ISceneManager sceneManager)
+            {
+                if (collisionStateMapByGameObjectPair.Count > 0)
+                {
+                    
+                    for (int i=0; i < collisionStateMapByGameObjectPair.Count; i++ )
+                    {
+                    //foreach (KeyValuePair<KeyValuePair<IGameObject, IGameObject>, bool> dictionaryElement in collisionRecordDictionary)
+                    //{
+                        //if (collisionRecordDictionary[dictionaryElement.Key] == false)
+                        //{
+                        //    collisionRecordDictionary.Remove(dictionaryElement.Key);
+                        //    dictionaryElement.Key.Key.onCollisionExitDelegate(dictionaryElement.Key.Value);
+                        //    dictionaryElement.Key.Value.onCollisionExitDelegate(dictionaryElement.Key.Key);
+                        //}
+                        KeyValuePair<IGameObject, IGameObject> gameObjectPair = collisionStateMapByGameObjectPair.ElementAt(i).Key;
+                        if (collisionStateMapByGameObjectPair[gameObjectPair] == false)
+                        {
+                            
+                            List<IGameObject> firstGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectPair.Key.getGameObjectTypeEnum());
+                            List<IGameObject> secondGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectPair.Value.getGameObjectTypeEnum());
+
+                            if(firstGameObjectList.Contains(gameObjectPair.Key)){
+                                gameObjectPair.Key.onCollisionExitDelegate(gameObjectPair.Value);
+                            }
+                            if (secondGameObjectList.Contains(gameObjectPair.Value))
+                            {
+                                gameObjectPair.Value.onCollisionExitDelegate(gameObjectPair.Key);
+                            }
+                            
+                            //remove element from dictionary
+                            collisionStateMapByGameObjectPair.Remove(gameObjectPair);
+                        }
+
+                    }
+                }
+            }
+
+            /// <summary>
+            /// add or confirm collidable game objects in repository
+            /// </summary>
+            /// <param name="currentGameObjectPair">IGameobject's pair</param>
+            public void storeOrConfirmCollision(KeyValuePair<IGameObject, IGameObject> currentGameObjectPair)
+            {
+                if (collisionStateMapByGameObjectPair.ContainsKey(currentGameObjectPair))
+                {
+                    collisionStateMapByGameObjectPair[currentGameObjectPair] = true;
+                }
+                else
+                {
+                    collisionStateMapByGameObjectPair.Add(currentGameObjectPair, true);
+                    // chiama l'enterCollisionDelegate su ogni oggetto di currentGameObjectPair
+                    currentGameObjectPair.Key.onCollisionEnterDelegate(currentGameObjectPair.Value);
+                    currentGameObjectPair.Value.onCollisionEnterDelegate(currentGameObjectPair.Key);
+                }
+
+            }
+        }
 
 
     }

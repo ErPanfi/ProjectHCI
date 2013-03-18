@@ -23,7 +23,7 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        void ISpawnerManager.awaken()
+        public void awaken()
         {
             if (firstTime)
             {
@@ -126,6 +126,10 @@ namespace ProjectHCI.KinectEngine
             
         }
 
+        public List<IGameObject> getSpawnedObjects()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
 
 
     }

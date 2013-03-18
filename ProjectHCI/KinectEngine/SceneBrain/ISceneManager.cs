@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ProjectHCI.KinectEngine
 {
@@ -30,9 +31,18 @@ namespace ProjectHCI.KinectEngine
 
         void canvasDisplayImage(IGameObject gameObject, int zIndex);
 
-        void canvasUpdateImage(IGameObject gameObject, int zIndex);
+        void canvasUpdateImage(IGameObject gameObject);
 
         void canvasRemoveImage(IGameObject gameObject);
+
+        void applyTranslation(IGameObject gameObject, double xCanvasPosition, double yCanvasPosition);
+
+
+
+
+        double getCanvasWidth();
+
+        double getCanvasHeight();
 
 
 

@@ -14,7 +14,8 @@ namespace ProjectHCI.KinectEngine
         DebugObject,
         UserObject,
         FriendlyObject,
-        UnfriendlyObject
+        UnfriendlyObject,
+        UIObject
     }
 
     public interface IGameObject

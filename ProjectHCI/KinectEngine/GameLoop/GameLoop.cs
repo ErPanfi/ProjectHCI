@@ -46,6 +46,7 @@ namespace ProjectHCI.KinectEngine
 
 
             gameLoopThread = new Thread(new ThreadStart(this.runLoop));
+            gameLoopThread.SetApartmentState(ApartmentState.STA);
             gameLoopThread.Name = "GameLoopThread";
             gameLoopThread.IsBackground = true; //ensures that will be terminated on application close
 

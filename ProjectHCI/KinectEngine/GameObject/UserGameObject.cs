@@ -16,7 +16,10 @@ namespace ProjectHCI.KinectEngine
 
 
         private KinectSensorHelper kinectSensorHelper;
+        private int Z_INDEX = 2;
 
+        private bool inverter = true;
+        private int coolTime = 0;
 
         public UserGameObject(double xPosition,
                               double yPosition,
@@ -34,7 +37,7 @@ namespace ProjectHCI.KinectEngine
             base._image = image;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
-            //this.kinectSensorHelper.initializeKinect();
+            this.kinectSensorHelper.initializeKinect();
 
         }
 
@@ -75,7 +78,7 @@ namespace ProjectHCI.KinectEngine
         {
 
             ISceneManager sceneManager = GameLoop.getSceneManager();
-            sceneManager.canvasDisplayImage(this, 10);
+            sceneManager.canvasDisplayImage(this, Z_INDEX);
 
         }
 
@@ -92,85 +95,81 @@ namespace ProjectHCI.KinectEngine
             ISceneManager sceneManager = GameLoop.getSceneManager();
 
 
+
+            //coolTime += Time.getDeltaTimeMillis();
+
+            //if (coolTime > 10000)
+            //{
+            //    if (inverter)
+            //    {
+            //        sceneManager.applyTranslation(this, 200, 200);
+            //    }
+            //    else
+            //    {
+            //        sceneManager.applyTranslation(this, -200, -200);
+            //    }
+
+            //    inverter = !inverter;
+            //    coolTime = 0;
+            //}
+
+            //return;
+
+
+
+
             Skeleton skeleton = this.kinectSensorHelper.getTrackedSkeleton();
 
-//             if (skeleton != null)
-//             {
-// 
-//                 foreach (UIElement uiElement0 in sceneManager.getUiElementListBoundToGameObject(this))
-//                 {
-// 
-//                     //UIElement userUiElement = sceneManager.getUiElementByUid(base._uid);
-// 
-// 
-//                     Joint headJoint = skeleton.Joints[JointType.Head];
-//                     Joint shoulderCenterJoint = skeleton.Joints[JointType.ShoulderCenter];
-// 
-// 
-//                     if (headJoint.TrackingState == JointTrackingState.Tracked)
-//                     {
-// 
-//                         double canvasWidth = sceneManager.getTargetCanvas().RenderSize.Width;
-//                         double canvasHeight = sceneManager.getTargetCanvas().RenderSize.Height;
-// 
-//                         double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0, 1.0, 0, canvasWidth);
-//                         double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y, 1.0, -1.0, 0, canvasHeight);
-// 
-// 
-//                         TransformGroup transformGroup = new TransformGroup();
-//                         //translate component
-//                         transformGroup.Children.Add(new TranslateTransform(xScreenPosition, yScreenPosition));
-// 
-// 
-//                         if (shoulderCenterJoint.TrackingState == JointTrackingState.Tracked)
-//                         {
-// 
-//                             Vector shoulderCenterVector = new Vector(shoulderCenterJoint.Position.X, shoulderCenterJoint.Position.Y);
-//                             Vector headVector = new Vector(headJoint.Position.X, headJoint.Position.Y);
-// 
-//                             Vector shoulderCenterToHeadVector = Vector.Subtract(headVector, shoulderCenterVector);
-//                             shoulderCenterToHeadVector.Normalize();
-// 
-//                             Vector upVector = new Vector(0, 1.0);
-// 
-//                             double rotationAngle = Vector.AngleBetween(upVector, shoulderCenterToHeadVector);
-// 
-//                             double xRotationCenter = base._boundingBoxGeometry.Bounds.X + (base._boundingBoxGeometry.Bounds.Width * 0.5);
-//                             double yRotationCenter = base._boundingBoxGeometry.Bounds.Y + (base._boundingBoxGeometry.Bounds.Height * 0.5);
-// 
-//                             //rotation component
-//                             transformGroup.Children.Add(new RotateTransform(-1 * rotationAngle, xRotationCenter, yRotationCenter));
-// 
-//                         }
-// 
-// 
-//                         transformGroup.Freeze();
-// 
-// 
-//                         base._boundingBoxGeometry.Transform = transformGroup;
-// 
-// 
-//                         Application.Current.Dispatcher.Invoke(new Action(
-//                             delegate()
-//                             {
-//                                 uiElement0.RenderTransform = transformGroup;
-//                                 //#if DEBUG
-//                                 //                                //********************* translateBoundingBox 
-//                                 //                                UIElement boundingBoxUiElement = sceneManager.getUiElementByUid("BB_" + base._uid);
-//                                 //                                boundingBoxUiElement.RenderTransform = transformGroup;
-//                                 //                                //*********************
-//                                 //#endif
-// 
-//                             }
-//                         ));
-// 
-// 
-// 
-// 
-// 
-//                     }
-//                 }
-//             }
+            if (skeleton != null)
+            {
+
+                Joint headJoint = skeleton.Joints[JointType.Head];
+                Joint shoulderCenterJoint = skeleton.Joints[JointType.ShoulderCenter];
+
+
+                if (headJoint.TrackingState == JointTrackingState.Tracked)
+                {
+
+                    double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0, 1.0, 0, sceneManager.getCanvasWidth());
+                    double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y, 1.0, -1.0, 0, sceneManager.getCanvasHeight());
+
+
+                    
+
+
+                    //TransformGroup transformGroup = new TransformGroup();
+
+                    ////translate component
+                    //transformGroup.Children.Add(new TranslateTransform( this._xPosition - xScreenPosition, this._yPosition - yScreenPosition));
+
+
+                    ////calculate rotation
+                    //if (shoulderCenterJoint.TrackingState == JointTrackingState.Tracked)
+                    //{
+
+                    //    Vector shoulderCenterVector = new Vector(shoulderCenterJoint.Position.X, shoulderCenterJoint.Position.Y);
+                    //    Vector headVector = new Vector(headJoint.Position.X, headJoint.Position.Y);
+
+                    //    Vector shoulderCenterToHeadVector = Vector.Subtract(headVector, shoulderCenterVector);
+                    //    shoulderCenterToHeadVector.Normalize();
+
+                    //    Vector skeletonUpVector = new Vector(0, 1.0);
+
+                    //    double rotationAngle = Vector.AngleBetween(skeletonUpVector, shoulderCenterToHeadVector);
+
+                    //    double xRotationCenter = this._xPosition + this._image.Width * 0.5;
+                    //    double yRotationCenter = this._yPosition + this._image.Height * 0.5;
+
+                        
+                    //    transformGroup.Children.Add(new RotateTransform(-1 * rotationAngle, xRotationCenter, yRotationCenter));
+
+                    //}
+
+                    sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition());
+                    
+                }
+                
+            }
 
         }
 
@@ -197,7 +196,7 @@ namespace ProjectHCI.KinectEngine
         /// <param name="otherGameObject"></param>
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
-            throw new NotSupportedException();
+            Debug.WriteLine("user colpito");
         }
 
         /// <summary>
@@ -206,7 +205,7 @@ namespace ProjectHCI.KinectEngine
         /// <param name="otherGameObject"></param>
         public override void onCollisionExitDelegate(IGameObject otherGameObject)
         {
-            throw new NotSupportedException();
+            //throw new NotSupportedException();
         }
 
 

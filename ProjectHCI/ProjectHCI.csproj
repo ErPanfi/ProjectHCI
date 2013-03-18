@@ -61,6 +61,8 @@
     <Compile Include="KinectEngine\GameObject\BoundingBoxViewrGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
     <Compile Include="KinectEngine\GameObject\NotUserFriendlyGameObject.cs" />
+    <Compile Include="KinectEngine\GameObject\UIButtonGameObject.cs" />
+    <Compile Include="KinectEngine\GameObject\UIObjectListener.cs" />
     <Compile Include="KinectEngine\GameObject\UserFriendlyGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\UserGameObject.cs" />
     <Compile Include="KinectEngine\SceneBrain\ISceneManager.cs" />
@@ -68,8 +70,8 @@
     <Compile Include="KinectEngine\SceneBrain\SceneNode.cs" />
     <Compile Include="KinectEngine\Sensor\KinectSensorHelper.cs" />
     <Compile Include="KinectEngine\SpawnerManager\FakeSpawner.cs" />
-    <Compile Include="KinectEngine\SpawnerManager\SpawnerManager.cs" />
-    <Compile Include="KinectEngine\SpawnerManager\SpawnerTestForCollisionManager.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\GameSpawnerManager.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\MainMenuSpawnerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\Time.cs" />
     <Compile Include="KinectEngine\TimerManager\TimerManager.cs" />
@@ -128,6 +130,14 @@
   <ItemGroup>
     <Resource Include="Resources\slash_horiz.png" />
     <Resource Include="Resources\slash_vert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ExitButton.png" />
+    <Resource Include="Resources\NewGameButton.png" />
+    <Resource Include="Resources\OptionsButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\crosshair.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
