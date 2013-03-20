@@ -22,7 +22,9 @@ namespace ProjectHCI.KinectEngine
         private const double TRY_TO_CUT_PLAYERS_PROBABILITY = 0.6;
         private bool userSpawned;
         private List<IGameObject> spawnedGameObjectList;
-
+        private int lastFriendlyObjSpawned, friendlyObjCooldown;
+        private int lastUnfriendlyObjSpawned, unfriendlyObjCooldown;
+        private Configuration currentConfiguration;
 
         /// <summary>
         /// Default constructor
@@ -33,6 +35,13 @@ namespace ProjectHCI.KinectEngine
             this.userSpawned = false;
 
             this.random = new Random();
+
+            currentConfiguration = Configuration.getCurrentConfiguration();
+
+            this.unfriendlyObjCooldown = random.Next(currentConfiguration.minChopSpawnCooldownTimeMillis, currentConfiguration.maxChopSpawnCooldownTimeMillis);
+            this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
+            this.lastFriendlyObjSpawned = 0;
+            this.lastUnfriendlyObjSpawned = 0;
         }
 
         public List<IGameObject> getSpawnedObjects()
@@ -48,10 +57,11 @@ namespace ProjectHCI.KinectEngine
         {
             ISceneManager sceneManager = GameLoop.getSceneManager();
             ISceneBrain sceneBrain = GameLoop.getSceneBrain();
+            int     deltaTimeMillis = Time.getDeltaTimeMillis();
 
             spawnedGameObjectList = new List<IGameObject>();
 
-            if(!this.userSpawned)
+            if (!this.userSpawned)
             {
                 IGameObject gameObject = this.spawnUserGameObject();
                 sceneManager.addGameObject(gameObject, null);
@@ -62,24 +72,14 @@ namespace ProjectHCI.KinectEngine
                 spawnedGameObjectList.Add(gameObject);
                 this.userSpawned = true;
             }
-
-
-
-
-
             
             Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType = sceneManager.getGameObjectListMapByTypeEnum();
-
-
-
+            
             //userGameObjectList
             Debug.Assert(gameObjectListMapByType.ContainsKey(GameObjectTypeEnum.UserObject), "the userGameObject must be created.");
             List<IGameObject> userGameObjectList = userGameObjectList = gameObjectListMapByType[GameObjectTypeEnum.UserObject];
             Debug.Assert(userGameObjectList.Count > 0, "expected userGameObjectList.Count > 0");
-
-
-
-
+            
             //friendlyObjectList
             List<IGameObject> friendlyObjectList;
             if (gameObjectListMapByType.ContainsKey(GameObjectTypeEnum.FriendlyObject))
@@ -90,9 +90,7 @@ namespace ProjectHCI.KinectEngine
             {
                 friendlyObjectList = new List<IGameObject>();
             }
-
-
-
+            
             //unfriendlyObjectList
             List<IGameObject> unfriendlyObjectList;
             if (gameObjectListMapByType.ContainsKey(GameObjectTypeEnum.UnfriendlyObject))
@@ -104,70 +102,102 @@ namespace ProjectHCI.KinectEngine
                 unfriendlyObjectList = new List<IGameObject>();
             }
 
-
-
             //obtain generation parameters from scene brain
-            int maxNumberOfChopAllowed = sceneBrain.getMaxNumberOfChopAllowed();
-            int maxNumberOfUserFriendlyGameObjectAllowed = sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed();
-            float bonusPercentiage = sceneBrain.getBonusPercentiege();
-
-
-
+            //int maxNumberOfChopAllowed = sceneBrain.getMaxNumberOfChopAllowed();
+            //int maxNumberOfUserFriendlyGameObjectAllowed = sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed();
+            //float bonusPercentiage = sceneBrain.getBonusPercentiege();
 
             //spawn a new unfriendly obj
-            if (this.shouldSpawnNewGameObject(unfriendlyObjectList.Count, maxNumberOfChopAllowed))
+            //if (this.shouldSpawnNewGameObject(unfriendlyObjectList.Count, maxNumberOfChopAllowed))
+            if (this.shouldSpawnNewUnfriendlyObject(unfriendlyObjectList.Count, sceneBrain.getMaxNumberOfChopAllowed(), this.unfriendlyObjCooldown, this.lastUnfriendlyObjSpawned))
             {
                 IGameObject gameObject = this.spawnNewUnfriendlyObject(userGameObjectList, friendlyObjectList);
                 spawnedGameObjectList.Add(gameObject);
                 sceneManager.addGameObject(gameObject, null);
+                this.unfriendlyObjCooldown = random.Next(currentConfiguration.minChopSpawnCooldownTimeMillis, currentConfiguration.maxChopSpawnCooldownTimeMillis);
+                this.lastUnfriendlyObjSpawned = 0;
 #if DEBUG
                 sceneManager.addGameObject(new BoundingBoxViewrGameObject(gameObject), gameObject);
 #endif
             }
+            else
+            {
+                this.lastUnfriendlyObjSpawned += deltaTimeMillis;
+            }
 
-            //spawn new friendly obj
-            if (this.shouldSpawnNewGameObject(friendlyObjectList.Count, maxNumberOfUserFriendlyGameObjectAllowed))
+            //spawn new friendly obj, with potentially different probability distribution
+            //if (this.shouldSpawnNewGameObject(friendlyObjectList.Count, maxNumberOfUserFriendlyGameObjectAllowed))
+            if (this.shouldSpawnNewFriendlyObject(friendlyObjectList.Count, sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed(), this.friendlyObjCooldown, this.lastFriendlyObjSpawned))
             {
                 IGameObject gameObject = this.spawnNewFriendlyObject(friendlyObjectList);
                 spawnedGameObjectList.Add(gameObject);
                 sceneManager.addGameObject(gameObject, null);
+                this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
+                this.lastFriendlyObjSpawned = 0;
 #if DEBUG
                 sceneManager.addGameObject(new BoundingBoxViewrGameObject(gameObject), gameObject);
 #endif
+            }
+            else
+            {
+                this.lastFriendlyObjSpawned += deltaTimeMillis;
             }
         }
 
 
 
-        ///// <summary> 
-        ///// This method evaluate if a new friendly object should be created
-        ///// </summary>
-        ///// <param name="presentObjectsNum">The number of current non-dead friendly objects in the scene.</param>
-        ///// <param name="maxObjectsNum">The maximum number of non-dead friendly objects allowed in the scene.</param>
-        ///// <returns>Returns true iff a new friendly object must be spawned.</returns>
-        ///// <remarks>Only one object per cycle should spawn</remarks>
-        //protected bool shouldSpawnNewFriendlyObject(int presentObjectsNum, int maxObjectsNum)
-        //{
-        //    //currently use the same probability function of unfriendly objs
-        //    return this.shouldSpawnNewGameObject(presentObjectsNum, maxObjectsNum);            
-        //}
+        /// <summary> 
+        /// This method evaluate if a new friendly object should be created
+        /// </summary>
+        /// <param name="presentObjectsNum">The number of current non-dead friendly objects in the scene.</param>
+        /// <param name="maxObjectsNum">The maximum number of non-dead friendly objects allowed in the scene.</param>
+        /// <returns>Returns true iff a new friendly object must be spawned.</returns>
+        /// <remarks>Only one object per cycle should spawn</remarks>
+        protected bool shouldSpawnNewFriendlyObject(int presentGameObjectsNum, int maxGameObjectsNum, int objectSpawnCooldown, int elapsedCooldown)
+        {
+            //currently use the same probability function of unfriendly objs, left duped method for any diversion
+            //it's more unlikely to spawn something if there's already many objs in the screen
+            return (
+                        (presentGameObjectsNum < maxGameObjectsNum)                                     //if there's already the maximum obj num short-circuit next condition
+                    &&  (random.Next(maxGameObjectsNum) < (maxGameObjectsNum - presentGameObjectsNum))  //probability decreasing with increasing obj num, note that this lead to certain object spawning if presentObjectsNum == 0
+                    &&  (random.Next(objectSpawnCooldown) < elapsedCooldown)                            //probability increasing as cooldown is reached
+                    );
+        }
 
 
 
         /// <summary> 
-        /// This method evaluate if a new gameObject should be created
+        /// This method evaluate if a new unfriendly gameObject should be created
         /// </summary>
         /// <param name="presentGameObjectsNum">The number of current non-dead gameObjects of a specific type in the scene.</param>
         /// <param name="maxGameObjectsNum">The maximum number of non-dead gameObjects of a specific type  allowed in the scene.</param>
         /// <returns>Returns true iff a new gameObject of a specific type must be spawned.</returns>
         /// <remarks>Only one object per cycle should spawn</remarks>
-        protected bool shouldSpawnNewGameObject(int presentGameObjectsNum, int maxGameObjectsNum)
+        protected bool shouldSpawnNewUnfriendlyObject(int presentGameObjectsNum, int maxGameObjectsNum, int objectSpawnCooldown, int elapsedCooldown)
         {
             //it's more unlikely to spawn something if there's already many objs in the screen
+            
             return (
-                        (presentGameObjectsNum < maxGameObjectsNum)                                   //if there's already the maximum obj num short-circuit next condition
-                    &&  (random.Next(maxGameObjectsNum) < (maxGameObjectsNum - presentGameObjectsNum))   //note that this lead to certain object spawning if presentObjectsNum == 0
+                        (presentGameObjectsNum < maxGameObjectsNum)                                     //if there's already the maximum obj num short-circuit next condition
+                    &&  (random.Next(maxGameObjectsNum) < (maxGameObjectsNum - presentGameObjectsNum))  //probability decreasing with increasing obj num, note that this lead to certain object spawning if presentObjectsNum == 0
+                    &&  (random.Next(objectSpawnCooldown) < elapsedCooldown)                            //probability increasing as cooldown is reached
                    );
+            
+            //explicit passages for debug
+            //if (presentGameObjectsNum < maxGameObjectsNum)
+            //{
+            //    int ran = random.Next(maxGameObjectsNum);
+            //    if (ran < (maxGameObjectsNum - presentGameObjectsNum))
+            //    {
+            //        ran = random.Next(objectSpawnCooldown);
+            //        if (ran < elapsedCooldown)
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //}
+
+            //return false;
         }
 
 
@@ -188,8 +218,8 @@ namespace ProjectHCI.KinectEngine
             Geometry boundingBoxGeometry = new EllipseGeometry(new Rect(new Point(0, 0), new Point(100, 100)));
 
 
-            int xPosition = random.Next(0, (int) GameLoop.getSceneManager().getCanvasWidth());
-            int yPosition = random.Next(0, (int) GameLoop.getSceneManager().getCanvasHeight());
+            int xPosition = random.Next(0, (int)GameLoop.getSceneManager().getCanvasWidth());
+            int yPosition = random.Next(0, (int)GameLoop.getSceneManager().getCanvasHeight());
 
 
             return new UserFriendlyGameObject(xPosition, yPosition, boundingBoxGeometry, image, random.Next(4000, 6000));
@@ -205,17 +235,17 @@ namespace ProjectHCI.KinectEngine
         /// <returns>The newly created unfriendly object</returns>
         protected IGameObject spawnNewUnfriendlyObject(List<IGameObject> userGameObjectList, List<IGameObject> friendlyGameObjectList)
         {
-            
+
             //choose the target of the cut
             bool targetTheUser = friendlyGameObjectList.Count == 0 || random.NextDouble() < TRY_TO_CUT_PLAYERS_PROBABILITY;
 
             IGameObject targetGameObject = this.extractRandomGameObjectFromList(targetTheUser ? userGameObjectList : friendlyGameObjectList);
             Debug.Assert(targetGameObject != null, "expected targetGameObject != null");
-            
+
 
             //locate the cut center point
             Geometry targetBoundingBoxGeometry = targetGameObject.getBoundingBoxGeometry();
-            Point targetBoundingBoxCenterPoint = new Point(targetBoundingBoxGeometry.Bounds.TopLeft.X + (targetBoundingBoxGeometry.Bounds.Width * 0.5), 
+            Point targetBoundingBoxCenterPoint = new Point(targetBoundingBoxGeometry.Bounds.TopLeft.X + (targetBoundingBoxGeometry.Bounds.Width * 0.5),
                                                            targetBoundingBoxGeometry.Bounds.TopLeft.Y + (targetBoundingBoxGeometry.Bounds.Height * 0.5));
 
 
@@ -231,11 +261,11 @@ namespace ProjectHCI.KinectEngine
             image.Stretch = Stretch.Fill;
             image.StretchDirection = StretchDirection.Both;
 
-            
+
             Geometry boundigBoxGeometry = new EllipseGeometry(new Rect(new Point(0, 0), new Point(image.Width, image.Height)));
-            Point gameObjectImageUpperLeftCornerPoint = new Point(targetBoundingBoxCenterPoint.X - (image.Width * 0.5), 
+            Point gameObjectImageUpperLeftCornerPoint = new Point(targetBoundingBoxCenterPoint.X - (image.Width * 0.5),
                                                                   targetBoundingBoxCenterPoint.Y - (image.Height * 0.5));
-           
+
             int timeToLive = random.Next(4000, 6000);
             return new NotUserFriendlyGameObject(gameObjectImageUpperLeftCornerPoint.X,
                                                  gameObjectImageUpperLeftCornerPoint.Y,
@@ -258,24 +288,24 @@ namespace ProjectHCI.KinectEngine
             image.Height = 200;
             image.Width = 200;
 
-            Geometry boundingBoxGeometry = new EllipseGeometry(new Point(100,110), 50, 50);
+            Geometry boundingBoxGeometry = new EllipseGeometry(new Point(100, 110), 50, 50);
 
             double halfCanvasWidth = GameLoop.getSceneManager().getCanvasWidth() * 0.5;
             double halfCanvasHeight = GameLoop.getSceneManager().getCanvasHeight() * 0.5;
 
             return new UserGameObject(halfCanvasWidth - image.Width * 0.5,
-                                      halfCanvasHeight - image.Height * 0.5, 
-                                      boundingBoxGeometry, 
-                                      image, 
+                                      halfCanvasHeight - image.Height * 0.5,
+                                      boundingBoxGeometry,
+                                      image,
                                       SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
-            
+
         }
 
-        
 
 
 
-         /// <summary>
+
+        /// <summary>
         /// Extract a random game object from a given list of game objects
         /// </summary>
         /// <param name="targetGameObjectList">The list of game objects</param>
@@ -286,9 +316,9 @@ namespace ProjectHCI.KinectEngine
 
             int gameObjectIndex = random.Next(targetGameObjectList.Count);
             return targetGameObjectList[gameObjectIndex];
-           
+
         }
-        
+
         ///// <summary>
         ///// Extract a random game object from a given list of game objects
         ///// </summary>

@@ -66,6 +66,7 @@
     <Compile Include="KinectEngine\GameObject\UserFriendlyGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\UserGameObject.cs" />
     <Compile Include="KinectEngine\SceneBrain\ISceneManager.cs" />
+    <Compile Include="KinectEngine\SceneBrain\Configuration.cs" />
     <Compile Include="KinectEngine\SceneBrain\SceneManager.cs" />
     <Compile Include="KinectEngine\SceneBrain\SceneNode.cs" />
     <Compile Include="KinectEngine\Sensor\KinectSensorHelper.cs" />
