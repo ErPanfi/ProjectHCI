@@ -44,20 +44,17 @@ namespace ProjectHCI
             ISceneBrain sceneBrain = new SceneBrain();            
 
             IUpdateRenderer updateRenderer = new UpdateRenderer();
-            //updateRenderer.setDisplayGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.displayGameObject));
-            //updateRenderer.setRemoveGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.removeGameObject));
-            //updateRenderer.setUpdateGameObjectEventHandler(new EventHandler<GameObjectEventArgs>(this.updateGameObject));
 
             ICollisionManager collisionManager = new CollisionManager();
             HashSet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> collidableTypeEnumHashSet = new HashSet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>>();
             collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UserObject, GameObjectTypeEnum.FriendlyObject));
+            collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UserObject, GameObjectTypeEnum.UIObject));
             collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UserObject, GameObjectTypeEnum.UnfriendlyObject));
             collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UnfriendlyObject, GameObjectTypeEnum.FriendlyObject));
             collisionManager.setCollisionToHandle(collidableTypeEnumHashSet);
 
-            //ISpawnerManager spawnerManager = new UISpawnerManager_MainMenu();
-            ISpawnerManager spawnerManager = new GameSpawnerManager();
-            //ISpawnerManager spawnerManager = new SpawnerTestForCollisionManager();
+            ISpawnerManager spawnerManager = new MainMenuSpawnerManager();
+            //ISpawnerManager spawnerManager = new GameSpawnerManager();
             ITimerManager timerManager = new TimerManager();
 
 
@@ -77,41 +74,7 @@ namespace ProjectHCI
 
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="uiElement"></param>
-        //public void registerUiElement(UIElement uiElement)
-        //{
-        //    Debug.Assert(!this.uiElementMapByUid.ContainsKey(uiElement.Uid), "uiElement already present in uiElementListMapByUid");
-
-        //    this.uiElementMapByUid.Add(uiElement.Uid, uiElement);
-
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="uid"></param>
-        ///// <returns></returns>
-        //public UIElement getUiElementByUid(String uid)
-        //{
-        //    Debug.Assert(this.uiElementMapByUid.ContainsKey(uid), "unkown uiElement");
-
-        //    return this.uiElementMapByUid[uid];
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="uiElement"></param>
-        //public void deregisterUiElement(UIElement uiElement)
-        //{
-        //    Debug.Assert(this.uiElementMapByUid.ContainsKey(uiElement.Uid), "unkown uiElement");
-
-        //    this.uiElementMapByUid.Remove(uiElement.Uid);
-
-        //}
+        
 
 
         //public enum RGB
@@ -166,44 +129,6 @@ namespace ProjectHCI
         //}
 
 
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="gameObject"></param>
-        //public void updateGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
-        //{
-        //    Dispatcher.Invoke(new Action(
-        //        delegate()
-        //        {
-
-        //            IGameObject gameObject = gameObjectEventArgs.getGameObject();
-        //            gameObject.onRendererUpdateDelegate();
-
-        //        }
-        //    ));
-        //}
-
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="gameObject"></param>
-        //public void removeGameObject(object sender, GameObjectEventArgs gameObjectEventArgs)
-        //{
-            
-        //    Dispatcher.Invoke(new Action(
-        //        delegate()
-        //        {
-
-        //            IGameObject gameObject = gameObjectEventArgs.getGameObject();
-        //            gameObject.onRendererRemoveDelegate();
-                    
-        //        }
-        //    ));
-
-        //}
 
     }
 }

@@ -37,6 +37,8 @@ namespace ProjectHCI.KinectEngine
 
         void applyTranslation(IGameObject gameObject, double xCanvasPosition, double yCanvasPosition);
 
+        void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRelativeRotationCenter, double yRelativeRotationCenter);
+
 
 
 

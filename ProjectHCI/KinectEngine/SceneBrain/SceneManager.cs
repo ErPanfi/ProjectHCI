@@ -154,7 +154,7 @@ namespace ProjectHCI.KinectEngine
             Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByTypeEnum = this.getCollidableGameObjectListMapByTypeEnum();
             if (collidableGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum))
             {
-                return this.getCollidableGameObjectListMapByTypeEnum()[gameObjectTypeEnum];
+                return new List<IGameObject>(this.getCollidableGameObjectListMapByTypeEnum()[gameObjectTypeEnum]);
             }
             else
             {
@@ -299,6 +299,10 @@ namespace ProjectHCI.KinectEngine
             SceneNode targetSceneNode = SceneNode.getSceneNodeByGameObject(this.sceneNodeTree, gameObject);
             Debug.Assert(targetSceneNode != null, "gameObject not found in the scene node tree");
 
+            if (xOffset == 0.0 && yOffset == 0.0)
+            {
+                return;
+            }
 
             this.recursiveApplyTranslation(targetSceneNode, xOffset, yOffset);
         }
@@ -309,15 +313,15 @@ namespace ProjectHCI.KinectEngine
         /// </summary>
         /// <param name="gameObject"></param>
         /// <param name="clockwiseDegreeAngle"></param>
-        /// <param name="xRelativeRotationCenter"></param>
-        /// <param name="yRelativeRotationCenter"></param>
-        public void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRelativeRotationCenter, double yRelativeRotationCenter)
+        /// <param name="xRotationCenter"></param>
+        /// <param name="yRotationCenter"></param>
+        public void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRotationCenter, double yRotationCenter)
         {
             Debug.Assert(gameObject != null, "expected gameObject != null");
             SceneNode targetSceneNode = SceneNode.getSceneNodeByGameObject(this.sceneNodeTree, gameObject);
             Debug.Assert(targetSceneNode != null, "gameObject not found in the scene node tree");
 
-            this.recursiveApplyRotation(targetSceneNode, clockwiseDegreeAngle, xRelativeRotationCenter, yRelativeRotationCenter);
+            this.recursiveApplyRotation(targetSceneNode, clockwiseDegreeAngle, xRotationCenter, yRotationCenter);
 
         }
 
@@ -383,6 +387,7 @@ namespace ProjectHCI.KinectEngine
         /// <param name="zIndex"></param>
         private void recursiveApplyTranslation(SceneNode sceneNode, double xOffset, double yOffset)
         {
+
             IGameObject gameObject = sceneNode.getSceneNodeGameObject();
             gameObject.setPosition(gameObject.getXPosition() + xOffset, gameObject.getYPosition() + yOffset);
 
@@ -412,11 +417,45 @@ namespace ProjectHCI.KinectEngine
         /// </summary>
         /// <param name="targetSceneNode"></param>
         /// <param name="clockwiseDegreeAngle"></param>
-        /// <param name="xRelativeRotationCenter"></param>
-        /// <param name="yRelativeRotationCenter"></param>
-        public void recursiveApplyRotation(SceneNode targetSceneNode, double clockwiseDegreeAngle, double xRelativeRotationCenter, double yRelativeRotationCenter)
+        /// <param name="xRotationCenter"></param>
+        /// <param name="yRotationCenter"></param>
+        public void recursiveApplyRotation(SceneNode sceneNode, double clockwiseDegreeAngle, double xRotationCenter, double yRotationCenter)
         {
+            IGameObject gameObject = sceneNode.getSceneNodeGameObject();
 
+
+            RotateTransform rotateTransform = new RotateTransform(clockwiseDegreeAngle, xRotationCenter, yRotationCenter);
+
+            { // transform image
+                TransformGroup transformGroup = new TransformGroup();
+                transformGroup.Children.Add(rotateTransform);
+                //transformGroup.Children.Add(gameObject.getImage().RenderTransform);
+
+                gameObject.getImage().RenderTransform = transformGroup;
+            }
+            
+
+            // transform geometry
+            if (gameObject.getBoundingBoxGeometry() != null)
+            {
+                TransformGroup transformGroup = new TransformGroup();
+                transformGroup.Children.Add(rotateTransform);
+                //transformGroup.Children.Add(gameObject.getBoundingBoxGeometry().Transform);
+
+                gameObject.getBoundingBoxGeometry().Transform = transformGroup;
+            }
+
+
+            if (this.uiThreadImageUidMapByGameObject.ContainsKey(gameObject))
+            {
+                this.canvasUpdateImage(gameObject);
+            }
+
+
+            foreach (SceneNode childSceneNode0 in sceneNode.getChildList())
+            {
+                this.recursiveApplyRotation(childSceneNode0, clockwiseDegreeAngle, xRotationCenter, yRotationCenter);
+            }
         }
 
 

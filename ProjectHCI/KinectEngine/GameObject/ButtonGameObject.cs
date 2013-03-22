@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace ProjectHCI.KinectEngine
 {
-    public class UIButtonGameObject : GameObject
+    public class ButtonGameObject : GameObject
     {
 
         public delegate void ActivationDelegate();
@@ -38,10 +38,11 @@ namespace ProjectHCI.KinectEngine
         
 
 
-        public UIButtonGameObject(double xPosition,
+        public ButtonGameObject(double xPosition,
                                 double yPosition,
                                 Geometry boundingBoxGeometry,
                                 Image image,
+                                bool enabled,
                                 ActivationDelegate activationDelegate)
         {
             base._xPosition = xPosition;
@@ -54,7 +55,7 @@ namespace ProjectHCI.KinectEngine
 
             this.activationDelegate = activationDelegate;
             this.pointedByUser = false;
-            this.enabled = false;
+            this.enabled = enabled;
             this.internalCountDown = USER_INTERACTION_DELAY;
 
         }

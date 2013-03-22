@@ -123,6 +123,7 @@ namespace ProjectHCI.KinectEngine
         /// <param name="otherGameObject"></param>
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
+            Debug.WriteLine("frutto colpito");
             //throw new NotSupportedException();
         }
 

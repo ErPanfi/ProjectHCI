@@ -123,6 +123,10 @@ namespace ProjectHCI.KinectEngine
 #if DEBUG
                 sceneManager.addGameObject(new BoundingBoxViewrGameObject(gameObject), gameObject);
 #endif
+                //sceneManager.applyRotation(gameObject,
+                //                            10,
+                //                            gameObject.getXPosition() - gameObject.getImage().Width * 0.5,
+                //                            gameObject.getYPosition() - gameObject.getImage().Height * 0.5);
             }
 
             //spawn new friendly obj
@@ -263,7 +267,7 @@ namespace ProjectHCI.KinectEngine
             double halfCanvasWidth = GameLoop.getSceneManager().getCanvasWidth() * 0.5;
             double halfCanvasHeight = GameLoop.getSceneManager().getCanvasHeight() * 0.5;
 
-            return new UserGameObject(halfCanvasWidth - image.Width * 0.5,
+            return new HeadUserGameObject(halfCanvasWidth - image.Width * 0.5,
                                       halfCanvasHeight - image.Height * 0.5, 
                                       boundingBoxGeometry, 
                                       image, 

@@ -34,23 +34,18 @@ namespace ProjectHCI.KinectEngine
 
             foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEntry0 in allGameObjectListMapByType)
             {
-                foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value)
+                foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value.ToList()) //ToList used as a copy 
                 {
+
                     gameObject00.update(Time.getDeltaTimeMillis());
 
-
-                    Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByType00 = sceneManager.getCollidableGameObjectListMapByTypeEnum();
-
-                    
+                    //an object can be removed by another gameObject00.update e.g. an object decides to remove all children in its update step.
+                    bool gameObjectIsStillPresent = sceneManager.getGameObjectListMapByTypeEnum()[gameObject00.getGameObjectTypeEnum()].Contains(gameObject00);
 
                     if (gameObject00.isCollidable()
+                        && gameObjectIsStillPresent
                         && !sceneManager.getCollaidableGameObjectList(gameObject00.getGameObjectTypeEnum()).Contains(gameObject00)){
     
-                        //if( gameObject00.GetType() == typeof(NotUserFriendlyGameObject) )
-                        //{
-                        //    System.Diagnostics.Debug.WriteLine("time to kill");
-                        //}
-
 
                         sceneManager.promoteToCollidableGameObject(gameObject00);
 

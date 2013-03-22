@@ -91,20 +91,17 @@ namespace ProjectHCI.KinectEngine
             base._yPosition = gameObject.getBoundingBoxGeometry().Bounds.Y;
 
 
-            if (this.previousCollidableState != this.gameObject.isCollidable())
-            {
-                Brush boundingBoxBrush = gameObject.isCollidable() ? Brushes.Red : Brushes.Yellow;
-                GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(boundingBoxBrush, 1.0), gameObject.getBoundingBoxGeometry());
-                DrawingImage boundingBoxDrawingImage = new DrawingImage(geometryDrawing);
+            Brush boundingBoxBrush = gameObject.isCollidable() ? Brushes.Red : Brushes.Yellow;
+            GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(boundingBoxBrush, 1.0), gameObject.getBoundingBoxGeometry());
+            DrawingImage boundingBoxDrawingImage = new DrawingImage(geometryDrawing);
 
-                Image boundingBoxImage = new Image();
-                boundingBoxImage.Source = boundingBoxDrawingImage;
+            Image boundingBoxImage = new Image();
+            boundingBoxImage.Source = boundingBoxDrawingImage;
 
-                base._image = boundingBoxImage;
-                
-                this.previousCollidableState = gameObject.isCollidable();
+            base._image = boundingBoxImage;
 
-            }
+            this.previousCollidableState = gameObject.isCollidable();
+
 
             sceneManager.canvasUpdateImage(this);
         }

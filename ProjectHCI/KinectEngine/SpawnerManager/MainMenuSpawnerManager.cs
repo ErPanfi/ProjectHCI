@@ -1,175 +1,220 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Windows.Media;
-//using System.Windows.Media.Imaging;
-//using System.Windows;
-//using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows;
+using System.Diagnostics;
+using System.Windows.Controls;
 
-//namespace ProjectHCI.KinectEngine
-//{
-//    public class MainMenuSpawnerManager : ISpawnerManager
-//    {
-//        private List<IGameObject> spawnedObjects;
-//        private bool menuSpawned = false;
+namespace ProjectHCI.KinectEngine
+{
+    public class MainMenuSpawnerManager : ISpawnerManager
+    {
+        //private List<IGameObject> spawnedObjects;
+        private bool menuSpawned = false;
 
-//        private const double MENU_ITEM_SPACING = 30;
+        private const double MENU_ITEM_SPACING = 30;
 
-//        #region ctors and dtors
 
-//        ~MainMenuSpawnerManager()
-//        {
-//            if (spawnedObjects != null && spawnedObjects.Count > 0)
-//            {
-//                List<IGameObject>.Enumerator listEnumerator = spawnedObjects.GetEnumerator();
-//                ISceneManager sceneManager = GameLoop.getSceneManager();
-//                while (listEnumerator.MoveNext())
-//                {
-//                    /*
-//                    Debug.Assert(listEnumerator.Current != null, "Expected menu item game object to be not null");
-//                    sceneManager.removeGameObject(listEnumerator.Current);
-//                     */
+        public MainMenuSpawnerManager()
+        {
+            //this.spawnedObjects = new List<IGameObject>();
+        }
 
-//                    IGameObject currObj = listEnumerator.Current;
-//                    if (currObj.GetType().IsSubclassOf(typeof(UIButtonGameObject)))
-//                    {
-//                        ((UIButtonGameObject)currObj).setRendered(false);
-//                    }
-//                    else if (currObj.GetType() == typeof(UserGameObject))
-//                    {
-//                        ((UserGameObject)currObj).setDead(true);
-//                    }
-//                    // 
-//                }
-//            }
-//        }
 
-//        #endregion
 
-//        #region ISpawnerManager members
 
-//        public void awaken()
-//        {
-//            if (!menuSpawned)
-//            {
-//                double yTotal = 0;
+        /// <summary>
+        /// 
+        /// </summary>
+        public void awaken()
+        {
+            if (!menuSpawned)
+            {
 
-//                spawnedObjects = new List<IGameObject>();
+                ISceneManager sceneManager = GameLoop.getSceneManager();
 
-//                UIButtonGameObject gameObject = new UIGameObj_NewGameButton(null, new BitmapImage(new Uri(@"pack://application:,,,/Resources/NewGameButton.png")), new UIButtonGameObject.ActivationDelegate(this.newGameButtonActivationDelegate));
 
-//                yTotal = gameObject.getImageSource().Height + MENU_ITEM_SPACING;
+                { //user gameObject
 
-//                spawnedObjects.Add(gameObject);
-//                GameLoop.getSceneManager().addGameObject(gameObject);
+                    Image image = new Image();
+                    image.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/crosshair.gif"));
+                    image.Height = 200;
+                    image.Width = 200;
 
-//                gameObject = new UIButtonGameObject(null, new BitmapImage(new Uri(@"pack://application:,,,/Resources/OptionsButton.png")), new UIButtonGameObject.ActivationDelegate(this.optionsButtonActivationDelegate));
+                    Geometry boundingBoxGeometry = new EllipseGeometry(new Point(100, 100), 80, 80);
 
-//                yTotal += gameObject.getImageSource().Height + MENU_ITEM_SPACING;
+                    double halfCanvasWidth = sceneManager.getCanvasWidth() * 0.5;
+                    double halfCanvasHeight = sceneManager.getCanvasHeight() * 0.5;
 
-//                spawnedObjects.Add(gameObject);
-//                GameLoop.getSceneManager().addGameObject(gameObject);
+                    HandUserGameObject userGameObject = new HandUserGameObject(200, 100, boundingBoxGeometry, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
+                    sceneManager.addGameObject(userGameObject, null);
+#if DEBUG
+                    sceneManager.addGameObject(new BoundingBoxViewrGameObject(userGameObject), userGameObject);
+#endif
 
-//                gameObject = new UIButtonGameObject(null, new BitmapImage(new Uri(@"pack://application:,,,/Resources/ExitButton.png")), new UIButtonGameObject.ActivationDelegate(this.exitButtonActivationDelegate));
+                }
 
-//                yTotal += gameObject.getImageSource().Height;
 
-//                spawnedObjects.Add(gameObject);
-//                GameLoop.getSceneManager().addGameObject(gameObject);
 
-//                double xOffset = GameLoop.getSceneManager().getTargetCanvas().RenderSize.Width / 2.0;
-//                double yOffset = (GameLoop.getSceneManager().getTargetCanvas().RenderSize.Height - yTotal) / 2.0;
 
-//                List<IGameObject>.Enumerator listEnumerator = spawnedObjects.GetEnumerator();
-//                while (listEnumerator.MoveNext())
-//                {
-//                    gameObject = (UIButtonGameObject)listEnumerator.Current;
-//                    gameObject.setGeometry(new RectangleGeometry(new System.Windows.Rect(
-//                                            new System.Windows.Point(xOffset - (gameObject.getImageSource().Width / 2.0), yOffset),
-//                                            new System.Windows.Point(xOffset + (gameObject.getImageSource().Width / 2.0), yOffset + gameObject.getImageSource().Height)
-//                                            )));
 
-//                    yOffset += (gameObject.getImageSource().Height + MENU_ITEM_SPACING);
-//                }
+                // used as centered layout
+                CenteredScreenAreaGameObject centeredScreenAreaGameObject = new CenteredScreenAreaGameObject(sceneManager.getCanvasWidth(),
+                                                                                                             sceneManager.getCanvasHeight(),
+                                                                                                             1024,
+                                                                                                             320);
+                sceneManager.addGameObject(centeredScreenAreaGameObject, null);
+#if DEBUG
+                sceneManager.addGameObject(new BoundingBoxViewrGameObject(centeredScreenAreaGameObject), centeredScreenAreaGameObject);
+#endif
 
-//                ImageSource imageSource = new BitmapImage(new Uri(@"pack://application:,,,/Resources/crosshair.gif"));
-//                UserGameObject userGameObject = new UserGameObject(new EllipseGeometry(new Point(100, 100), 100, 100), imageSource, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
-//                imageSource.Freeze();
 
-//                spawnedObjects.Add(userGameObject);
-//                GameLoop.getSceneManager().addGameObject(userGameObject);
 
-//                menuSpawned = true;
-//            }
-//        }
 
-//        public List<IGameObject> getSpawnedObjects()
-//        {
-//            return spawnedObjects.ToList<IGameObject>();
-//        }
+                { //new-game button
 
-//        #endregion
+                    Image buttonImage = new Image();
+                    buttonImage.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/NewGameButton.png"));
+                    buttonImage.Height = 50;
+                    buttonImage.Width = 200;
+                    buttonImage.Stretch = Stretch.Fill;
+                    buttonImage.StretchDirection = StretchDirection.Both;
 
-//        #region Buttons activation delegates
+                    Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(320, 320)));
+                    ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.newGameButtonActivationDelegate);
 
-//        public void exitButtonActivationDelegate()
-//        {
-//            //stop game loop
-//            GameLoop.getGameLoopSingleton().stop();
-//        }
+                    ButtonGameObject buttonGameObject = new ButtonGameObject(0, 0, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
-//        public void newGameButtonActivationDelegate()
-//        {
-//            //menu cleaning accomplished with spawner switching
-//            //fetch User Interface Game Objects enumerator
-//            List<IGameObject>.Enumerator listEnumerator = GameLoop.getSceneManager().getGameObjectListMapByTypeEnum()[GameObjectTypeEnum.UIObject].ToList<IGameObject>().GetEnumerator(); //TODO improve object fetching method: fetch all and only UIGameObjects of current menu
-//            ISceneManager sceneManager = GameLoop.getSceneManager();
+                    sceneManager.addGameObject(buttonGameObject, centeredScreenAreaGameObject);
+#if DEBUG
+                    sceneManager.addGameObject(new BoundingBoxViewrGameObject(buttonGameObject), buttonGameObject);
+#endif
+                }
 
-//            //mark all objects as not-renderized, so that they'll be removed
-//            while (listEnumerator.MoveNext())
-//            {
-//                if (listEnumerator.Current.GetType() == typeof(UIButtonGameObject) || listEnumerator.Current.GetType().IsSubclassOf(typeof(UIButtonGameObject)))
-//                {
-//                    UIButtonGameObject currObj = (UIButtonGameObject)listEnumerator.Current;
-//                    currObj.setRendered(false);
-//                }
 
-//                /*
-//                Debug.Assert(listEnumerator.Current != null, "Expected game object to remove to be not null");
-//                sceneManager.removeGameObject(listEnumerator.Current);
-//                */
-//            }
 
-//            listEnumerator = GameLoop.getSceneManager().getGameObjectListMapByTypeEnum()[GameObjectTypeEnum.UserObject].ToList<IGameObject>().GetEnumerator(); //TODO improve object fetching method: fetch all and only UIGameObjects of current menu
+                { //option button
 
-//            //mark all objects as not-renderized, so that they'll be removed
-//            while (listEnumerator.MoveNext())
-//            {
-//                if (listEnumerator.Current.GetType() == typeof(UserGameObject))
-//                {
-//                    UserGameObject currObj = (UserGameObject)listEnumerator.Current;
-//                    currObj.setDead(true);
-//                }
+                    Image buttonImage = new Image();
+                    buttonImage.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/OptionsButton.png"));
+                    buttonImage.Height = 50;
+                    buttonImage.Width = 200;
+                    buttonImage.Stretch = Stretch.Fill;
+                    buttonImage.StretchDirection = StretchDirection.Both;
 
-//                /*
-//                Debug.Assert(listEnumerator.Current != null, "Expected game object to remove to be not null");
-//                sceneManager.removeGameObject(listEnumerator.Current);
-//                */
-//            }
+                    Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(320, 320)));
+                    ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.optionsButtonActivationDelegate);
 
-//            //set the game spawner on the game loop object
-//            GameLoop.getGameLoopSingleton().setSpawnerManager(new GameSpawnerManager());
+                    ButtonGameObject buttonGameObject = new ButtonGameObject(350, 0, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
-//            //let the madness begin!!!
-//        }
+                    sceneManager.addGameObject(buttonGameObject, centeredScreenAreaGameObject);
+#if DEBUG
+                    sceneManager.addGameObject(new BoundingBoxViewrGameObject(buttonGameObject), buttonGameObject);
+#endif
+                }
 
-//        public void optionsButtonActivationDelegate()
-//        {
-//            //do nothing
-//        }
 
-//        #endregion
-//    }
 
-//}
+                { //exit button
+
+                    Image buttonImage = new Image();
+                    buttonImage.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/ExitButton.png"));
+                    buttonImage.Height = 50;
+                    buttonImage.Width = 200;
+                    buttonImage.Stretch = Stretch.Fill;
+                    buttonImage.StretchDirection = StretchDirection.Both;
+
+                    Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(320, 320)));
+                    ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.exitButtonActivationDelegate);
+
+                    ButtonGameObject buttonGameObject = new ButtonGameObject(700, 0, boundingBoxGeometry, buttonImage, true, buttonDelegate);
+
+                    sceneManager.addGameObject(buttonGameObject, centeredScreenAreaGameObject);
+#if DEBUG
+                    sceneManager.addGameObject(new BoundingBoxViewrGameObject(buttonGameObject), buttonGameObject);
+#endif
+                }
+                
+
+                menuSpawned = true;
+            }
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<IGameObject> getSpawnedObjects()
+        {
+            throw new NotImplementedException();
+        }
+
+       
+
+
+
+
+
+     
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void exitButtonActivationDelegate()
+        {
+            //stop game loop
+            GameLoop.getGameLoopSingleton().stop();
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void newGameButtonActivationDelegate()
+        {
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+
+
+            { //menu cleaning accomplished with spawner switching
+
+                foreach (IGameObject gameObject in sceneManager.getGameObjectListMapByTypeEnum()[GameObjectTypeEnum.UIObject].ToList())//ToList used as a copy 
+                {
+                    sceneManager.removeGameObject(gameObject);
+                }
+
+                foreach (IGameObject gameObject in sceneManager.getGameObjectListMapByTypeEnum()[GameObjectTypeEnum.UserObject].ToList())//ToList used as a copy 
+                {
+                    sceneManager.removeGameObject(gameObject);
+                }
+
+            }
+            
+
+
+            //set the game spawner on the game loop object
+            GameLoop.getGameLoopSingleton().setSpawnerManager(new GameSpawnerManager());
+
+            //let the madness begin!!! .....WTF?!
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void optionsButtonActivationDelegate()
+        {
+            //do nothing
+        }
+
+    }
+
+}

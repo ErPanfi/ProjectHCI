@@ -11,17 +11,14 @@ using System.Windows;
 
 namespace ProjectHCI.KinectEngine
 {
-    class UserGameObject : GameObject
+    class HeadUserGameObject : GameObject
     {
 
 
-        private KinectSensorHelper kinectSensorHelper;
+        protected KinectSensorHelper kinectSensorHelper;
         private int Z_INDEX = 2;
 
-        private bool inverter = true;
-        private int coolTime = 0;
-
-        public UserGameObject(double xPosition,
+        public HeadUserGameObject(double xPosition,
                               double yPosition,
                               Geometry boundingBoxGeometry,
                               Image image,
@@ -37,7 +34,7 @@ namespace ProjectHCI.KinectEngine
             base._image = image;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
-            this.kinectSensorHelper.initializeKinect();
+            //this.kinectSensorHelper.initializeKinect();
 
         }
 
@@ -94,30 +91,7 @@ namespace ProjectHCI.KinectEngine
 
             ISceneManager sceneManager = GameLoop.getSceneManager();
 
-
-
-            //coolTime += Time.getDeltaTimeMillis();
-
-            //if (coolTime > 10000)
-            //{
-            //    if (inverter)
-            //    {
-            //        sceneManager.applyTranslation(this, 200, 200);
-            //    }
-            //    else
-            //    {
-            //        sceneManager.applyTranslation(this, -200, -200);
-            //    }
-
-            //    inverter = !inverter;
-            //    coolTime = 0;
-            //}
-
-            //return;
-
-
-
-
+            
             Skeleton skeleton = this.kinectSensorHelper.getTrackedSkeleton();
 
             if (skeleton != null)
@@ -210,7 +184,7 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        private double mapValueToNewRange(double value,
+        protected double mapValueToNewRange(double value,
                                           double oldLowerLimit,
                                           double oldHigherLimit,
                                           double newLowerLimit,

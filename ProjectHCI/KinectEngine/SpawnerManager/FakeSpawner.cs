@@ -40,7 +40,7 @@ namespace ProjectHCI.KinectEngine
 
                     Geometry boundingBoxGeometry = new EllipseGeometry(new Rect(new Point(50, 60), new Point(150, 160)));
 
-                    IGameObject userGameObject = new UserGameObject(400, 400, boundingBoxGeometry, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
+                    IGameObject userGameObject = new HeadUserGameObject(400, 400, boundingBoxGeometry, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
                     sceneManager.addGameObject(userGameObject, null);
 #if DEBUG
                     sceneManager.addGameObject(new BoundingBoxViewrGameObject(userGameObject), userGameObject);

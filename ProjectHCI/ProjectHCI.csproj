@@ -60,11 +60,12 @@
     <Compile Include="KinectEngine\CollisionManager\ICollisionManager.cs" />
     <Compile Include="KinectEngine\GameObject\BoundingBoxViewrGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
+    <Compile Include="KinectEngine\GameObject\HandUserGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\NotUserFriendlyGameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\UIButtonGameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\UIObjectListener.cs" />
+    <Compile Include="KinectEngine\GameObject\ButtonGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\UserFriendlyGameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\UserGameObject.cs" />
+    <Compile Include="KinectEngine\GameObject\HeadUserGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CenteredScreenAreaGameObject.cs" />
     <Compile Include="KinectEngine\SceneBrain\ISceneManager.cs" />
     <Compile Include="KinectEngine\SceneBrain\SceneManager.cs" />
     <Compile Include="KinectEngine\SceneBrain\SceneNode.cs" />

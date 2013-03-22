@@ -89,7 +89,6 @@ namespace ProjectHCI.KinectEngine
                 this.spawnerManager.awaken();
                 this.timerManager.tick();
                 List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList = this.collisionManager.createCollisionList();
-                //List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList = null;
                 this.sceneBrain.think(collidedGameObjectPairList);
                 this.updateRenderer.drawObject();
 
