@@ -7,45 +7,42 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System.Diagnostics;
 using System.Windows;
+using ProjectHCI.KinectEngine;
 
-namespace ProjectHCI.KinectEngine
+namespace ProjectHCI.ReverseFruitNinja
 {
-    public class NotUserFriendlyGameObject : GameObject
+    public class UserFriendlyGameObject : GameObject
     {
 
-        private int collidableTimeMillis;
         private int timeToLiveMillis;
+
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="geometry"></param>
-        /// <param name="imageSource"></param>
+        /// <param name="xPosition"></param>
+        /// <param name="yPosition"></param>
+        /// <param name="boundingBoxGeometry"></param>
+        /// <param name="image"></param>
         /// <param name="timeToLiveMillis"></param>
-        /// <param name="chopDurationMillis"></param>
-        public NotUserFriendlyGameObject(double xPosition,
-                                         double yPosition,
-                                         Geometry boundingBoxGeometry,
-                                         Image image,
-                                         int timeToLiveMillis,
-                                         int notCollidableTimeMillis)
+        public UserFriendlyGameObject(double xPosition,
+                                      double yPosition,
+                                      Geometry boundingBoxGeometry,
+                                      Image image,
+                                      int timeToLiveMillis)
         {
-            Debug.Assert(timeToLiveMillis > 0, "expected timeToLiveMillis > 0");
-            Debug.Assert(notCollidableTimeMillis > 0, "expected notCollidableTimeMillis > 0");
-            Debug.Assert(notCollidableTimeMillis <= timeToLiveMillis, "expected notCollidableTimeMillis <= timeToLiveMillis");
 
-           
+            Debug.Assert(timeToLiveMillis > 0, "expected timeToLiveMillis > 0");
 
             base._xPosition = xPosition;
             base._yPosition = yPosition;
             base._boundingBoxGeometry = boundingBoxGeometry;
             base._extraData = null;
             base._uid = Guid.NewGuid().ToString();
-            base._gameObjectTypeEnum = GameObjectTypeEnum.UnfriendlyObject;
+            base._gameObjectTypeEnum = GameObjectTypeEnum.FriendlyObject;
             base._image = image;
 
             this.timeToLiveMillis = timeToLiveMillis;
-            this.collidableTimeMillis = this.timeToLiveMillis - notCollidableTimeMillis;
         }
 
 
@@ -58,13 +55,15 @@ namespace ProjectHCI.KinectEngine
             this.timeToLiveMillis -= deltaTimeMillis;
         }
 
+
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public override bool isCollidable()
         {
-            return this.timeToLiveMillis <= collidableTimeMillis;
+            return this.timeToLiveMillis >= 0;
         }
 
         /// <summary>
@@ -89,19 +88,20 @@ namespace ProjectHCI.KinectEngine
             }
 
 
-            ISceneManager sceneManager = GameLoop.getSceneManager();
-            sceneManager.canvasDisplayImage(this, 5);
 
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.canvasDisplayImage(this, 0);
 
         }
 
+        
 
         /// <summary>
         /// 
         /// </summary>
         public override void onRendererUpdateDelegate()
         {
-            //do nothing... maybe change color
+            //do nothing, maybe bounching icon
         }
 
 
@@ -111,12 +111,11 @@ namespace ProjectHCI.KinectEngine
         public override void onRendererRemoveDelegate()
         {
 
+
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.canvasRemoveImage(this);
 
         }
-
-
 
 
         /// <summary>
@@ -125,6 +124,7 @@ namespace ProjectHCI.KinectEngine
         /// <param name="otherGameObject"></param>
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
+            Debug.WriteLine("frutto colpito");
             //throw new NotSupportedException();
         }
 
@@ -136,5 +136,6 @@ namespace ProjectHCI.KinectEngine
         {
             //throw new NotSupportedException();
         }
+
     }
 }

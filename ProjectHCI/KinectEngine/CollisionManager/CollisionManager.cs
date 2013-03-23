@@ -56,10 +56,16 @@ namespace ProjectHCI.KinectEngine
                     secondGameObjectList.ForEach(delegate(IGameObject gameObjectInSecondList)
                     {
 
+                        Geometry geometry1 = gameObjectInFirstList.getBoundingBoxGeometry();
+                        Geometry geometry2 = gameObjectInSecondList.getBoundingBoxGeometry();
+
                         Point[] collisionPointArray = collisionDetect(gameObjectInFirstList.getBoundingBoxGeometry(), gameObjectInSecondList.getBoundingBoxGeometry());
-                        if (collisionPointArray.Length > 0)
+
+                        bool areaInclusionBool = geometry1.FillContains(geometry2) || geometry2.FillContains(geometry1);
+
+                        if (areaInclusionBool || collisionPointArray.Length > 0)
                         {
-                            collisionRecorder.storeOrConfirmCollision(new KeyValuePair<IGameObject, IGameObject>(gameObjectInFirstList,gameObjectInSecondList));
+                            collisionRecorder.storeOrConfirmCollision(new KeyValuePair<IGameObject, IGameObject>(gameObjectInFirstList, gameObjectInSecondList));
                             gameObjectKeyValuePairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObjectInFirstList, gameObjectInSecondList));
                         }
                     });

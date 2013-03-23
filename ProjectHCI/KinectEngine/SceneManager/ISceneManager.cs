@@ -15,7 +15,10 @@ namespace ProjectHCI.KinectEngine
 
         void addGameObject(IGameObject gameObject, IGameObject parentGameObject);
 
+        void removeGameObjectsByType(GameObjectTypeEnum gameObjectTypeEnum);
+
         void removeGameObject(IGameObject gameObject);
+
 
 
 
@@ -25,6 +28,9 @@ namespace ProjectHCI.KinectEngine
         Dictionary<GameObjectTypeEnum, List<IGameObject>> getGameObjectListMapByTypeEnum();
 
         List<IGameObject> getCollaidableGameObjectList(GameObjectTypeEnum gameObjectTypeEnum);
+
+        bool gameObjectExist(IGameObject gameObject);
+
 
 
 

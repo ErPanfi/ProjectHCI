@@ -8,8 +8,9 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using Microsoft.Kinect;
 using System.Windows;
+using ProjectHCI.KinectEngine;
 
-namespace ProjectHCI.KinectEngine
+namespace ProjectHCI.ReverseFruitNinja
 {
     class HeadUserGameObject : GameObject
     {
@@ -34,7 +35,7 @@ namespace ProjectHCI.KinectEngine
             base._image = image;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
-            //this.kinectSensorHelper.initializeKinect();
+            this.kinectSensorHelper.initializeKinect();
 
         }
 

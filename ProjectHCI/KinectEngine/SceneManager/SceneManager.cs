@@ -117,6 +117,18 @@ namespace ProjectHCI.KinectEngine
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameObjectTypeEnum"></param>
+        public void removeGameObjectsByType(GameObjectTypeEnum gameObjectTypeEnum)
+        {
+            Debug.Assert(this.gameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum), "expected this.gameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum)");
+            foreach(IGameObject gameObject0 in this.gameObjectListMapByTypeEnum[gameObjectTypeEnum])
+            {
+                this.removeGameObject(gameObject0);
+            }
+        }
 
 
 
@@ -543,6 +555,17 @@ namespace ProjectHCI.KinectEngine
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <returns></returns>
+        public bool gameObjectExist(IGameObject gameObject)
+        {
+            return gameObject == null
+                || (    this.gameObjectListMapByTypeEnum.ContainsKey(gameObject.getGameObjectTypeEnum())
+                    &&  this.gameObjectListMapByTypeEnum[gameObject.getGameObjectTypeEnum()].Contains(gameObject));
 
+        }
     }
 }

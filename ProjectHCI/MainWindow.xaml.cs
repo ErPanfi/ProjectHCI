@@ -16,6 +16,7 @@ using ProjectHCI.KinectEngine;
 using System.Runtime.InteropServices;
 using ProjectHCI.Utility;
 using System.Diagnostics;
+using ProjectHCI.ReverseFruitNinja;
 
 
 namespace ProjectHCI
@@ -27,7 +28,6 @@ namespace ProjectHCI
     {
 
         private Canvas targetCanvas;
-        //private Dictionary<String, UIElement> uiElementMapByUid;
 
 
         public MainWindow()
@@ -35,14 +35,10 @@ namespace ProjectHCI
             InitializeComponent();
 
             targetCanvas = windowsCanvas; //windowsCanvas is defined in the xaml.
-            //uiElementMapByUid = new Dictionary<String, UIElement>();
-
 
 
             ISceneManager sceneManager = new SceneManager(targetCanvas);
-
             ISceneBrain sceneBrain = new SceneBrain();            
-
             IUpdateRenderer updateRenderer = new UpdateRenderer();
 
             ICollisionManager collisionManager = new CollisionManager();
@@ -54,7 +50,6 @@ namespace ProjectHCI
             collisionManager.setCollisionToHandle(collidableTypeEnumHashSet);
 
             ISpawnerManager spawnerManager = new MainMenuSpawnerManager();
-            //ISpawnerManager spawnerManager = new GameSpawnerManager();
             ITimerManager timerManager = new TimerManager();
 
 

@@ -11,24 +11,85 @@ namespace ProjectHCI.KinectEngine
     public class SceneBrain : ISceneBrain
     {
 
+        //private int maxNumberOfChopAllowed;
+        //private int maxNumberOfUserFriendlyGameObjectAllowed;
 
-        private int maxNumberOfChopAllowed;
-        private int maxNumberOfUserFriendlyGameObjectAllowed;
+
+        /**
+         * Ok, that's exaperating things.
+         
+        #region public int chopSpawnCooldownMillis {get; private set;}
+
+        private int minChopSpawnCooldownMillis;
+
+        public int getMinChopSpawnCooldownMillis()
+        {
+            return minChopSpawnCooldownMillis;
+        }
+
+        private int maxChopSpawnCooldownMillis;
+
+        public int getMaxChopSpawnCooldownMillis()
+        {
+            return maxChopSpawnCooldownMillis;
+        }
+
+        #endregion
+
+        #region public int friendlyObjectSpawnCooldownMillis {get; private set;}
+
+        private int minFriendlyObjectSpawnCooldownMillis;
+
+        public int getMinFriendlyObjectSpawnCooldownMillis()
+        {
+            return minFriendlyObjectSpawnCooldownMillis;
+        }
+
+        private int maxFriendlyObjectSpawnCooldownMillis;
+
+        public int getMaxFriendlyObjectSpawnCooldownMillis()
+        {
+            return maxFriendlyObjectSpawnCooldownMillis;
+        }
+
+        #endregion
+
         private float bonusPercentiege;
+         */ 
 
-        
+        //it's better to encapsulate the current configuration directly
+        private Configuration currentConfiguration;
 
         /// <summary>
         /// 
         /// </summary>
         public SceneBrain()
         {
-
+            #region Old Commented Code
+            /* 
             this.maxNumberOfChopAllowed = 0;
             this.maxNumberOfUserFriendlyGameObjectAllowed = 0;
             this.bonusPercentiege = 0.0f;
+            */		 
+	        #endregion
 
+            currentConfiguration = Configuration.getCurrentConfiguration();
 
+            #region code before de-exasperating refactoring
+            /*
+            this.maxNumberOfChopAllowed = configuration.getMaxNumOfChopsAllowed();
+            this.maxNumberOfUserFriendlyGameObjectAllowed = configuration.getMaxNumOfFriendlyObjectsAllowed();
+            this.chopSpawnCooldownMillis = configuration.getChopSpawnCooldownTimeMillis();
+            this.friendlyObjectSpawnCooldownMillis = configuration.getFriendlyObjectSpawnCooldownTimeMillis();
+            */
+
+            /*
+            this.maxNumberOfChopAllowed = configuration.maxNumOfChopsAllowed;
+            this.maxNumberOfUserFriendlyGameObjectAllowed = configuration.maxNumOfFriendlyObjectsAllowed;
+            this.chopSpawnCooldownMillis = configuration.chopSpawnCooldownTimeMillis;
+            this.friendlyObjectSpawnCooldownMillis = configuration.friendlyObjectSpawnCooldownTimeMillis;
+            */
+            #endregion
         }
 
 
@@ -68,7 +129,7 @@ namespace ProjectHCI.KinectEngine
         /// </summary>
         public void think(List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList)
         {
-            ISceneManager sceneManager = GameLoop.getSceneManager();
+            //ISceneManager sceneManager = GameLoop.getSceneManager();
 
 
 
@@ -78,6 +139,7 @@ namespace ProjectHCI.KinectEngine
             
 
             //***** Fake implementation, these parameters should be bound to the totaltime...
+            /*
             Random random = new Random();
             this.maxNumberOfChopAllowed = random.Next(1, 5);
 
@@ -101,7 +163,8 @@ namespace ProjectHCI.KinectEngine
                 this.maxNumberOfUserFriendlyGameObjectAllowed = 5;
             }
 
-            this.bonusPercentiege = 0.0f;
+            //this.bonusPercentiege = 0.0f;
+             */ 
             //******
 
 
@@ -110,35 +173,39 @@ namespace ProjectHCI.KinectEngine
 
         }
 
-        
+
 
         /// <summary>
-        /// 
+        /// This returns the maximum number of chops
         /// </summary>
-        /// <returns></returns>
+        /// <returns> The maximum number of chops that can exist simultaneously into the scene </returns>
         public int getMaxNumberOfChopAllowed()
         {
-            return this.maxNumberOfChopAllowed;
+            //return this.maxNumberOfChopAllowed;
+            return currentConfiguration.maxNumOfChopsAllowed;
         }
 
 
         /// <summary>
-        /// 
+        /// This returns the maximum number of active friendly objects
         /// </summary>
-        /// <returns></returns>
+        /// <returns> The maximum number of friendly objects that can exist simultaneously into the scene </returns>
+        /// <remarks> This is backed by the configuration class</remarks>
         public int getMaxNumberOfUserFriendlyGameObjectAllowed()
         {
-            return this.maxNumberOfUserFriendlyGameObjectAllowed;
+            //return this.maxNumberOfUserFriendlyGameObjectAllowed;
+            return currentConfiguration.maxNumOfFriendlyObjectsAllowed;
         }
 
 
         /// <summary>
-        /// 
+        /// This method should be removed. Seriously.
         /// </summary>
         /// <returns></returns>
         public float getBonusPercentiege()
         {
-            return this.bonusPercentiege;
+            //return this.bonusPercentiege;
+            return 0;
         }
 
 

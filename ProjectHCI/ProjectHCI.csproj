@@ -58,21 +58,23 @@
     </ApplicationDefinition>
     <Compile Include="KinectEngine\CollisionManager\CollisionManager.cs" />
     <Compile Include="KinectEngine\CollisionManager\ICollisionManager.cs" />
-    <Compile Include="KinectEngine\GameObject\BoundingBoxViewrGameObject.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\GameObjectSpawnRequest.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\SpawnerManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\BoundingBoxViewrGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\HandUserGameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\NotUserFriendlyGameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\ButtonGameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\UserFriendlyGameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\HeadUserGameObject.cs" />
-    <Compile Include="ReverseFruitNinja\CenteredScreenAreaGameObject.cs" />
-    <Compile Include="KinectEngine\SceneBrain\ISceneManager.cs" />
-    <Compile Include="KinectEngine\SceneBrain\SceneManager.cs" />
-    <Compile Include="KinectEngine\SceneBrain\SceneNode.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\HandUserGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\NotUserFriendlyGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\UserFriendlyGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\HeadUserGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\CenteredScreenAreaGameObject.cs" />
+    <Compile Include="KinectEngine\SceneManager\ISceneManager.cs" />
+    <Compile Include="KinectEngine\SceneBrain\Configuration.cs" />
+    <Compile Include="KinectEngine\SceneManager\SceneManager.cs" />
+    <Compile Include="KinectEngine\SceneManager\SceneNode.cs" />
     <Compile Include="KinectEngine\Sensor\KinectSensorHelper.cs" />
-    <Compile Include="KinectEngine\SpawnerManager\FakeSpawner.cs" />
-    <Compile Include="KinectEngine\SpawnerManager\GameSpawnerManager.cs" />
-    <Compile Include="KinectEngine\SpawnerManager\MainMenuSpawnerManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSpawner\GameSpawnerManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSpawner\MainMenuSpawnerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\Time.cs" />
     <Compile Include="KinectEngine\TimerManager\TimerManager.cs" />
@@ -139,6 +141,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\crosshair.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\clock.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

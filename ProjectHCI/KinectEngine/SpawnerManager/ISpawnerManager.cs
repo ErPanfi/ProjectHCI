@@ -12,15 +12,43 @@ namespace ProjectHCI.KinectEngine
     {
 
         /// <summary>
-        /// This method is called when the spawner should spawn new objects
+        /// 
         /// </summary>
-        void awaken();
+        /// <param name="gameObjectSpawnRequest"></param>
+        void specialRequestToSpawn(GameObjectSpawnRequest gameObjectSpawnRequest);
 
         /// <summary>
-        /// This will return a list of the game objects just spawned.
+        /// 
         /// </summary>
-        /// <returns>The list of the object spawned during the last <c>awaken</c> invocation.</returns>
-        /// <remarks>Multiple call of this method should return always the same result, ignoring any modification made to the list by callers.</remarks>       
-        List<IGameObject> getSpawnedObjects();
+        /// <param name="gameObject"></param>
+        void specialRequestToKillGameObject(IGameObject gameObject);
+
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
+        //List<KeyValuePair<IGameObject, IGameObject>> onStartSpawnGameObjects();
+
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
+        //List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjects();
+
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="gameObjectTypeEnum"></param>
+        //void removeSpawnedGameObjectByType(GameObjectTypeEnum gameObjectTypeEnum);
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void awaken();
     }
 }
