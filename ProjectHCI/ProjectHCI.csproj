@@ -62,6 +62,7 @@
     <Compile Include="KinectEngine\SpawnerManager\SpawnerManager.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\BoundingBoxViewrGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\FormattedTextGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HandUserGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\NotUserFriendlyGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />

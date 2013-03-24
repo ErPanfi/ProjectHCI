@@ -33,6 +33,19 @@ namespace ProjectHCI.ReverseFruitNinja
             List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
 
 
+
+
+            { // text game object test
+
+                FormattedTextGameObject formattedTextGameObject = new FormattedTextGameObject(400, 10, "Hello World!");
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(formattedTextGameObject, null));
+
+            }
+
+
+
+
+
             { //user gameObject
 
                 Image image = new Image();

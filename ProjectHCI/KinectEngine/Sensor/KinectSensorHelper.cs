@@ -107,12 +107,7 @@ namespace ProjectHCI.KinectEngine
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);
 
-                Application.Current.Dispatcher.Invoke(new Action(
-                delegate()
-                {
-                    Application.Current.MainWindow.Close();
-                }
-                ));
+                GameLoop.getGameLoopSingleton().stop();
             }
         }
 
