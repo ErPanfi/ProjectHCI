@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.Windows;
 using ProjectHCI.KinectEngine;
 using ProjectHCI.Utility;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace ProjectHCI.ReverseFruitNinja

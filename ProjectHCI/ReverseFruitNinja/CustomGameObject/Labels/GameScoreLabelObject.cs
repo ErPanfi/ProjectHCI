@@ -9,13 +9,26 @@ namespace ProjectHCI.ReverseFruitNinja
 {
     public class GameScoreLabelObject : FormattedTextGameObject
     {
-        protected static string LABEL_HEADER = "Score  ";
+        protected const string LABEL_HEADER_DEFAULT = "Score  ";
 
-        public GameScoreLabelObject(double xPosition,
-                                       double yPosition)
-            : base(xPosition, yPosition, LABEL_HEADER, -1)
+        protected string labelHeader;
+        protected IGameStateTracker gameStateTracker;
+
+        #region ctors and dtors
+
+        public GameScoreLabelObject(double xPosition, double yPosition, string headerText, IGameStateTracker gameStateTracker)
+            : base(xPosition, yPosition, headerText, -1)
+        {
+            this.labelHeader = headerText;
+            this.gameStateTracker = gameStateTracker;
+        }
+
+        public GameScoreLabelObject(double xPosition, double yPosition, IGameStateTracker gameStateTracker)
+            : this(xPosition, yPosition, LABEL_HEADER_DEFAULT, gameStateTracker)
         {
         }
+
+        #endregion
 
         protected override FormattedText formatText(string stringText)
         {
@@ -30,11 +43,14 @@ namespace ProjectHCI.ReverseFruitNinja
         public override void update(int deltaTimeMillis)
         {
             base.update(deltaTimeMillis);
+            if (this.labelHeader != LABEL_HEADER_DEFAULT)
+            {
+                int i = 0;
+            }
             //also update game score text
-            System.Diagnostics.Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
-            int currentScore = ((GameSceneBrain)GameLoop.getSceneBrain()).getCurrentScore();
+            int currentScore = this.gameStateTracker.getGameScore();
 
-            this.setText(LABEL_HEADER + currentScore);
+            this.setText(this.labelHeader + currentScore);
         }
     }
 }

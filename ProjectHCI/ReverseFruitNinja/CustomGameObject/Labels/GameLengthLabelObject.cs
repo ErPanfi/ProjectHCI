@@ -9,14 +9,27 @@ namespace ProjectHCI.ReverseFruitNinja
 {
     public class GameLengthLabelObject : FormattedTextGameObject
     {
-        protected static string LABEL_HEADER = "Time  ";
+        protected const string LABEL_HEADER_DEFAULT = "Time  ";
 
-        public GameLengthLabelObject(double xPosition,
-                                       double yPosition)
-            : base(xPosition, yPosition, LABEL_HEADER, -1)
+        protected string labelHeader;
+        protected IGameStateTracker gameStateTracker;
+
+
+        #region ctors and dtors
+
+        public GameLengthLabelObject(double xPosition, double yPosition, string headerText, IGameStateTracker gameStateTracker)
+            : base(xPosition, yPosition, headerText, -1)
         {
+            this.labelHeader = headerText;
+            this.gameStateTracker = gameStateTracker;
         }
 
+        public GameLengthLabelObject(double xPosition, double yPosition, IGameStateTracker gameStateTracker)
+            : this(xPosition, yPosition, LABEL_HEADER_DEFAULT, gameStateTracker)
+        {
+        }
+        
+        #endregion
         protected override FormattedText formatText(string stringText)
         {
             return new FormattedText(stringText,
@@ -29,17 +42,20 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public override void update(int deltaTimeMillis)
         {
+            if (this.labelHeader != LABEL_HEADER_DEFAULT)
+            {
+                int i = 0;
+            }
             base.update(deltaTimeMillis);
             //also update game length text
-            System.Diagnostics.Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
-            int currentMillis = ((GameSceneBrain)GameLoop.getSceneBrain()).getGameLengthMillis();
+            int currentMillis = this.gameStateTracker.getGameLengthMillis();
             int hh = currentMillis / 3600000;
             currentMillis %= 3600000;
             int mm = currentMillis / 60000;
             currentMillis %= 60000;
             int ss = currentMillis / 1000;
 
-            this.setText(LABEL_HEADER + hh + ":" + mm + ":" + ss);
+            this.setText(this.labelHeader + hh + ":" + mm + ":" + ss);
         }
     }
 }

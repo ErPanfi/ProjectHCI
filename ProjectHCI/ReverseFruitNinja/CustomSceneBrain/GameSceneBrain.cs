@@ -6,7 +6,7 @@ using ProjectHCI.KinectEngine;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    public class GameSceneBrain : SceneBrain
+    public class GameSceneBrain : SceneBrain, IGameStateTracker
     {
         private Configuration currentConfiguration;
 
@@ -14,7 +14,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         protected int currentScore;
 
-        public int getCurrentScore()
+        public int getGameScore()
         {
             return currentScore;
         }
@@ -157,6 +157,8 @@ namespace ProjectHCI.ReverseFruitNinja
                         //invoke the correct trigger for each object
                         switch (gameObjectList0.Key)
                         {
+                            case GameObjectTypeEnum.DebugObject :   //debug objs are removed implicitly
+                                break;
                             case GameObjectTypeEnum.UserObject:
                                 ((HeadUserGameObject)gameObject00).cutTrigger();
                                 goto default;   //fallback in default case
@@ -185,13 +187,15 @@ namespace ProjectHCI.ReverseFruitNinja
                 }
             }
 
-            ////remove objs
-            //foreach (IGameObject gameObject0 in objsToRemove)
-            //{
-            //    sceneManager.removeGameObject(gameObject0);
-            //}
+            //remove objs
+            foreach (IGameObject gameObject0 in objsToRemove)
+            {
+                sceneManager.removeGameObject(gameObject0);
+            }
 
-            //TODO switch to endgame scene
+            //switch to endgame scene
+            GameLoop.getGameLoopSingleton().setSpawnerManager(new GameDebriefingSpawnerManager(this));
+            GameLoop.getGameLoopSingleton().setSceneBrain(new SceneBrain());
         }
     }
 }

@@ -108,15 +108,18 @@ namespace ProjectHCI.ReverseFruitNinja
 #endif
 
             //label spawn
-            gameObject = new GameLengthLabelObject(10, VERTICAL_LABEL_SPACE);
+            Debug.Assert(typeof(IGameStateTracker).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a IGameStateTracker object");
+            IGameStateTracker gameStateTracker = (IGameStateTracker)GameLoop.getSceneBrain();
+
+            gameObject = new GameLengthLabelObject(10, VERTICAL_LABEL_SPACE, gameStateTracker);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
-            gameObject = new GameScoreLabelObject(10, (2 * VERTICAL_LABEL_SPACE) + gameObject.getBoundingBoxGeometry().Bounds.Height);
+            gameObject = new GameScoreLabelObject(10, (2 * VERTICAL_LABEL_SPACE) + gameObject.getBoundingBoxGeometry().Bounds.Height, gameStateTracker);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
-            //debug cooldown label objs
-            gameObject = new DEBUG_CooldownLabelObject(10, (3 * VERTICAL_LABEL_SPACE) + (2* gameObject.getBoundingBoxGeometry().Bounds.Height));
-            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+            ////debug cooldown label objs
+            //gameObject = new DEBUG_CooldownLabelObject(10, (3 * VERTICAL_LABEL_SPACE) + (2* gameObject.getBoundingBoxGeometry().Bounds.Height));
+            //gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
             return gameObjectParentGameObjectPairList;
         }

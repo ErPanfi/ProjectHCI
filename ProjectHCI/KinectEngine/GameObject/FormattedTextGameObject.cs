@@ -89,7 +89,7 @@ namespace ProjectHCI.KinectEngine
 
         public void setText(String stringText)
         {
-            this.isTextChanged = (this.text != stringText);
+            this.isTextChanged = true;
             this.text = stringText;
         }
 

@@ -63,10 +63,10 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\BoundingBoxViewrGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
     <Compile Include="KinectEngine\GameObject\FormattedTextGameObject.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\DEBUG_CooldownLabelObject.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\GameFloatingLabelObject.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\GameLengthLabelObject.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\GameScoreLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\DEBUG_CooldownLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameFloatingLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameLengthLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameScoreLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HandUserGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\NotUserFriendlyGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />
@@ -78,7 +78,10 @@
     <Compile Include="KinectEngine\SceneManager\SceneManager.cs" />
     <Compile Include="KinectEngine\SceneManager\SceneNode.cs" />
     <Compile Include="KinectEngine\Sensor\KinectSensorHelper.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\GameDebriefingSceneBrain.cs" />
     <Compile Include="ReverseFruitNinja\CustomSceneBrain\GameSceneBrain.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\IGameStateTracker.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSpawner\GameDebriefingSpawnerManager.cs" />
     <Compile Include="ReverseFruitNinja\CustomSpawner\GameSpawnerManager.cs" />
     <Compile Include="ReverseFruitNinja\CustomSpawner\MainMenuSpawnerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />
@@ -150,6 +153,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\clock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\BackButton.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
