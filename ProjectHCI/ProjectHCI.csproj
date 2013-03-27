@@ -62,7 +62,11 @@
     <Compile Include="KinectEngine\SpawnerManager\SpawnerManager.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\BoundingBoxViewrGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\FormattedTextGameObject.cs" />
+    <Compile Include="KinectEngine\GameObject\FormattedTextGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\DEBUG_CooldownLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\GameFloatingLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\GameLengthLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\GameScoreLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HandUserGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\NotUserFriendlyGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />
@@ -70,10 +74,11 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\HeadUserGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\CenteredScreenAreaGameObject.cs" />
     <Compile Include="KinectEngine\SceneManager\ISceneManager.cs" />
-    <Compile Include="KinectEngine\SceneBrain\Configuration.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\Configuration.cs" />
     <Compile Include="KinectEngine\SceneManager\SceneManager.cs" />
     <Compile Include="KinectEngine\SceneManager\SceneNode.cs" />
     <Compile Include="KinectEngine\Sensor\KinectSensorHelper.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\GameSceneBrain.cs" />
     <Compile Include="ReverseFruitNinja\CustomSpawner\GameSpawnerManager.cs" />
     <Compile Include="ReverseFruitNinja\CustomSpawner\MainMenuSpawnerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />

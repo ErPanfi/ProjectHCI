@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Collections.Concurrent;
 using ProjectHCI.KinectEngine;
+using ProjectHCI.Utility;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
@@ -37,7 +38,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
             { // text game object test
 
-                FormattedTextGameObject formattedTextGameObject = new FormattedTextGameObject(400, 10, "Hello World!");
+                FormattedTextGameObject formattedTextGameObject = new FormattedTextGameObject(400, 10, "Hello World!", 3000);
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(formattedTextGameObject, null));
 
             }
@@ -49,7 +50,7 @@ namespace ProjectHCI.ReverseFruitNinja
             { //user gameObject
 
                 Image image = new Image();
-                image.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/crosshair.gif"));
+                image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"crosshair.gif")));
                 image.Height = 200;
                 image.Width = 200;
 
@@ -61,7 +62,7 @@ namespace ProjectHCI.ReverseFruitNinja
                 HandUserGameObject userGameObject = new HandUserGameObject(0, 0, boundingBoxGeometry, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, null));
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(userGameObject), userGameObject));
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(userGameObject), userGameObject));
 #endif
 
             }
@@ -77,7 +78,7 @@ namespace ProjectHCI.ReverseFruitNinja
                                                                                                          320);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(centeredScreenAreaGameObject, null));
 #if DEBUG
-            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(centeredScreenAreaGameObject), centeredScreenAreaGameObject));
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(centeredScreenAreaGameObject), centeredScreenAreaGameObject));
 #endif
 
 
@@ -86,7 +87,7 @@ namespace ProjectHCI.ReverseFruitNinja
             { //new-game button
 
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/NewGameButton.png"));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"NewGameButton.png")));
                 buttonImage.Height = 50;
                 buttonImage.Width = 200;
                 buttonImage.Stretch = Stretch.Fill;
@@ -99,7 +100,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, centeredScreenAreaGameObject));
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(buttonGameObject), buttonGameObject));
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(buttonGameObject), buttonGameObject));
 #endif
             }
 
@@ -108,7 +109,7 @@ namespace ProjectHCI.ReverseFruitNinja
             { //option button
 
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/OptionsButton.png"));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"OptionsButton.png")));
                 buttonImage.Height = 50;
                 buttonImage.Width = 200;
                 buttonImage.Stretch = Stretch.Fill;
@@ -121,7 +122,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, centeredScreenAreaGameObject));
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(buttonGameObject), buttonGameObject));
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(buttonGameObject), buttonGameObject));
 #endif
             }
 
@@ -130,7 +131,7 @@ namespace ProjectHCI.ReverseFruitNinja
             { //exit button
 
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/ExitButton.png"));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"ExitButton.png")));
                 buttonImage.Height = 50;
                 buttonImage.Width = 200;
                 buttonImage.Stretch = Stretch.Fill;
@@ -143,7 +144,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, centeredScreenAreaGameObject));
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(buttonGameObject), buttonGameObject));
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(buttonGameObject), buttonGameObject));
 #endif
             }
 
@@ -193,12 +194,11 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
             //set the game spawner on the game loop object
+            GameLoop.getGameLoopSingleton().setSceneBrain(new GameSceneBrain());
             GameLoop.getGameLoopSingleton().setSpawnerManager(new GameSpawnerManager());
 
             //let the madness begin!!! .....WTF?!
         }
-
-
 
         /// <summary>
         /// 
@@ -207,7 +207,5 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             //do nothing
         }
-                
     }
-
 }

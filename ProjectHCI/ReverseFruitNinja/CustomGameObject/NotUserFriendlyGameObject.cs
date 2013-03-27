@@ -15,8 +15,23 @@ namespace ProjectHCI.ReverseFruitNinja
     {
 
         private int collidableTimeMillis;
-        private int timeToLiveMillis;
 
+        #region protected timeToLiveMillis {public get; public set;}
+
+        protected int timeToLiveMillis;
+
+        public int getTimeToLiveMillis()
+        {
+            return timeToLiveMillis;
+        }
+
+        public void setTimeToLiveMillis(int timeToLiveMillis)
+        {
+            this.timeToLiveMillis = timeToLiveMillis;
+        }
+
+        #endregion
+        
         /// <summary>
         /// 
         /// </summary>
@@ -136,6 +151,10 @@ namespace ProjectHCI.ReverseFruitNinja
         public override void onCollisionExitDelegate(IGameObject otherGameObject)
         {
             //throw new NotSupportedException();
+        }
+
+        public void cutUserTrigger()
+        {
         }
     }
 }

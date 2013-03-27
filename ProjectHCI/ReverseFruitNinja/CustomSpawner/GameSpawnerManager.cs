@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Collections;
 using System.Collections.Concurrent;
 using ProjectHCI.KinectEngine;
+using ProjectHCI.Utility;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
@@ -22,11 +23,50 @@ namespace ProjectHCI.ReverseFruitNinja
 
         private Random random;
 
-        private const double TRY_TO_CUT_PLAYERS_PROBABILITY = 0.6;
+        private const double VERTICAL_LABEL_SPACE = 10;
+
         private int lastFriendlyObjSpawned, friendlyObjCooldown;
         private int lastUnfriendlyObjSpawned, unfriendlyObjCooldown;
         private Configuration currentConfiguration;
 
+        #region accelerating chop spawning rate code
+
+        private const double MIN_CHOP_SPAWN_OFFSET_INC_PER_MILLIS = 0.3;
+        public double minChopSpawnCooldownMillis;
+
+        private const double MAX_CHOP_SPAWN_OFFSET_INC_PER_MILLIS = 0.6;
+        public double maxChopSpawnCooldownMillis;
+
+        protected void updateSpawnOffsets(int deltaTimeMillis)
+        {
+            if (this.minChopSpawnCooldownMillis > 0)
+            {
+                this.minChopSpawnCooldownMillis -= deltaTimeMillis * MIN_CHOP_SPAWN_OFFSET_INC_PER_MILLIS;
+                if (this.minChopSpawnCooldownMillis < 0)
+                {
+                    this.minChopSpawnCooldownMillis = 0;
+                }
+            }
+
+            if (this.maxChopSpawnCooldownMillis > this.minChopSpawnCooldownMillis)
+            {
+                this.maxChopSpawnCooldownMillis -= deltaTimeMillis * MAX_CHOP_SPAWN_OFFSET_INC_PER_MILLIS;
+                if (this.maxChopSpawnCooldownMillis < this.minChopSpawnCooldownMillis)
+                {
+                    this.maxChopSpawnCooldownMillis = this.minChopSpawnCooldownMillis;
+                }
+            }
+        }
+
+        protected int generateNewChopCooldown()
+        {
+            if(this.maxChopSpawnCooldownMillis == 0)
+                return 0;
+
+            return random.Next((int)Math.Round(this.minChopSpawnCooldownMillis), (int)Math.Round(this.maxChopSpawnCooldownMillis));
+        }
+
+        #endregion
 
         /// <summary>
         /// Default constructor
@@ -38,12 +78,12 @@ namespace ProjectHCI.ReverseFruitNinja
 
             currentConfiguration = Configuration.getCurrentConfiguration();
 
-            this.unfriendlyObjCooldown = random.Next(currentConfiguration.minChopSpawnCooldownTimeMillis, currentConfiguration.maxChopSpawnCooldownTimeMillis);
+            this.minChopSpawnCooldownMillis = currentConfiguration.minChopSpawnCooldownTimeMillis;
+            this.maxChopSpawnCooldownMillis = currentConfiguration.maxChopSpawnCooldownTimeMillis;
+            this.unfriendlyObjCooldown = this.generateNewChopCooldown();
+            this.lastUnfriendlyObjSpawned = unfriendlyObjCooldown;
             this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
             this.lastFriendlyObjSpawned = 0;
-            this.lastUnfriendlyObjSpawned = 0;
-
-            
         }
 
 
@@ -59,10 +99,24 @@ namespace ProjectHCI.ReverseFruitNinja
 
             List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
 
-            IGameObject userGameObject = this.spawnUserGameObject();
+            IGameObject gameObject = this.spawnUserGameObject();
 
-            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, null));
-            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(userGameObject), userGameObject));
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+
+#if DEBUG
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(gameObject), gameObject));            
+#endif
+
+            //label spawn
+            gameObject = new GameLengthLabelObject(10, VERTICAL_LABEL_SPACE);
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+
+            gameObject = new GameScoreLabelObject(10, (2 * VERTICAL_LABEL_SPACE) + gameObject.getBoundingBoxGeometry().Bounds.Height);
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+
+            //debug cooldown label objs
+            gameObject = new DEBUG_CooldownLabelObject(10, (3 * VERTICAL_LABEL_SPACE) + (2* gameObject.getBoundingBoxGeometry().Bounds.Height));
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
             return gameObjectParentGameObjectPairList;
         }
@@ -75,24 +129,22 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         protected override List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjectsPerFrame()
         {
+            int deltaTimeMillis = Time.getDeltaTimeMillis();
+
+            this.updateSpawnOffsets(deltaTimeMillis);
 
             List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
             ISceneManager sceneManager = GameLoop.getSceneManager();
-            ISceneBrain sceneBrain = GameLoop.getSceneBrain();
-
-
+            
+            Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
+            GameSceneBrain sceneBrain = (GameSceneBrain) GameLoop.getSceneBrain();
 
             Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType = sceneManager.getGameObjectListMapByTypeEnum();
-
-
 
             //userGameObjectList
             Debug.Assert(gameObjectListMapByType.ContainsKey(GameObjectTypeEnum.UserObject), "the userGameObject must be created.");
             List<IGameObject> userGameObjectList = userGameObjectList = gameObjectListMapByType[GameObjectTypeEnum.UserObject];
             Debug.Assert(userGameObjectList.Count > 0, "expected userGameObjectList.Count > 0");
-
-
-
 
             //friendlyObjectList
             List<IGameObject> friendlyObjectList;
@@ -105,9 +157,6 @@ namespace ProjectHCI.ReverseFruitNinja
                 friendlyObjectList = new List<IGameObject>();
             }
 
-
-
-
             //unfriendlyObjectList
             List<IGameObject> unfriendlyObjectList;
             if (gameObjectListMapByType.ContainsKey(GameObjectTypeEnum.UnfriendlyObject))
@@ -119,9 +168,6 @@ namespace ProjectHCI.ReverseFruitNinja
                 unfriendlyObjectList = new List<IGameObject>();
             }
 
-
-
-
             //spawn a new unfriendly obj
             if (this.shouldSpawnNewUnfriendlyObject(unfriendlyObjectList.Count, sceneBrain.getMaxNumberOfChopAllowed(), this.unfriendlyObjCooldown, this.lastUnfriendlyObjSpawned))
             {
@@ -129,20 +175,17 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
-                this.unfriendlyObjCooldown = random.Next(currentConfiguration.minChopSpawnCooldownTimeMillis, currentConfiguration.maxChopSpawnCooldownTimeMillis);
+                this.unfriendlyObjCooldown = this.generateNewChopCooldown();
                 this.lastUnfriendlyObjSpawned = 0;
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(gameObject), gameObject));
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(gameObject), gameObject));
 #endif
                 
             }
             else
             {
-                this.lastUnfriendlyObjSpawned += Time.getDeltaTimeMillis();
+                this.lastUnfriendlyObjSpawned += deltaTimeMillis;
             }
-
-
-
 
             //spawn new friendly obj, with potentially different probability distribution
             if (this.shouldSpawnNewFriendlyObject(friendlyObjectList.Count, sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed(), this.friendlyObjCooldown, this.lastFriendlyObjSpawned))
@@ -153,15 +196,13 @@ namespace ProjectHCI.ReverseFruitNinja
                 this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
                 this.lastFriendlyObjSpawned = 0;
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(gameObject), gameObject));
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(gameObject), gameObject));
 #endif
             }
             else
             {
-                this.lastFriendlyObjSpawned += Time.getDeltaTimeMillis();
+                this.lastFriendlyObjSpawned += deltaTimeMillis;
             }
-
-
 
             return gameObjectParentGameObjectPairList;
         }
@@ -184,7 +225,7 @@ namespace ProjectHCI.ReverseFruitNinja
             return (
                         (presentGameObjectsNum < maxGameObjectsNum)                                     //if there's already the maximum obj num short-circuit next condition
                     &&  (random.Next(maxGameObjectsNum) < (maxGameObjectsNum - presentGameObjectsNum))  //probability decreasing with increasing obj num, note that this lead to certain object spawning if presentObjectsNum == 0
-                    &&  (random.Next(objectSpawnCooldown) < elapsedCooldown)                            //probability increasing as cooldown is reached
+                    && (objectSpawnCooldown == 0 || random.Next(objectSpawnCooldown) < elapsedCooldown) //probability increasing as cooldown is reached
                     );
         }
 
@@ -204,7 +245,7 @@ namespace ProjectHCI.ReverseFruitNinja
             return (
                         (presentGameObjectsNum < maxGameObjectsNum)                                     //if there's already the maximum obj num short-circuit next condition
                     &&  (random.Next(maxGameObjectsNum) < (maxGameObjectsNum - presentGameObjectsNum))  //probability decreasing with increasing obj num, note that this lead to certain object spawning if presentObjectsNum == 0
-                    &&  (random.Next(objectSpawnCooldown) < elapsedCooldown)                            //probability increasing as cooldown is reached
+                    && (objectSpawnCooldown == 0 || random.Next(objectSpawnCooldown) < elapsedCooldown) //probability increasing as cooldown is reached
                    );
             
             //explicit passages for debug
@@ -235,7 +276,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
             Image image = new Image();
-            image.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/skype.png"));
+            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"skype.png")));
             image.Height = 100;
             image.Width = 100;
 
@@ -261,7 +302,7 @@ namespace ProjectHCI.ReverseFruitNinja
         {
 
             //choose the target of the cut
-            bool targetTheUser = friendlyGameObjectList.Count == 0 || random.NextDouble() < TRY_TO_CUT_PLAYERS_PROBABILITY;
+            bool targetTheUser = friendlyGameObjectList.Count == 0 || random.NextDouble() < currentConfiguration.tryToCutPlayerProbability;
 
             IGameObject targetGameObject = this.extractRandomGameObjectFromList(targetTheUser ? userGameObjectList : friendlyGameObjectList);
             Debug.Assert(targetGameObject != null, "expected targetGameObject != null");
@@ -279,7 +320,7 @@ namespace ProjectHCI.ReverseFruitNinja
             bool cutVertically = random.NextDouble() < 0.5;
 
             Image image = new Image();
-            image.Source = new BitmapImage(new Uri(cutVertically ? @"pack://application:,,,/Resources/slash_vert.png" : @"pack://application:,,,/Resources/slash_horiz.png"));
+            image.Source = new BitmapImage(new Uri(cutVertically ? BitmapUtility.getImgResourcePath(@"slash_vert.png") : BitmapUtility.getImgResourcePath(@"slash_horiz.png")));
             image.Width = cutVertically ? 25 : random.Next(300, 800);
             image.Height = cutVertically ? random.Next(300, 800) : 25;
             image.Stretch = Stretch.Fill;
@@ -308,7 +349,7 @@ namespace ProjectHCI.ReverseFruitNinja
         {
 
             Image image = new Image();
-            image.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/shark.png"));
+            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"shark.png")));
             image.Height = 200;
             image.Width = 200;
 

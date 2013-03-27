@@ -8,13 +8,37 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using System.Windows;
 using ProjectHCI.KinectEngine;
+using ProjectHCI.Utility;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
     public class UserFriendlyGameObject : GameObject
     {
 
-        private int timeToLiveMillis;
+        public const int FRUIT_COLLECTION_POINTS = 10;
+        public const int FRUIT_DEATH_POINTS = -3;
+
+        #region protected int timeToLiveMillis {public get; public set;}
+        
+        protected int timeToLiveMillis;
+
+        public int getTimeToLiveMillis()
+        {
+            return timeToLiveMillis;
+        }
+
+        public void setTimeToLiveMillis(int timeToLiveMillis)
+        {
+            this.timeToLiveMillis = timeToLiveMillis;
+        }
+
+        #endregion
+
+        protected bool isCut;
+        protected bool isCollected;
+        protected bool displayed;
 
 
         /// <summary>
@@ -43,8 +67,11 @@ namespace ProjectHCI.ReverseFruitNinja
             base._image = image;
 
             this.timeToLiveMillis = timeToLiveMillis;
-        }
+            this.isCut = false;
+            this.isCollected = false;
+            this.displayed = false;
 
+        }
 
         /// <summary>
         /// 
@@ -55,15 +82,13 @@ namespace ProjectHCI.ReverseFruitNinja
             this.timeToLiveMillis -= deltaTimeMillis;
         }
 
-
-
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public override bool isCollidable()
         {
-            return this.timeToLiveMillis >= 0;
+            return this.timeToLiveMillis >= 0 && !isCollected && !isCut;
         }
 
         /// <summary>
@@ -72,29 +97,23 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         public override bool isDead()
         {
-            return this.timeToLiveMillis <= 0;
+            return isCollected || isCut || this.timeToLiveMillis < 0;
         }
-
 
         /// <summary>
         /// 
         /// </summary>
         public override void onRendererDisplayDelegate()
         {
-
             if (this.getImage() == null)
             {
                 return;
             }
 
-
-
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.canvasDisplayImage(this, 0);
-
+            displayed = true;
         }
-
-        
 
         /// <summary>
         /// 
@@ -104,19 +123,14 @@ namespace ProjectHCI.ReverseFruitNinja
             //do nothing, maybe bounching icon
         }
 
-
         /// <summary>
         /// 
         /// </summary>
         public override void onRendererRemoveDelegate()
         {
-
-
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.canvasRemoveImage(this);
-
         }
-
 
         /// <summary>
         /// 
@@ -137,5 +151,51 @@ namespace ProjectHCI.ReverseFruitNinja
             //throw new NotSupportedException();
         }
 
+        #region useless method
+        
+        //protected void fadeImage()
+        //{
+        //    //Make current image transparent
+        //    RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)this._image.Source);
+
+        //    for (int i = 0; i < rgbData.dataLength; i += 4)
+        //    {
+        //        /*
+        //        rgbData.rawRgbByteArray[i + 0] = 0;	    //blue
+        //        rgbData.rawRgbByteArray[i + 1] = 0;     //green
+        //        rgbData.rawRgbByteArray[i + 2] = 1;     //red
+        //         */
+        //        rgbData.rawRgbByteArray[i + 3] = 0;     //alpha
+
+        //    }
+
+        //    BitmapSource bitmapSource = BitmapUtility.createBitmapSource(rgbData);
+        //    this._image.Source = bitmapSource;
+        //    if (displayed)
+        //    {
+        //        GameLoop.getSceneManager().canvasUpdateImage(this);
+        //    }
+        //}
+        #endregion
+
+        public int cutTrigger()
+        {
+            //this.fadeImage();
+            this.isCut = true;
+            //create floating death label
+            GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, GameFloatingLabelObject.points2string(FRUIT_DEATH_POINTS)), null));
+
+            return FRUIT_DEATH_POINTS;
+        }
+
+        public int collectionTrigger()
+        {
+            //this.fadeImage();
+            this.isCollected = true;
+            //create floating death label
+            GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, GameFloatingLabelObject.points2string(FRUIT_COLLECTION_POINTS)), null));
+
+            return FRUIT_COLLECTION_POINTS;
+        }
     }
 }
