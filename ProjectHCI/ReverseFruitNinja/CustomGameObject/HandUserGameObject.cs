@@ -1,5 +1,6 @@
 ﻿using Microsoft.Kinect;
 using ProjectHCI.KinectEngine;
+using ProjectHCI.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +17,10 @@ namespace ProjectHCI.ReverseFruitNinja
     {
 
         private const double PIXEL_PER_CENTIMETER = 5;
+        private bool firstTimeTracked;
+        private Image notAlreadyTrackedImage;
+        private Image cursorImage;
+
         //private IGameObject hourglassChildGameObject;
 
         
@@ -26,13 +31,22 @@ namespace ProjectHCI.ReverseFruitNinja
                                   SkeletonSmoothingFilter skeletonSmoothingFilter)
             : base (xPosition, yPosition, boundingBoxGeometry, image, skeletonSmoothingFilter)
         {
-            //this.hourglassChildGameObject = null;
-        }        
+            this.firstTimeTracked = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mainWindowCanvas"></param>
+            this.notAlreadyTrackedImage = new Image();
+            this.notAlreadyTrackedImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"wave.png")));
+            this.notAlreadyTrackedImage.Height = 129;
+            this.notAlreadyTrackedImage.Width = 600;
+
+            this.cursorImage = image;
+
+            this._image = notAlreadyTrackedImage;
+
+            //this.hourglassChildGameObject = null;
+        }
+
+        
+
         public override void onRendererUpdateDelegate()
         {
 
@@ -49,6 +63,8 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 if (handJoint.TrackingState == JointTrackingState.Tracked)
                 {
+                    this._image = cursorImage;
+                    this.firstTimeTracked = true;
 
                     double xHandJointPosition = Math.Abs(handJoint.Position.X) > 0.4 ? 0.4 * Math.Sign(handJoint.Position.X) : handJoint.Position.X;
                     double yHandJointPosition = Math.Abs(handJoint.Position.Y) > 0.4 ? 0.4 * Math.Sign(handJoint.Position.Y) : handJoint.Position.Y;
@@ -63,6 +79,22 @@ namespace ProjectHCI.ReverseFruitNinja
                 }
             }
         }
+
+
+
+
+        public override bool isCollidable()
+        {
+            return this.firstTimeTracked;
+        }
+
+
+
+
+        
+
+
+
 
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {

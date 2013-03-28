@@ -117,7 +117,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 Geometry boundingBoxGeometry = new EllipseGeometry(new Point(75, 75), 10, 10);
 
-                HandUserGameObject userGameObject = new HandUserGameObject(700, 650, boundingBoxGeometry, image, SkeletonSmoothingFilter.HIGH_SMOOTHING_LEVEL);
+                HandUserGameObject userGameObject = new HandUserGameObject(0, 0, boundingBoxGeometry, image, SkeletonSmoothingFilter.HIGH_SMOOTHING_LEVEL);
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, null));
 #if DEBUG
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(userGameObject), userGameObject));
