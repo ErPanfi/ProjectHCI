@@ -52,19 +52,19 @@ namespace ProjectHCI.ReverseFruitNinja
 
             //add user object
             Image image = new Image();
-            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"hand.png")));
-            image.Height = 150;
-            image.Width = 150;
+            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"crosshair.gif")));
+            image.Height = 200;
+            image.Width = 200;
 
-            Geometry boundingBoxGeometry = new EllipseGeometry(new Point(75, 75), 10, 10);
+            Geometry boundingBoxGeometry = new EllipseGeometry(new Point(100, 100), 80, 80);
 
             double halfCanvasWidth = sceneManager.getCanvasWidth() * 0.5;
             double halfCanvasHeight = sceneManager.getCanvasHeight() * 0.5;
 
-            HandUserGameObject userGameObject = new HandUserGameObject(0, 0, boundingBoxGeometry, image, SkeletonSmoothingFilter.HIGH_SMOOTHING_LEVEL);
+            HandUserGameObject userGameObject = new HandUserGameObject(0, 0, boundingBoxGeometry, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, null));
 #if DEBUG
-            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(userGameObject), userGameObject));
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(userGameObject), userGameObject));
 #endif
 
 
@@ -79,7 +79,7 @@ namespace ProjectHCI.ReverseFruitNinja
             IGameObject gameObject = new GameScoreLabelObject(0, 0, "Game score : ", this);
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
 #if DEBUG
-            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), userGameObject));
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(gameObject), userGameObject));
 #endif
 
 
@@ -88,7 +88,7 @@ namespace ProjectHCI.ReverseFruitNinja
             gameObject.update(0);
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
 #if DEBUG
-            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), userGameObject));
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(gameObject), userGameObject));
 #endif
 
 
@@ -110,7 +110,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
 #if DEBUG
-            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(userGameObject), userGameObject));
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(userGameObject), userGameObject));
 #endif
 
             return ret;
@@ -123,13 +123,21 @@ namespace ProjectHCI.ReverseFruitNinja
             List<IGameObject> objsToRemove = new List<IGameObject>();
 
             //removing all objs
+<<<<<<< HEAD
             foreach (KeyValuePair<String, List<IGameObject>> gameTypeAndObjectPair0 in sceneManager.getGameObjectListMapByTag())
+=======
+            foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameTypeAndObjectPair0 in sceneManager.getGameObjectListMapByTypeEnum())
+>>>>>>> 2217e9bba8b77d31e766363a074ac36164778def
             {
                 foreach (IGameObject gameObject00 in gameTypeAndObjectPair0.Value)
                 {
                     switch (gameTypeAndObjectPair0.Key)
                     {
+<<<<<<< HEAD
                         case Tags.DEBUG_TAG:   //debug objs are removed implicitly
+=======
+                        case GameObjectTypeEnum.DebugObject:   //debug objs are removed implicitly
+>>>>>>> 2217e9bba8b77d31e766363a074ac36164778def
                             break;
                         default:
                             objsToRemove.Add(gameObject00); //can't remove object in this foreach (collection modified exception)

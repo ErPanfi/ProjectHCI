@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using ProjectHCI.ReverseFruitNinja;
 
 namespace ProjectHCI.KinectEngine
 {
@@ -37,8 +38,8 @@ namespace ProjectHCI.KinectEngine
             base._yPosition = yPosition;
             base._extraData = null;
             base._uid = Guid.NewGuid().ToString();
-<<<<<<< HEAD:ProjectHCI/ReverseFruitNinja/CustomGameObject/FormattedTextGameObject.cs
-            base._gameObjectTag = Tags.DEBUG_TAG;
+<<<<<<< HEAD:ProjectHCI/KinectEngine/GameObject/FormattedTextGameObject.cs
+            base._gameObjectTag = Tags.UI_TAG;
 =======
             base._gameObjectTypeEnum = GameObjectTypeEnum.UIObject;
 >>>>>>> 2217e9bba8b77d31e766363a074ac36164778def:ProjectHCI/KinectEngine/GameObject/FormattedTextGameObject.cs

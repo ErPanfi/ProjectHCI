@@ -104,7 +104,7 @@ namespace ProjectHCI.ReverseFruitNinja
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
 #if DEBUG
-            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), gameObject));            
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(gameObject), gameObject));            
 #endif
 
             //label spawn
@@ -142,7 +142,12 @@ namespace ProjectHCI.ReverseFruitNinja
             Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
             GameSceneBrain sceneBrain = (GameSceneBrain) GameLoop.getSceneBrain();
 
+<<<<<<< HEAD
             Dictionary<String, List<IGameObject>> gameObjectListMapByType = sceneManager.getGameObjectListMapByTag();
+=======
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType = sceneManager.getGameObjectListMapByTypeEnum();
+>>>>>>> 2217e9bba8b77d31e766363a074ac36164778def
+
             //userGameObjectList
             Debug.Assert(gameObjectListMapByType.ContainsKey(Tags.USER_TAG), "the userGameObject must be created.");
             List<IGameObject> userGameObjectList = userGameObjectList = gameObjectListMapByType[Tags.USER_TAG];
@@ -180,7 +185,7 @@ namespace ProjectHCI.ReverseFruitNinja
                 this.unfriendlyObjCooldown = this.generateNewChopCooldown();
                 this.lastUnfriendlyObjSpawned = 0;
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), gameObject));
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(gameObject), gameObject));
 #endif
                 
             }
@@ -198,7 +203,7 @@ namespace ProjectHCI.ReverseFruitNinja
                 this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
                 this.lastFriendlyObjSpawned = 0;
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), gameObject));
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewGameObject(gameObject), gameObject));
 #endif
             }
             else
