@@ -110,7 +110,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
 #if DEBUG
-            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(userGameObject), userGameObject));
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), gameObject));
 #endif
 
             return ret;
