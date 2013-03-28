@@ -366,9 +366,8 @@ namespace ProjectHCI.ReverseFruitNinja
                 buttonImage.StretchDirection = StretchDirection.Both;
 
                 Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(420, 350)));
-                //ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.newGameButtonActivationDelegate);
-
-                ButtonGameObject buttonGameObject = new ButtonGameObject(0, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, null);
+                ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.easyLevelButtonActivationDelegate);
+                ButtonGameObject buttonGameObject = new ButtonGameObject(0, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, this.menuAreaGameObject));
 #if DEBUG
@@ -388,9 +387,8 @@ namespace ProjectHCI.ReverseFruitNinja
                 buttonImage.StretchDirection = StretchDirection.Both;
 
                 Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(420, 350)));
-                //ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.optionsButtonActivationDelegate);
-
-                ButtonGameObject buttonGameObject = new ButtonGameObject(470, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, null);
+                ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.mediumLevelButtonActivationDelegate);
+                ButtonGameObject buttonGameObject = new ButtonGameObject(470, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, this.menuAreaGameObject));
 #if DEBUG
@@ -410,9 +408,8 @@ namespace ProjectHCI.ReverseFruitNinja
                 buttonImage.StretchDirection = StretchDirection.Both;
 
                 Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(420, 350)));
-                //ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.exitButtonActivationDelegate);
-
-                ButtonGameObject buttonGameObject = new ButtonGameObject(940, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, null);
+                ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.hardLevelButtonActivationDelegate);
+                ButtonGameObject buttonGameObject = new ButtonGameObject(940, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, this.menuAreaGameObject));
 #if DEBUG
@@ -461,9 +458,8 @@ namespace ProjectHCI.ReverseFruitNinja
                 buttonImage.StretchDirection = StretchDirection.Both;
 
                 Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(420, 350)));
-                //ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.newGameButtonActivationDelegate);
-
-                ButtonGameObject buttonGameObject = new ButtonGameObject(0, 350 - buttonImage.Height *0.5, boundingBoxGeometry, buttonImage, true, null);
+                ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.handControlButtonActivationDelegate);
+                ButtonGameObject buttonGameObject = new ButtonGameObject(0, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, this.menuAreaGameObject));
 #if DEBUG
@@ -483,9 +479,8 @@ namespace ProjectHCI.ReverseFruitNinja
                 buttonImage.StretchDirection = StretchDirection.Both;
 
                 Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(420, 350)));
-                //ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.optionsButtonActivationDelegate);
-
-                ButtonGameObject buttonGameObject = new ButtonGameObject(470, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, null);
+                ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.headControlButtonActivationDelegate);
+                ButtonGameObject buttonGameObject = new ButtonGameObject(470, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, this.menuAreaGameObject));
 #if DEBUG
@@ -533,9 +528,8 @@ namespace ProjectHCI.ReverseFruitNinja
                 buttonImage.StretchDirection = StretchDirection.Both;
 
                 Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(420, 350)));
-                //ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.newGameButtonActivationDelegate);
-
-                ButtonGameObject buttonGameObject = new ButtonGameObject(0, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, null);
+                ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.fruit1ButtonActivationDelegate);
+                ButtonGameObject buttonGameObject = new ButtonGameObject(0, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, this.menuAreaGameObject));
 #if DEBUG
@@ -555,9 +549,8 @@ namespace ProjectHCI.ReverseFruitNinja
                 buttonImage.StretchDirection = StretchDirection.Both;
 
                 Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(420, 350)));
-                //ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.optionsButtonActivationDelegate);
-
-                ButtonGameObject buttonGameObject = new ButtonGameObject(470, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, null);
+                ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.fruit2ButtonActivationDelegate);
+                ButtonGameObject buttonGameObject = new ButtonGameObject(470, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, this.menuAreaGameObject));
 #if DEBUG
@@ -576,9 +569,8 @@ namespace ProjectHCI.ReverseFruitNinja
                 buttonImage.StretchDirection = StretchDirection.Both;
 
                 Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(420, 350)));
-                //ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.optionsButtonActivationDelegate);
-
-                ButtonGameObject buttonGameObject = new ButtonGameObject(470, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, null);
+                ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.fruit3ButtonActivationDelegate);
+                ButtonGameObject buttonGameObject = new ButtonGameObject(470, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, this.menuAreaGameObject));
 #if DEBUG
@@ -643,22 +635,19 @@ namespace ProjectHCI.ReverseFruitNinja
             //let the madness begin!!! .....WTF?!
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public void settingsButtonActivationDelegate()
         {
             this.changeState(this.spawnSettingsMenu);
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
         public void quitButtonActivationDelegate()
         {
             GameLoop.getGameLoopSingleton().stop();
         }
+
+
+
+
 
 
 
@@ -677,6 +666,59 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             this.changeState(this.spawnGraphicsMenu);
         }
+
+
+
+
+
+        public void easyLevelButtonActivationDelegate()
+        {
+            //TODO
+        }
+
+        public void mediumLevelButtonActivationDelegate()
+        {
+            //TODO
+        }
+
+        public void hardLevelButtonActivationDelegate()
+        {
+            //TODO
+        }
+
+
+
+
+
+        public void headControlButtonActivationDelegate()
+        {
+            //TODO
+        }
+
+        public void handControlButtonActivationDelegate()
+        {
+            //TODO
+        }
+
+
+
+        public void fruit1ButtonActivationDelegate()
+        {
+            //TODO
+        }
+
+        public void fruit2ButtonActivationDelegate()
+        {
+            //TODO
+        }
+
+        public void fruit3ButtonActivationDelegate()
+        {
+            //TODO
+        }
+
+
+
 
 
         public void backButtonActivationDelegate()

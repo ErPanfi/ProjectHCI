@@ -147,9 +147,6 @@
     <Resource Include="Resources\slash_vert.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\clock.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\new_game.png" />
   </ItemGroup>
   <ItemGroup>
