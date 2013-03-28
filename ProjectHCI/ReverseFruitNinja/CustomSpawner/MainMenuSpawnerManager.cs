@@ -108,6 +108,27 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
 
+
+
+
+
+            { // test
+
+                FormattedTextGameObject fgo = new FormattedTextGameObject(300, 300, "Font di merda", -1);
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(fgo, null));
+
+
+                //foreach (FontFamily fontFamily in Fonts.GetFontFamilies(new Uri("pack://application:,,,/"), "./Resources/"))
+                //{
+                //    System.Diagnostics.Debug.WriteLine("font: " + fontFamily);
+                //}
+
+            }
+
+
+
+
+
             { //userObject
 
                 Image image = new Image();
