@@ -3,35 +3,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    class CenteredScreenAreaGameObject : GameObject
+    public class ImageGuiGameObject : GameObject
     {
 
-
-        public CenteredScreenAreaGameObject(double canvasWidth,
-                                            double canvasHeight,
-                                            double gameObjectAreaWidth,
-                                            double gameObjectAreaHeight)
+        public ImageGuiGameObject(double xPosition,
+                                  double yPosition,
+                                  Image image)
         {
-
-            base._xPosition = canvasWidth * 0.5 - gameObjectAreaWidth *0.5;
-            base._yPosition = canvasHeight * 0.5 - gameObjectAreaHeight * 0.5;
-            base._boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(gameObjectAreaWidth, gameObjectAreaHeight)));
+            
+            base._xPosition = xPosition;
+            base._yPosition = yPosition;
+            base._boundingBoxGeometry = null;
             base._extraData = null;
-            base._image = null;
             base._uid = Guid.NewGuid().ToString();
             base._gameObjectTag = Tags.UI_TAG;
-            
+            base._image = image;
+
         }
 
 
         public override void update(int deltaTimeMillis)
         {
-            //do nothing
+            // do nothing
         }
 
         public override bool isCollidable()
@@ -44,29 +41,37 @@ namespace ProjectHCI.ReverseFruitNinja
             return false;
         }
 
+
+
         public override void onRendererDisplayDelegate()
         {
-            //do nothing
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.canvasDisplayImage(this, 100);
         }
 
         public override void onRendererUpdateDelegate()
         {
-            //do nothing
+            // do nothing
         }
 
         public override void onRendererRemoveDelegate()
         {
-            //do nothing
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.canvasRemoveImage(this);
         }
+
+
+
+
 
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
-            //do nothing
+            throw new NotImplementedException();
         }
 
         public override void onCollisionExitDelegate(IGameObject otherGameObject)
         {
-            //do nothing
+            throw new NotImplementedException();
         }
     }
 }

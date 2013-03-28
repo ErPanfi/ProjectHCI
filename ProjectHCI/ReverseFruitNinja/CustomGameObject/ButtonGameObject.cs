@@ -51,7 +51,7 @@ namespace ProjectHCI.ReverseFruitNinja
             base._extraData = null;
             base._boundingBoxGeometry = boundingBoxGeometry;
             base._image = image;
-            base._gameObjectTypeEnum = GameObjectTypeEnum.UIObject;
+            base._gameObjectTag = Tags.BUTTON_TAG;
             base._uid = Guid.NewGuid().ToString();
 
             this.activationDelegate = activationDelegate;
@@ -123,7 +123,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         public override void onRendererUpdateDelegate()
         {
-            //TODO: change state color
+            //do nothing
         }
 
         /// <summary>
@@ -141,9 +141,11 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="otherGameObject"></param>
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
-            if (otherGameObject.getGameObjectTypeEnum() == GameObjectTypeEnum.UserObject)
+            if (otherGameObject.getGameObjectTag() == Tags.USER_TAG)
             {
+                GameLoop.getSceneManager().applyScale(this, 1.2, 1.2, this.getImage().Width * 0.5, this.getImage().Height * 0.5);
                 pointedByUser = true;
+
             }
         }
 
@@ -153,8 +155,9 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="otherGameObject"></param>
         public override void onCollisionExitDelegate(IGameObject otherGameObject)
         {
-            if (otherGameObject.getGameObjectTypeEnum() == GameObjectTypeEnum.UserObject)
+            if (otherGameObject.getGameObjectTag() == Tags.USER_TAG)
             {
+                GameLoop.getSceneManager().applyScale(this, 1 / 1.2, 1 / 1.2, this.getImage().Width * 0.5, this.getImage().Height * 0.5);
                 this.pointedByUser = false;
                 this.internalCountDown = USER_INTERACTION_DELAY;
             }

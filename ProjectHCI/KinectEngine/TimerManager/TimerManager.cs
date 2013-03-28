@@ -29,22 +29,23 @@ namespace ProjectHCI.KinectEngine
             ISceneManager sceneManager = GameLoop.getSceneManager();
 
 
-            Dictionary<GameObjectTypeEnum, List<IGameObject>> allGameObjectListMapByType = sceneManager.getGameObjectListMapByTypeEnum(); 
-            Debug.Assert(allGameObjectListMapByType != null, "expected allGameObjectListMapByType != null");
+            Dictionary<String, List<IGameObject>> allGameObjectListMapByTag = sceneManager.getGameObjectListMapByTag(); 
+            Debug.Assert(allGameObjectListMapByTag != null, "expected allGameObjectListMapByType != null");
 
-            foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEntry0 in allGameObjectListMapByType)
+            foreach (KeyValuePair<String, List<IGameObject>> gameObjectListMapByTag0 in allGameObjectListMapByTag)
             {
-                foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value.ToList()) //ToList used as a copy 
+                foreach (IGameObject gameObject00 in gameObjectListMapByTag0.Value.ToList()) //ToList used as a copy 
                 {
 
                     gameObject00.update(Time.getDeltaTimeMillis());
 
-                    //an object can be removed by another gameObject00.update e.g. an object decides to remove all children in its update step.
-                    bool gameObjectIsStillPresent = sceneManager.getGameObjectListMapByTypeEnum()[gameObject00.getGameObjectTypeEnum()].Contains(gameObject00);
+                    //an object can be removed by another gameObject00.update (the line above) e.g. an object decides to remove all children in its update step.
+                    bool gameObjectIsStillPresent = sceneManager.getGameObjectListMapByTag()[gameObject00.getGameObjectTag()].Contains(gameObject00);
 
                     if (gameObject00.isCollidable()
                         && gameObjectIsStillPresent
-                        && !sceneManager.getCollaidableGameObjectList(gameObject00.getGameObjectTypeEnum()).Contains(gameObject00)){
+                        && sceneManager.isGameObjectDisplayed(gameObject00)
+                        && !sceneManager.getCollaidableGameObjectList(gameObject00.getGameObjectTag()).Contains(gameObject00)){
     
 
                         sceneManager.promoteToCollidableGameObject(gameObject00);

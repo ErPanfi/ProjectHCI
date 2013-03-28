@@ -20,7 +20,7 @@ namespace ProjectHCI.KinectEngine
         protected Geometry _boundingBoxGeometry;
         protected object _extraData;
         protected String _uid;
-        protected GameObjectTypeEnum _gameObjectTypeEnum;
+        protected String _gameObjectTag = "no_tag";
         protected Image _image;
 
 
@@ -105,14 +105,14 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public virtual void setGameObjectTypeEnum(GameObjectTypeEnum gameObjectTypeEnum)
+        public virtual void setGameObjectTag(String gameObjectTag)
         {
-            _gameObjectTypeEnum = gameObjectTypeEnum;
+            _gameObjectTag = gameObjectTag;
         }
 
-        public virtual GameObjectTypeEnum getGameObjectTypeEnum()
+        public virtual String getGameObjectTag()
         {
-            return _gameObjectTypeEnum;
+            return _gameObjectTag;
         }
 
 

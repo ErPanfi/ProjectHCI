@@ -64,8 +64,10 @@
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\FormattedTextGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HandUserGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\ImageGuiGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\NotUserFriendlyGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Tags.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\UserFriendlyGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HeadUserGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\CenteredScreenAreaGameObject.cs" />
@@ -124,6 +126,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Resource Include="Resources\made_in_china.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\skype.png" />
@@ -136,15 +139,47 @@
     <Resource Include="Resources\slash_vert.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ExitButton.png" />
-    <Resource Include="Resources\NewGameButton.png" />
-    <Resource Include="Resources\OptionsButton.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\crosshair.gif" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\clock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\new_game.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\quit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\controls.png" />
+    <Resource Include="Resources\difficulty.png" />
+    <Resource Include="Resources\graphics.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\easy.png" />
+    <Resource Include="Resources\hard.png" />
+    <Resource Include="Resources\normal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\head_control.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hand_control.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

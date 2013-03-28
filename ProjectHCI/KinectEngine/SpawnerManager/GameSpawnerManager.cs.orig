@@ -7,33 +7,33 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Diagnostics;
 using System.Windows.Controls;
-using System.Collections;
-using System.Collections.Concurrent;
-using ProjectHCI.KinectEngine;
 
-namespace ProjectHCI.ReverseFruitNinja
+namespace ProjectHCI.KinectEngine
 {
     /// <summary>
     /// This class implements the spawner mechanism of the game.
     /// In order to generate a constant object flow the spawner must check the objects currently present in the scene and, if needed, create & add a new object to it.
     /// </summary>
-    public class GameSpawnerManager : SpawnerManager
+    public class GameSpawnerManager : ISpawnerManager
     {
 
         private Random random;
 
         private const double TRY_TO_CUT_PLAYERS_PROBABILITY = 0.6;
+        private bool userSpawned;
+        private List<IGameObject> spawnedGameObjectList;
         private int lastFriendlyObjSpawned, friendlyObjCooldown;
         private int lastUnfriendlyObjSpawned, unfriendlyObjCooldown;
         private Configuration currentConfiguration;
-
 
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="sceneBrain">The active scene brain must be passed,in order to allow the spawner to reference it</param>
-        public GameSpawnerManager() : base()
+        public GameSpawnerManager()
         {
+            this.userSpawned = false;
+
             this.random = new Random();
 
             currentConfiguration = Configuration.getCurrentConfiguration();
@@ -42,132 +42,112 @@ namespace ProjectHCI.ReverseFruitNinja
             this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
             this.lastFriendlyObjSpawned = 0;
             this.lastUnfriendlyObjSpawned = 0;
-
-            
         }
 
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        protected override List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjectsOnStart()
+        public List<IGameObject> getSpawnedObjects()
         {
-
-            //userGameObject spawn
-
-            List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
-
-            IGameObject userGameObject = this.spawnUserGameObject();
-
-            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, null));
-            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(userGameObject), userGameObject));
-
-            return gameObjectParentGameObjectPairList;
+            return new List<IGameObject>(spawnedGameObjectList);
         }
 
-
-
         /// <summary>
-        /// 
+        /// This method, when called, awake the spawner.
+        /// The spawner, then, check if a new object (user friendly or not) must be added to the scene and, if necessary, create the appropriate object and submit it to the scene manager.
         /// </summary>
-        /// <returns></returns>
-        protected override List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjectsPerFrame()
+        public void awaken()
         {
-
-            List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
             ISceneManager sceneManager = GameLoop.getSceneManager();
             ISceneBrain sceneBrain = GameLoop.getSceneBrain();
+            int     deltaTimeMillis = Time.getDeltaTimeMillis();
 
+            spawnedGameObjectList = new List<IGameObject>();
 
+            if (!this.userSpawned)
+            {
+                IGameObject gameObject = this.spawnUserGameObject();
+                sceneManager.addGameObject(gameObject, null);
+#if DEBUG
+                sceneManager.addGameObject(new BoundingBoxViewrGameObject(gameObject), gameObject);
+#endif
 
-            Dictionary<String, List<IGameObject>> gameObjectListMapByType = sceneManager.getGameObjectListMapByTag();
-
-
-
+                spawnedGameObjectList.Add(gameObject);
+                this.userSpawned = true;
+            }
+            
+            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType = sceneManager.getGameObjectListMapByTypeEnum();
+            
             //userGameObjectList
-            Debug.Assert(gameObjectListMapByType.ContainsKey(Tags.USER_TAG), "the userGameObject must be created.");
-            List<IGameObject> userGameObjectList = userGameObjectList = gameObjectListMapByType[Tags.USER_TAG];
+            Debug.Assert(gameObjectListMapByType.ContainsKey(GameObjectTypeEnum.UserObject), "the userGameObject must be created.");
+            List<IGameObject> userGameObjectList = userGameObjectList = gameObjectListMapByType[GameObjectTypeEnum.UserObject];
             Debug.Assert(userGameObjectList.Count > 0, "expected userGameObjectList.Count > 0");
-
-
-
-
+            
             //friendlyObjectList
             List<IGameObject> friendlyObjectList;
-            if (gameObjectListMapByType.ContainsKey(Tags.FRUIT_TAG))
+            if (gameObjectListMapByType.ContainsKey(GameObjectTypeEnum.FriendlyObject))
             {
-                friendlyObjectList = gameObjectListMapByType[Tags.FRUIT_TAG];
+                friendlyObjectList = gameObjectListMapByType[GameObjectTypeEnum.FriendlyObject];
             }
             else
             {
                 friendlyObjectList = new List<IGameObject>();
             }
-
-
-
-
+            
             //unfriendlyObjectList
             List<IGameObject> unfriendlyObjectList;
-            if (gameObjectListMapByType.ContainsKey(Tags.CUT_TAG))
+            if (gameObjectListMapByType.ContainsKey(GameObjectTypeEnum.UnfriendlyObject))
             {
-                unfriendlyObjectList = gameObjectListMapByType[Tags.CUT_TAG];
+                unfriendlyObjectList = gameObjectListMapByType[GameObjectTypeEnum.UnfriendlyObject];
             }
             else
             {
                 unfriendlyObjectList = new List<IGameObject>();
             }
 
-
-
+            //obtain generation parameters from scene brain
+            //int maxNumberOfChopAllowed = sceneBrain.getMaxNumberOfChopAllowed();
+            //int maxNumberOfUserFriendlyGameObjectAllowed = sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed();
+            //float bonusPercentiage = sceneBrain.getBonusPercentiege();
 
             //spawn a new unfriendly obj
+            //if (this.shouldSpawnNewGameObject(unfriendlyObjectList.Count, maxNumberOfChopAllowed))
             if (this.shouldSpawnNewUnfriendlyObject(unfriendlyObjectList.Count, sceneBrain.getMaxNumberOfChopAllowed(), this.unfriendlyObjCooldown, this.lastUnfriendlyObjSpawned))
             {
                 IGameObject gameObject = this.spawnNewUnfriendlyObject(userGameObjectList, friendlyObjectList);
-
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
-
+                spawnedGameObjectList.Add(gameObject);
+                sceneManager.addGameObject(gameObject, null);
                 this.unfriendlyObjCooldown = random.Next(currentConfiguration.minChopSpawnCooldownTimeMillis, currentConfiguration.maxChopSpawnCooldownTimeMillis);
                 this.lastUnfriendlyObjSpawned = 0;
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(gameObject), gameObject));
+                sceneManager.addGameObject(new BoundingBoxViewrGameObject(gameObject), gameObject);
 #endif
-                
+                //sceneManager.applyRotation(gameObject,
+                //                            10,
+                //                            gameObject.getXPosition() - gameObject.getImage().Width * 0.5,
+                //                            gameObject.getYPosition() - gameObject.getImage().Height * 0.5);
             }
             else
             {
-                this.lastUnfriendlyObjSpawned += Time.getDeltaTimeMillis();
+                this.lastUnfriendlyObjSpawned += deltaTimeMillis;
             }
 
-
-
-
             //spawn new friendly obj, with potentially different probability distribution
+            //if (this.shouldSpawnNewGameObject(friendlyObjectList.Count, maxNumberOfUserFriendlyGameObjectAllowed))
             if (this.shouldSpawnNewFriendlyObject(friendlyObjectList.Count, sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed(), this.friendlyObjCooldown, this.lastFriendlyObjSpawned))
             {
                 IGameObject gameObject = this.spawnNewFriendlyObject(friendlyObjectList);
-
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+                spawnedGameObjectList.Add(gameObject);
+                sceneManager.addGameObject(gameObject, null);
                 this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
                 this.lastFriendlyObjSpawned = 0;
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewrGameObject(gameObject), gameObject));
+                sceneManager.addGameObject(new BoundingBoxViewrGameObject(gameObject), gameObject);
 #endif
             }
             else
             {
-                this.lastFriendlyObjSpawned += Time.getDeltaTimeMillis();
+                this.lastFriendlyObjSpawned += deltaTimeMillis;
             }
-
-
-
-            return gameObjectParentGameObjectPairList;
         }
 
-
-       
 
 
         /// <summary> 
@@ -317,10 +297,17 @@ namespace ProjectHCI.ReverseFruitNinja
             double halfCanvasWidth = GameLoop.getSceneManager().getCanvasWidth() * 0.5;
             double halfCanvasHeight = GameLoop.getSceneManager().getCanvasHeight() * 0.5;
 
+<<<<<<< HEAD
             return new HeadUserGameObject(halfCanvasWidth - image.Width * 0.5,
+                                      halfCanvasHeight - image.Height * 0.5, 
+                                      boundingBoxGeometry, 
+                                      image, 
+=======
+            return new UserGameObject(halfCanvasWidth - image.Width * 0.5,
                                       halfCanvasHeight - image.Height * 0.5,
                                       boundingBoxGeometry,
                                       image,
+>>>>>>> 8bbd6ef5c0cddcfe389038362089b9cb29f18dfd
                                       SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
 
         }
@@ -367,7 +354,6 @@ namespace ProjectHCI.ReverseFruitNinja
         //        return null;
         //    }
         //}
-
 
     }
 }

@@ -104,9 +104,9 @@ namespace ProjectHCI.KinectEngine
             ISceneManager sceneManager = GameLoop.getSceneManager();
 
             List<IGameObject> deadGameObjectList = new List<IGameObject>(20);
-            foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEntry0 in sceneManager.getGameObjectListMapByTypeEnum())
+            foreach (KeyValuePair<String, List<IGameObject>> gameObjectListMapByTag0 in sceneManager.getGameObjectListMapByTag())
             {
-                foreach (IGameObject gameObject00 in gameObjectListMapByTypeEntry0.Value)
+                foreach (IGameObject gameObject00 in gameObjectListMapByTag0.Value)
                 {
                     if (gameObject00.isDead())
                     {

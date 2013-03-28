@@ -31,7 +31,7 @@ namespace ProjectHCI.ReverseFruitNinja
             base._boundingBoxGeometry = boundingBoxGeometry;
             base._extraData = null;
             base._uid = Guid.NewGuid().ToString();
-            base._gameObjectTypeEnum = GameObjectTypeEnum.UserObject;
+            base._gameObjectTag = Tags.USER_TAG;
             base._image = image;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);

@@ -42,11 +42,11 @@ namespace ProjectHCI
             IUpdateRenderer updateRenderer = new UpdateRenderer();
 
             ICollisionManager collisionManager = new CollisionManager();
-            HashSet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> collidableTypeEnumHashSet = new HashSet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>>();
-            collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UserObject, GameObjectTypeEnum.FriendlyObject));
-            collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UserObject, GameObjectTypeEnum.UIObject));
-            collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UserObject, GameObjectTypeEnum.UnfriendlyObject));
-            collidableTypeEnumHashSet.Add(new KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>(GameObjectTypeEnum.UnfriendlyObject, GameObjectTypeEnum.FriendlyObject));
+            HashSet<KeyValuePair<String, String>> collidableTypeEnumHashSet = new HashSet<KeyValuePair<String, String>>();
+            collidableTypeEnumHashSet.Add(new KeyValuePair<String, String>(Tags.USER_TAG, Tags.FRUIT_TAG));
+            collidableTypeEnumHashSet.Add(new KeyValuePair<String, String>(Tags.USER_TAG, Tags.BUTTON_TAG));
+            collidableTypeEnumHashSet.Add(new KeyValuePair<String, String>(Tags.USER_TAG, Tags.CUT_TAG));
+            collidableTypeEnumHashSet.Add(new KeyValuePair<String, String>(Tags.CUT_TAG, Tags.FRUIT_TAG));
             collisionManager.setCollisionToHandle(collidableTypeEnumHashSet);
 
             ISpawnerManager spawnerManager = new MainMenuSpawnerManager();

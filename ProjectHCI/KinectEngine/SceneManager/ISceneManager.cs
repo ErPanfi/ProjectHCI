@@ -15,7 +15,7 @@ namespace ProjectHCI.KinectEngine
 
         void addGameObject(IGameObject gameObject, IGameObject parentGameObject);
 
-        void removeGameObjectsByType(GameObjectTypeEnum gameObjectTypeEnum);
+        void removeGameObjectsByTag(String gameObjectTag);
 
         void removeGameObject(IGameObject gameObject);
 
@@ -23,11 +23,11 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByTypeEnum();
+        Dictionary<String, List<IGameObject>> getCollidableGameObjectListMapByTag();
 
-        Dictionary<GameObjectTypeEnum, List<IGameObject>> getGameObjectListMapByTypeEnum();
+        Dictionary<String, List<IGameObject>> getGameObjectListMapByTag();
 
-        List<IGameObject> getCollaidableGameObjectList(GameObjectTypeEnum gameObjectTypeEnum);
+        List<IGameObject> getCollaidableGameObjectList(String gameObjectTag);
 
         bool gameObjectExist(IGameObject gameObject);
 
@@ -41,9 +41,16 @@ namespace ProjectHCI.KinectEngine
 
         void canvasRemoveImage(IGameObject gameObject);
 
-        void applyTranslation(IGameObject gameObject, double xCanvasPosition, double yCanvasPosition);
+        void applyTranslation(IGameObject gameObject, double xOffset, double yOffset);
 
         void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRelativeRotationCenter, double yRelativeRotationCenter);
+
+        void applyScale(IGameObject gameObject, double xScale, double yScale, double xCenter, double yCenter);
+
+
+
+
+        bool isGameObjectDisplayed(IGameObject gameObject);
 
 
 

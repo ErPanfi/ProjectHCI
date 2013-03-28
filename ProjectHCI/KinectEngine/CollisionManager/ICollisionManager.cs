@@ -13,7 +13,7 @@ namespace ProjectHCI.KinectEngine
         /// <returns></returns>
         List<KeyValuePair<IGameObject, IGameObject>> createCollisionList();
 
-        void setCollisionToHandle(ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet);
+        void setCollisionToHandle(ISet<KeyValuePair<String, String>> tagCollidablePairSet);
 
     }
 }

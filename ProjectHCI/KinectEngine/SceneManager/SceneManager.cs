@@ -18,8 +18,8 @@ namespace ProjectHCI.KinectEngine
 
         private SceneNode sceneNodeTree;
 
-        private Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEnum;
-        private Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByTypeEnum;
+        private Dictionary<String, List<IGameObject>> gameObjectListMapByTag;
+        private Dictionary<String, List<IGameObject>> collidableGameObjectListMapByTag;
         private Dictionary<IGameObject, String> uiThreadImageUidMapByGameObject;
 
 
@@ -31,8 +31,8 @@ namespace ProjectHCI.KinectEngine
         {
             this.targetCanvas = targetCanvas;
 
-            this.gameObjectListMapByTypeEnum = new Dictionary<GameObjectTypeEnum, List<IGameObject>>(10);
-            this.collidableGameObjectListMapByTypeEnum = new Dictionary<GameObjectTypeEnum, List<IGameObject>>(10);
+            this.gameObjectListMapByTag = new Dictionary<String, List<IGameObject>>(10);
+            this.collidableGameObjectListMapByTag = new Dictionary<String, List<IGameObject>>(10);
             this.uiThreadImageUidMapByGameObject = new Dictionary<IGameObject, String>(100);
 
             //creation of the rootNode
@@ -51,10 +51,10 @@ namespace ProjectHCI.KinectEngine
         /// <param name="collidableGameObject"></param>
         public void promoteToCollidableGameObject(IGameObject collidableGameObject)
         {
-            Debug.Assert(this.gameObjectListMapByTypeEnum.ContainsKey(collidableGameObject.getGameObjectTypeEnum()), "add the specified object before try to register it as collidable.");
-            Debug.Assert(this.gameObjectListMapByTypeEnum[collidableGameObject.getGameObjectTypeEnum()].Contains(collidableGameObject), "add the specified object before try to register it as collidable.");
+            Debug.Assert(this.gameObjectListMapByTag.ContainsKey(collidableGameObject.getGameObjectTag()), "add the specified object before try to register it as collidable.");
+            Debug.Assert(this.gameObjectListMapByTag[collidableGameObject.getGameObjectTag()].Contains(collidableGameObject), "add the specified object before try to register it as collidable.");
 
-            this.registerGameObject(collidableGameObject, this.collidableGameObjectListMapByTypeEnum);
+            this.registerGameObject(collidableGameObject, this.collidableGameObjectListMapByTag);
         }
 
 
@@ -87,7 +87,7 @@ namespace ProjectHCI.KinectEngine
 
             targetSceneNode.addChild(new SceneNode(gameObject));
 
-            this.registerGameObject(gameObject, this.gameObjectListMapByTypeEnum);
+            this.registerGameObject(gameObject, this.gameObjectListMapByTag);
         }
 
 
@@ -106,8 +106,8 @@ namespace ProjectHCI.KinectEngine
             if (targetSceneNode == null)
             {
                 //assert that all data of this game object was already removed.
-                Debug.Assert(!this.gameObjectListMapByTypeEnum[gameObject.getGameObjectTypeEnum()].Contains(gameObject));
-                Debug.Assert(!this.collidableGameObjectListMapByTypeEnum[gameObject.getGameObjectTypeEnum()].Contains(gameObject));
+                Debug.Assert(!this.gameObjectListMapByTag[gameObject.getGameObjectTag()].Contains(gameObject));
+                Debug.Assert(!this.collidableGameObjectListMapByTag[gameObject.getGameObjectTag()].Contains(gameObject));
             }
             else
             {
@@ -120,11 +120,11 @@ namespace ProjectHCI.KinectEngine
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="gameObjectTypeEnum"></param>
-        public void removeGameObjectsByType(GameObjectTypeEnum gameObjectTypeEnum)
+        /// <param name="gameObjectTag"></param>
+        public void removeGameObjectsByTag(String gameObjectTag)
         {
-            Debug.Assert(this.gameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum), "expected this.gameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum)");
-            foreach(IGameObject gameObject0 in this.gameObjectListMapByTypeEnum[gameObjectTypeEnum])
+            Debug.Assert(this.gameObjectListMapByTag.ContainsKey(gameObjectTag), "expected this.gameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum)");
+            foreach(IGameObject gameObject0 in this.gameObjectListMapByTag[gameObjectTag].ToList()) //to list used as copy
             {
                 this.removeGameObject(gameObject0);
             }
@@ -138,9 +138,9 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <returns></returns>
-        public Dictionary<GameObjectTypeEnum, List<IGameObject>> getGameObjectListMapByTypeEnum()
+        public Dictionary<String, List<IGameObject>> getGameObjectListMapByTag()
         {
-            return this.gameObjectListMapByTypeEnum;
+            return this.gameObjectListMapByTag;
         }
 
 
@@ -149,9 +149,9 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <returns></returns>
-        public Dictionary<GameObjectTypeEnum, List<IGameObject>> getCollidableGameObjectListMapByTypeEnum()
+        public Dictionary<String, List<IGameObject>> getCollidableGameObjectListMapByTag()
         {
-            return this.collidableGameObjectListMapByTypeEnum;
+            return this.collidableGameObjectListMapByTag;
         }
 
 
@@ -159,14 +159,14 @@ namespace ProjectHCI.KinectEngine
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="gameObjectTypeEnum"></param>
+        /// <param name="gameObjectTag"></param>
         /// <returns></returns>
-        public List<IGameObject> getCollaidableGameObjectList(GameObjectTypeEnum gameObjectTypeEnum)
+        public List<IGameObject> getCollaidableGameObjectList(String gameObjectTag)
         {
-            Dictionary<GameObjectTypeEnum, List<IGameObject>> collidableGameObjectListMapByTypeEnum = this.getCollidableGameObjectListMapByTypeEnum();
-            if (collidableGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum))
+            Dictionary<String, List<IGameObject>> collidableGameObjectListMapByTag = this.getCollidableGameObjectListMapByTag();
+            if (collidableGameObjectListMapByTag.ContainsKey(gameObjectTag))
             {
-                return new List<IGameObject>(this.getCollidableGameObjectListMapByTypeEnum()[gameObjectTypeEnum]);
+                return new List<IGameObject>(this.getCollidableGameObjectListMapByTag()[gameObjectTag]);
             }
             else
             {
@@ -338,6 +338,44 @@ namespace ProjectHCI.KinectEngine
         }
 
 
+        public void applyScale(IGameObject gameObject, double xScale, double yScale, double xCenter, double yCenter)
+        {
+
+
+            ScaleTransform scaleTransform = new ScaleTransform(xScale, yScale, xCenter, yCenter);
+
+            TransformGroup imageTransformGroup = new TransformGroup();
+            imageTransformGroup.Children.Add(scaleTransform);
+            imageTransformGroup.Children.Add(gameObject.getImage().RenderTransform);
+            
+
+            gameObject.getImage().RenderTransform = imageTransformGroup;
+
+
+            if (gameObject.getBoundingBoxGeometry() != null)
+            {
+                TransformGroup geometryTransformGroup = new TransformGroup();
+                geometryTransformGroup.Children.Add(scaleTransform);
+                geometryTransformGroup.Children.Add(gameObject.getBoundingBoxGeometry().Transform);
+
+                gameObject.getBoundingBoxGeometry().Transform = geometryTransformGroup;
+            }
+            
+
+
+
+            this.canvasUpdateImage(gameObject);
+
+        }
+
+
+
+        public bool isGameObjectDisplayed(IGameObject gameObject)
+        {
+            return this.uiThreadImageUidMapByGameObject.ContainsKey(gameObject);
+        }
+
+
 
         /// <summary>
         /// 
@@ -378,8 +416,8 @@ namespace ProjectHCI.KinectEngine
         {
             if (sceneNode.getSceneNodeGameObject() != null)
             {
-                this.deleteGameObject(sceneNode.getSceneNodeGameObject(), this.gameObjectListMapByTypeEnum);
-                this.deleteGameObject(sceneNode.getSceneNodeGameObject(), this.collidableGameObjectListMapByTypeEnum);
+                this.deleteGameObject(sceneNode.getSceneNodeGameObject(), this.gameObjectListMapByTag);
+                this.deleteGameObject(sceneNode.getSceneNodeGameObject(), this.collidableGameObjectListMapByTag);
             }
 
             foreach (SceneNode childSceneNode0 in sceneNode.getChildList())
@@ -441,7 +479,7 @@ namespace ProjectHCI.KinectEngine
             { // transform image
                 TransformGroup transformGroup = new TransformGroup();
                 transformGroup.Children.Add(rotateTransform);
-                //transformGroup.Children.Add(gameObject.getImage().RenderTransform);
+                transformGroup.Children.Add(gameObject.getImage().RenderTransform);
 
                 gameObject.getImage().RenderTransform = transformGroup;
             }
@@ -452,7 +490,7 @@ namespace ProjectHCI.KinectEngine
             {
                 TransformGroup transformGroup = new TransformGroup();
                 transformGroup.Children.Add(rotateTransform);
-                //transformGroup.Children.Add(gameObject.getBoundingBoxGeometry().Transform);
+                transformGroup.Children.Add(gameObject.getBoundingBoxGeometry().Transform);
 
                 gameObject.getBoundingBoxGeometry().Transform = transformGroup;
             }
@@ -514,20 +552,20 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <param name="gameObject"></param>
-        /// <param name="targetGameObjectListMapByTypeEnum"></param>
-        private void registerGameObject(IGameObject gameObject, Dictionary<GameObjectTypeEnum, List<IGameObject>> targetGameObjectListMapByTypeEnum)
+        /// <param name="targetGameObjectListMapByTag"></param>
+        private void registerGameObject(IGameObject gameObject, Dictionary<String, List<IGameObject>> targetGameObjectListMapByTag)
         {
             Debug.Assert(gameObject != null, "expected gameObject not null.");
-            Debug.Assert(targetGameObjectListMapByTypeEnum != null, "expected targetGameObjectListMapByTypeEnum not null");
+            Debug.Assert(targetGameObjectListMapByTag != null, "expected targetGameObjectListMapByTypeEnum not null");
 
-            GameObjectTypeEnum gameObjectTypeEnum = gameObject.getGameObjectTypeEnum();
+            String gameObjectTag = gameObject.getGameObjectTag();
 
 
-            if (!targetGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum))
+            if (!targetGameObjectListMapByTag.ContainsKey(gameObjectTag))
             {
-                targetGameObjectListMapByTypeEnum.Add(gameObjectTypeEnum, new List<IGameObject>(20));
+                targetGameObjectListMapByTag.Add(gameObjectTag, new List<IGameObject>(20));
             }
-            targetGameObjectListMapByTypeEnum[gameObjectTypeEnum].Add(gameObject);
+            targetGameObjectListMapByTag[gameObjectTag].Add(gameObject);
 
         }
 
@@ -538,19 +576,19 @@ namespace ProjectHCI.KinectEngine
         /// 
         /// </summary>
         /// <param name="gameObject"></param>
-        /// <param name="targetGameObjectListMapByTypeEnum"></param>
-        private void deleteGameObject(IGameObject gameObject, Dictionary<GameObjectTypeEnum, List<IGameObject>> targetGameObjectListMapByTypeEnum)
+        /// <param name="targetGameObjectListMapByTag"></param>
+        private void deleteGameObject(IGameObject gameObject, Dictionary<String, List<IGameObject>> targetGameObjectListMapByTag)
         {
             Debug.Assert(gameObject != null, "expected gameObject not null.");
-            Debug.Assert(targetGameObjectListMapByTypeEnum != null, "expected targetGameObjectListMapByTypeEnum not null");
+            Debug.Assert(targetGameObjectListMapByTag != null, "expected targetGameObjectListMapByTypeEnum not null");
 
 
-            GameObjectTypeEnum gameObjectTypeEnum = gameObject.getGameObjectTypeEnum(); 
+            String gameObjectTag = gameObject.getGameObjectTag(); 
 
-            if (targetGameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum)
-                    && targetGameObjectListMapByTypeEnum[gameObjectTypeEnum].Contains(gameObject))
+            if (targetGameObjectListMapByTag.ContainsKey(gameObjectTag)
+                    && targetGameObjectListMapByTag[gameObjectTag].Contains(gameObject))
             {
-                targetGameObjectListMapByTypeEnum[gameObjectTypeEnum].Remove(gameObject);
+                targetGameObjectListMapByTag[gameObjectTag].Remove(gameObject);
             }
 
         }
@@ -563,8 +601,8 @@ namespace ProjectHCI.KinectEngine
         public bool gameObjectExist(IGameObject gameObject)
         {
             return gameObject == null
-                || (    this.gameObjectListMapByTypeEnum.ContainsKey(gameObject.getGameObjectTypeEnum())
-                    &&  this.gameObjectListMapByTypeEnum[gameObject.getGameObjectTypeEnum()].Contains(gameObject));
+                || (    this.gameObjectListMapByTag.ContainsKey(gameObject.getGameObjectTag())
+                    &&  this.gameObjectListMapByTag[gameObject.getGameObjectTag()].Contains(gameObject));
 
         }
     }

@@ -39,7 +39,7 @@ namespace ProjectHCI.ReverseFruitNinja
             base._boundingBoxGeometry = boundingBoxGeometry;
             base._extraData = null;
             base._uid = Guid.NewGuid().ToString();
-            base._gameObjectTypeEnum = GameObjectTypeEnum.FriendlyObject;
+            base._gameObjectTag = Tags.FRUIT_TAG;
             base._image = image;
 
             this.timeToLiveMillis = timeToLiveMillis;
