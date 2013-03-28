@@ -8,6 +8,7 @@ using System.Diagnostics;
 
 namespace ProjectHCI.KinectEngine
 {
+    //TODO interface should not be needed anymore...
     public class SceneBrain : ISceneBrain
     {
 
@@ -55,48 +56,41 @@ namespace ProjectHCI.KinectEngine
         #endregion
 
         private float bonusPercentiege;
-         */ 
+         */
 
-        //it's better to encapsulate the current configuration directly
-        private Configuration currentConfiguration;
+        
+        //public SceneBrain()
+        //{
+        //    #region Old Commented Code
+        //    /* 
+        //    this.maxNumberOfChopAllowed = 0;
+        //    this.maxNumberOfUserFriendlyGameObjectAllowed = 0;
+        //    this.bonusPercentiege = 0.0f;
+        //    */		 
+        //    #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public SceneBrain()
-        {
-            #region Old Commented Code
-            /* 
-            this.maxNumberOfChopAllowed = 0;
-            this.maxNumberOfUserFriendlyGameObjectAllowed = 0;
-            this.bonusPercentiege = 0.0f;
-            */		 
-	        #endregion
+        //    #region code before de-exasperating refactoring
+        //    /*
+        //    this.maxNumberOfChopAllowed = configuration.getMaxNumOfChopsAllowed();
+        //    this.maxNumberOfUserFriendlyGameObjectAllowed = configuration.getMaxNumOfFriendlyObjectsAllowed();
+        //    this.chopSpawnCooldownMillis = configuration.getChopSpawnCooldownTimeMillis();
+        //    this.friendlyObjectSpawnCooldownMillis = configuration.getFriendlyObjectSpawnCooldownTimeMillis();
+        //    */
 
-            currentConfiguration = Configuration.getCurrentConfiguration();
-
-            #region code before de-exasperating refactoring
-            /*
-            this.maxNumberOfChopAllowed = configuration.getMaxNumOfChopsAllowed();
-            this.maxNumberOfUserFriendlyGameObjectAllowed = configuration.getMaxNumOfFriendlyObjectsAllowed();
-            this.chopSpawnCooldownMillis = configuration.getChopSpawnCooldownTimeMillis();
-            this.friendlyObjectSpawnCooldownMillis = configuration.getFriendlyObjectSpawnCooldownTimeMillis();
-            */
-
-            /*
-            this.maxNumberOfChopAllowed = configuration.maxNumOfChopsAllowed;
-            this.maxNumberOfUserFriendlyGameObjectAllowed = configuration.maxNumOfFriendlyObjectsAllowed;
-            this.chopSpawnCooldownMillis = configuration.chopSpawnCooldownTimeMillis;
-            this.friendlyObjectSpawnCooldownMillis = configuration.friendlyObjectSpawnCooldownTimeMillis;
-            */
-            #endregion
-        }
+        //    /*
+        //    this.maxNumberOfChopAllowed = configuration.maxNumOfChopsAllowed;
+        //    this.maxNumberOfUserFriendlyGameObjectAllowed = configuration.maxNumOfFriendlyObjectsAllowed;
+        //    this.chopSpawnCooldownMillis = configuration.chopSpawnCooldownTimeMillis;
+        //    this.friendlyObjectSpawnCooldownMillis = configuration.friendlyObjectSpawnCooldownTimeMillis;
+        //    */
+        //    #endregion
+        //}
 
 
         
 
         /// <summary>
-        /// 
+        /// This ask the sceneManager to remove all the dead objects
         /// </summary>
         public void cleanDeadGameObject()
         {
@@ -125,10 +119,13 @@ namespace ProjectHCI.KinectEngine
 
 
         /// <summary>
-        /// 
+        /// This method is called once per frame, it's used to evaluate and commit changes in game state
         /// </summary>
-        public void think(List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList)
+        /// <param name="collidedGameObjectPairList">A list of pair of objects that has collided in the current frame</param>
+        /// <remarks> In this basic implementation only the check for dead object is performed </remarks>
+        public virtual void think(List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList)
         {
+            #region old commented code
             //ISceneManager sceneManager = GameLoop.getSceneManager();
 
 
@@ -164,9 +161,9 @@ namespace ProjectHCI.KinectEngine
             }
 
             //this.bonusPercentiege = 0.0f;
-             */ 
+             */
             //******
-
+            #endregion
 
             this.cleanDeadGameObject();
             
@@ -174,7 +171,8 @@ namespace ProjectHCI.KinectEngine
         }
 
 
-
+        #region methods moved in child class with scene brain refactoring
+        /*
         /// <summary>
         /// This returns the maximum number of chops
         /// </summary>
@@ -207,7 +205,8 @@ namespace ProjectHCI.KinectEngine
             //return this.bonusPercentiege;
             return 0;
         }
-
-
+        */
+         
+        #endregion
     }
 }

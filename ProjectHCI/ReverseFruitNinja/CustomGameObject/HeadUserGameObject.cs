@@ -15,9 +15,28 @@ namespace ProjectHCI.ReverseFruitNinja
     class HeadUserGameObject : GameObject
     {
 
+        public const int USER_DEAD_STOP_MILLIS = 3000;
 
         protected KinectSensorHelper kinectSensorHelper;
         private int Z_INDEX = 2;
+
+        protected bool isCut;
+
+        #region protected int timeToLiveMillis {public get; public set;}
+
+        protected int timeToLiveMillis;
+
+        public int getTimeToLiveMillis()
+        {
+            return this.timeToLiveMillis;
+        }
+
+        public void setTimeToLiveMillis(int timeToLiveMillis)
+        {
+            this.timeToLiveMillis = timeToLiveMillis;
+        }
+
+        #endregion
 
         public HeadUserGameObject(double xPosition,
                               double yPosition,
@@ -36,7 +55,8 @@ namespace ProjectHCI.ReverseFruitNinja
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
             this.kinectSensorHelper.initializeKinect();
-
+            this.timeToLiveMillis = 0;
+            this.isCut = false;
         }
 
 
@@ -46,7 +66,10 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="deltaTimeMillis"></param>
         public override void update(int deltaTimeMillis)
         {
-            //do nothing
+            if (isCut && timeToLiveMillis >= 0)
+            {
+                timeToLiveMillis -= deltaTimeMillis;
+            }
         }
 
 
@@ -65,7 +88,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         public override bool isDead()
         {
-            return false;
+            return (isCut && timeToLiveMillis < 0);
         }
 
 
@@ -74,10 +97,8 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         public override void onRendererDisplayDelegate()
         {
-
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.canvasDisplayImage(this, Z_INDEX);
-
         }
 
 
@@ -88,30 +109,21 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="mainWindowCanvas"></param>
         public override void onRendererUpdateDelegate()
         {
-
-
             ISceneManager sceneManager = GameLoop.getSceneManager();
 
-            
             Skeleton skeleton = this.kinectSensorHelper.getTrackedSkeleton();
 
             if (skeleton != null)
             {
-
                 Joint headJoint = skeleton.Joints[JointType.Head];
                 Joint shoulderCenterJoint = skeleton.Joints[JointType.ShoulderCenter];
 
-
                 if (headJoint.TrackingState == JointTrackingState.Tracked)
                 {
-
                     double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0, 1.0, 0, sceneManager.getCanvasWidth());
                     double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y, 1.0, -1.0, 0, sceneManager.getCanvasHeight());
 
-
-                    
-
-
+                    #region old commented code
                     //TransformGroup transformGroup = new TransformGroup();
 
                     ////translate component
@@ -135,19 +147,17 @@ namespace ProjectHCI.ReverseFruitNinja
                     //    double xRotationCenter = this._xPosition + this._image.Width * 0.5;
                     //    double yRotationCenter = this._yPosition + this._image.Height * 0.5;
 
-                        
+
                     //    transformGroup.Children.Add(new RotateTransform(-1 * rotationAngle, xRotationCenter, yRotationCenter));
 
                     //}
+                    #endregion
 
                     sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition());
-                    
                 }
-                
-            }
 
+            }           
         }
-
 
 
         /// <summary>
@@ -155,15 +165,9 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         public override void onRendererRemoveDelegate()
         {
-
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.canvasRemoveImage(this);
-
-
         }
-
-
-
 
         /// <summary>
         /// 
@@ -171,7 +175,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="otherGameObject"></param>
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
-            Debug.WriteLine("user colpito");
+            //Debug.WriteLine("user colpito");
         }
 
         /// <summary>
@@ -182,8 +186,6 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             //throw new NotSupportedException();
         }
-
-
 
         protected double mapValueToNewRange(double value,
                                           double oldLowerLimit,
@@ -196,9 +198,11 @@ namespace ProjectHCI.ReverseFruitNinja
             double newRange = newHigherLimit - newLowerLimit;
 
             return (((value - oldLowerLimit) * newRange) / oldRange) + newLowerLimit;
-
-
         }
 
+        public void cutTrigger()
+        {
+            GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, "Dead!!!"), null));
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace ProjectHCI.ReverseFruitNinja
     {
 
         private const double PIXEL_PER_CENTIMETER = 5;
-        private IGameObject hourglassChildGameObject;
+        //private IGameObject hourglassChildGameObject;
 
         
         public HandUserGameObject(double xPosition,
@@ -26,11 +26,8 @@ namespace ProjectHCI.ReverseFruitNinja
                                   SkeletonSmoothingFilter skeletonSmoothingFilter)
             : base (xPosition, yPosition, boundingBoxGeometry, image, skeletonSmoothingFilter)
         {
-            this.hourglassChildGameObject = null;
-        }
-
-
-        
+            //this.hourglassChildGameObject = null;
+        }        
 
         /// <summary>
         /// 
@@ -67,8 +64,6 @@ namespace ProjectHCI.ReverseFruitNinja
             }
         }
 
-
-
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
             //ISpawnerManager spawnerManager = GameLoop.getSpawnerManager();
@@ -77,7 +72,7 @@ namespace ProjectHCI.ReverseFruitNinja
             //// hourglass creation
 
             //Image image = new Image();
-            //image.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/clock.png"));
+            //image.Source = new BitmapImage(new Uri(ProjectHCI.Utility.BitmapUtility.getImgResourcePath(@"clock.png")));
             //image.Height = 100;
             //image.Width = 100;
 
@@ -89,14 +84,10 @@ namespace ProjectHCI.ReverseFruitNinja
             //this.hourglassChildGameObject = hourglassGameObject;
         }
 
-
-
         public override void onCollisionExitDelegate(IGameObject otherGameObject)
         {
             //ISpawnerManager spawnerManager = GameLoop.getSpawnerManager();
             //spawnerManager.specialRequestToKillGameObject(this.hourglassChildGameObject);
         }
-
-
     }
 }

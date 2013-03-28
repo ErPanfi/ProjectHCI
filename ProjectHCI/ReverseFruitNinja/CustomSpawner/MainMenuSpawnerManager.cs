@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Collections.Concurrent;
 using ProjectHCI.KinectEngine;
+using ProjectHCI.Utility;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
@@ -636,6 +637,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
             //set the game spawner on the game loop object
+            GameLoop.getGameLoopSingleton().setSceneBrain(new GameSceneBrain());
             GameLoop.getGameLoopSingleton().setSpawnerManager(new GameSpawnerManager());
 
             //let the madness begin!!! .....WTF?!

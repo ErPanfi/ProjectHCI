@@ -11,13 +11,13 @@ using ProjectHCI.KinectEngine;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    public class BoundingBoxViewrGameObject : GameObject
+    public class BoundingBoxViewerGameObject : GameObject
     {
 
         private IGameObject gameObject;
         private bool previousCollidableState;
 
-        public BoundingBoxViewrGameObject(IGameObject gameObject)
+        public BoundingBoxViewerGameObject(IGameObject gameObject)
         {
 
             Debug.Assert(gameObject.getBoundingBoxGeometry() != null, "expected gameObject.getBoundingBoxGeometry() != null");

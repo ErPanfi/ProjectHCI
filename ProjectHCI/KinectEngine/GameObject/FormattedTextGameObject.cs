@@ -7,8 +7,9 @@ using System.Windows.Media;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using ProjectHCI.ReverseFruitNinja;
 
-namespace ProjectHCI.ReverseFruitNinja
+namespace ProjectHCI.KinectEngine
 {
     public class FormattedTextGameObject : GameObject
     {
@@ -16,80 +17,90 @@ namespace ProjectHCI.ReverseFruitNinja
         private String text;
         private bool isTextChanged;
 
+        protected int timeToLive;
+        protected bool isTemporary;
 
 
+        /// <summary>
+        /// Base constructor for formatted text object
+        /// </summary>
+        /// <param name="xPosition">X-axis position of text upper left corner</param>
+        /// <param name="yPosition">Y-axis position of text upper left corner</param>
+        /// <param name="text">The text to display</param>
+        /// <param name="timeToLive">If a positive value is given the text will last only the given time in milliseconds.Otherwise it will be permanentely displayed.</param>
         public FormattedTextGameObject(double xPosition,
-                                  double yPosition,
-                                  String text)
+                                       double yPosition,
+                                       String text,
+                                       int timeToLive)
         {
             
             base._xPosition = xPosition;
             base._yPosition = yPosition;
-            base._boundingBoxGeometry = null;
             base._extraData = null;
             base._uid = Guid.NewGuid().ToString();
-            base._gameObjectTag = Tags.DEBUG_TAG;
+            base._gameObjectTag = Tags.UI_TAG;
 
 
             base._image = this.createImageFromText(text);
-            this.text = text;
+            base._boundingBoxGeometry = new RectangleGeometry(((DrawingImage)base._image.Source).Drawing.Bounds);
 
             this.isTextChanged = false;
+            this.timeToLive = timeToLive;
+            this.isTemporary = (timeToLive > 0);
         }
 
-
-
-        private Image createImageFromText(String stringText)
+        protected virtual Image createImageFromText(String stringText)
         {
-            FormattedText formattedText = new FormattedText(stringText,
-                                                            CultureInfo.CurrentCulture, 
-                                                            FlowDirection.LeftToRight, 
-                                                            new Typeface("Arial"),          // the font... can be a custom font
-                                                            100,                            // font size in em
-                                                            Brushes.Black);                 //unused param, we create a geometry from this FormattedText
-
-
-            Geometry textGeometry = formattedText.BuildGeometry(new System.Windows.Point(0, 0));
-
-            GeometryDrawing geometryDrawing = new GeometryDrawing();
-            geometryDrawing.Geometry = textGeometry;
-
-            //the glyph's body color, can be a single color, a gradient or an image
-            geometryDrawing.Brush = new LinearGradientBrush(Colors.PaleVioletRed,
-                                                            Color.FromRgb(204, 204, 255),
-                                                            new Point(0, 0),
-                                                            new Point(1, 1));
-
-            //the glyph's border color, can be a single color, a gradient or an image
-            geometryDrawing.Pen = new Pen(Brushes.Indigo, 3);
-
             //create an imageSource
-            DrawingImage drawingImage = new DrawingImage(geometryDrawing);
-
             Image image = new Image();
-            image.Source = drawingImage;
+            image.Source = new DrawingImage(this.textGeometryDrawing(this.formatText(stringText)));
             
 
             return image;            
         }
 
+        protected virtual FormattedText formatText(string stringText)
+        {
+            return new FormattedText(stringText,
+                                            CultureInfo.CurrentCulture,
+                                            FlowDirection.LeftToRight,
+                                            new Typeface("Arial"),          // the font... can be a custom font
+                                            100,                            // font size in em
+                                            Brushes.Black);                 //unused param, we create a geometry from this FormattedText
+        }
 
+        protected virtual GeometryDrawing textGeometryDrawing(FormattedText formattedText)
+        {
+            GeometryDrawing geometryDrawing = new GeometryDrawing();
+            geometryDrawing.Geometry = formattedText.BuildGeometry(new System.Windows.Point(0, 0));
+
+            //the glyph's body color, can be a single color, a gradient or an image
+            /*
+            geometryDrawing.Brush = new LinearGradientBrush(Colors.PaleVioletRed,
+                                                            Color.FromRgb(204, 204, 255),
+                                                            new Point(0, 0),
+                                                            new Point(1, 1));
+            */
+            geometryDrawing.Brush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            //the glyph's border color, can be a single color, a gradient or an image
+            geometryDrawing.Pen = new Pen(Brushes.Indigo, 3);
+
+            return geometryDrawing;
+        }
 
         public void setText(String stringText)
         {
-            this.text = stringText;
             this.isTextChanged = true;
+            this.text = stringText;
         }
 
 
 
         public override void update(int deltaTimeMillis)
         {
-            // do nothing
+            if (timeToLive > 0)
+                timeToLive -= deltaTimeMillis;
         }
-
-
-
 
         public override bool isCollidable()
         {
@@ -98,11 +109,8 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public override bool isDead()
         {
-            return false;
+            return (isTemporary && timeToLive <= 0);
         }
-
-
-
 
         public override void onRendererDisplayDelegate()
         {
@@ -115,6 +123,7 @@ namespace ProjectHCI.ReverseFruitNinja
             if (this.isTextChanged)
             {
                 base._image = this.createImageFromText(this.text);
+                base._boundingBoxGeometry = new RectangleGeometry(((DrawingImage)base._image.Source).Drawing.Bounds);
 
                 ISceneManager sceneManager = GameLoop.getSceneManager();
                 sceneManager.canvasUpdateImage(this);
@@ -129,19 +138,13 @@ namespace ProjectHCI.ReverseFruitNinja
             sceneManager.canvasRemoveImage(this);
         }
 
-
-
-
-
-
+        
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
-            throw new NotImplementedException();
         }
 
         public override void onCollisionExitDelegate(IGameObject otherGameObject)
         {
-            throw new NotImplementedException();
         }
     }
 }
