@@ -15,7 +15,8 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
         private const int USER_INTERACTION_DELAY = 3000;
-        private bool pointedByUser;
+        private bool pointedByObject;
+        private HourglassGUIGameObject runningHourglass;
         private int internalCountDown;
         private bool enabled;
 
@@ -55,7 +56,7 @@ namespace ProjectHCI.ReverseFruitNinja
             base._uid = Guid.NewGuid().ToString();
 
             this.activationDelegate = activationDelegate;
-            this.pointedByUser = false;
+            this.pointedByObject = false;
             this.enabled = enabled;
             this.internalCountDown = USER_INTERACTION_DELAY;
 
@@ -70,14 +71,26 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="deltaTimeMillis">The number of millisecond elapsed since the last timer tick</param>
         public override void update(int deltaTimeMillis)
         {
-            if (this.pointedByUser)
+            if (this.pointedByObject)
             {
-                this.internalCountDown -= deltaTimeMillis;
-
-                if (this.internalCountDown <= 0)
+                if (this.runningHourglass != null)
                 {
-                    this.activate();
+                    int desiredState = (int)(
+                                                (1.0 - ((double)this.internalCountDown / (double)USER_INTERACTION_DELAY))
+                                               * runningHourglass.getHourglassStates()
+                                            );
+                    if (desiredState > runningHourglass.getHourglassCurrentState())
+                    {
+                        runningHourglass.incHourglassState();
+                    }
+
+                    if (this.internalCountDown <= 0)
+                    {
+                        this.activate();
+                    }
                 }
+
+                this.internalCountDown -= deltaTimeMillis;
             }
         }
 
@@ -88,8 +101,6 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             this.activationDelegate();
         }
-
-
 
         /// <summary>
         /// 
@@ -144,8 +155,9 @@ namespace ProjectHCI.ReverseFruitNinja
             if (otherGameObject.getGameObjectTag() == Tags.USER_TAG)
             {
                 GameLoop.getSceneManager().applyScale(this, 1.2, 1.2, this.getImage().Width * 0.5, this.getImage().Height * 0.5);
-                pointedByUser = true;
-
+                this.pointedByObject = true;
+                this.runningHourglass = new HourglassGUIGameObject(otherGameObject, new string[] { @"Hourglass_1.png", @"Hourglass_2.png", @"Hourglass_3.png", @"Hourglass_4.png" });
+                GameLoop.getSceneManager().addGameObject(runningHourglass, otherGameObject);
             }
         }
 
@@ -157,9 +169,14 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             if (otherGameObject.getGameObjectTag() == Tags.USER_TAG)
             {
-                GameLoop.getSceneManager().applyScale(this, 1 / 1.2, 1 / 1.2, this.getImage().Width * 0.5, this.getImage().Height * 0.5);
-                this.pointedByUser = false;
+                ISceneManager sceneManager = GameLoop.getSceneManager();
+                sceneManager.applyScale(this, 1 / 1.2, 1 / 1.2, this.getImage().Width * 0.5, this.getImage().Height * 0.5);
+                this.pointedByObject = false;
                 this.internalCountDown = USER_INTERACTION_DELAY;
+                if (this.runningHourglass != null)
+                {
+                    sceneManager.removeGameObject(runningHourglass);
+                }
             }
         }
     }

@@ -80,21 +80,10 @@ namespace ProjectHCI.ReverseFruitNinja
             }
         }
 
-
-
-
         public override bool isCollidable()
         {
             return this.firstTimeTracked;
         }
-
-
-
-
-        
-
-
-
 
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
@@ -121,5 +110,6 @@ namespace ProjectHCI.ReverseFruitNinja
             //ISpawnerManager spawnerManager = GameLoop.getSpawnerManager();
             //spawnerManager.specialRequestToKillGameObject(this.hourglassChildGameObject);
         }
+
     }
 }

@@ -94,9 +94,9 @@ namespace ProjectHCI.ReverseFruitNinja
 
             //back to main button
             Image buttonImage = new Image();
-            buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"BackButton.png")));
-            buttonImage.Height = 300;
-            buttonImage.Width = 400;
+            buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"back.png")));
+            buttonImage.Height = 100;
+            buttonImage.Width = 250;
             buttonImage.Stretch = Stretch.Fill;
             buttonImage.StretchDirection = StretchDirection.Both;
 

@@ -47,10 +47,6 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public override void update(int deltaTimeMillis)
         {
-            if (this.labelHeader != LABEL_HEADER_DEFAULT)
-            {
-                int i = 0;
-            }
             base.update(deltaTimeMillis);
             //also update game length text
             int currentMillis = this.gameStateTracker.getGameLengthMillis();

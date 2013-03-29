@@ -56,7 +56,6 @@ namespace ProjectHCI.ReverseFruitNinja
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
             this.kinectSensorHelper.initializeKinect();
             this.timeToLiveMillis = 0;
-            //this.isCut = false;
         }
 
 
@@ -205,5 +204,7 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, "Dead!!!"), null));
         }
+
     }
+
 }

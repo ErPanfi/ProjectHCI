@@ -63,6 +63,7 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\BoundingBoxViewerGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
     <Compile Include="KinectEngine\GameObject\FormattedTextGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameStartCountdownLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\DEBUG_CooldownLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameFloatingLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameLengthLabelObject.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="KinectEngine\TimerManager\Time.cs" />
     <Compile Include="KinectEngine\TimerManager\TimerManager.cs" />
     <Compile Include="KinectEngine\GameObject\GameObjectEventArgs.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Hourglass\HourglassGUIGameObject.cs" />
     <Compile Include="Utility\BitmapUtility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -213,6 +215,12 @@
     <Resource Include="Resources\user_fruit_button1.png" />
     <Resource Include="Resources\user_fruit_button2.png" />
     <Resource Include="Resources\user_fruit_button3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Hourglass_1.png" />
+    <Resource Include="Resources\Hourglass_2.png" />
+    <Resource Include="Resources\Hourglass_3.png" />
+    <Resource Include="Resources\Hourglass_4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

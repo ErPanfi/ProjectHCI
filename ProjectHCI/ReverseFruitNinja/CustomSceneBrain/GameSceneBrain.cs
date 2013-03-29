@@ -32,9 +32,22 @@ namespace ProjectHCI.ReverseFruitNinja
         
         #endregion
 
+        #region protected int gameStartCountdownMillis {public get; set;}
+
+        public const int GAME_START_COUNTDOWN_MILLIS = 15000;
+
+        protected int gameStartCountdownMillis;
+
+        public int getGameStartCountdownMillis()
+        {
+            return gameStartCountdownMillis;
+        }
+        #endregion
+
         public GameSceneBrain()
         {
-            currentConfiguration = Configuration.getCurrentConfiguration();
+            this.currentConfiguration = Configuration.getCurrentConfiguration();
+            this.gameStartCountdownMillis = GAME_START_COUNTDOWN_MILLIS;
         }
 
         /// <summary>
@@ -65,8 +78,17 @@ namespace ProjectHCI.ReverseFruitNinja
             bool playerCut = false;
             List<IGameObject> collidedCutsList = new List<IGameObject>();
 
-            //update 
-            gameLengthMillis += Time.getDeltaTimeMillis();
+            //update game length
+            int delta = Time.getDeltaTimeMillis();
+            if (this.gameStartCountdownMillis > 0)
+            {
+                this.gameStartCountdownMillis -= delta;
+            }
+            else
+            {
+                this.gameLengthMillis += delta;
+            }
+
 
 
             foreach (KeyValuePair<IGameObject, IGameObject> collidedObjs0 in collidedGameObjectPairList)

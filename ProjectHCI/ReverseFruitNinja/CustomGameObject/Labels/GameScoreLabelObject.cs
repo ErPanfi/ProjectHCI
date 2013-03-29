@@ -48,10 +48,6 @@ namespace ProjectHCI.ReverseFruitNinja
         public override void update(int deltaTimeMillis)
         {
             base.update(deltaTimeMillis);
-            if (this.labelHeader != LABEL_HEADER_DEFAULT)
-            {
-                int i = 0;
-            }
             //also update game score text
             int currentScore = this.gameStateTracker.getGameScore();
 

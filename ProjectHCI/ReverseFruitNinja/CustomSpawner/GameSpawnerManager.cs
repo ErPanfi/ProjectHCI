@@ -108,13 +108,16 @@ namespace ProjectHCI.ReverseFruitNinja
 #endif
 
             //label spawn
-            Debug.Assert(typeof(IGameStateTracker).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a IGameStateTracker object");
-            IGameStateTracker gameStateTracker = (IGameStateTracker)GameLoop.getSceneBrain();
+            Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
+            GameSceneBrain gameSceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
 
-            gameObject = new GameLengthLabelObject(10, VERTICAL_LABEL_SPACE, gameStateTracker);
+            gameObject = new GameLengthLabelObject(10, VERTICAL_LABEL_SPACE, gameSceneBrain);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
-            gameObject = new GameScoreLabelObject(10, (2 * VERTICAL_LABEL_SPACE) + gameObject.getBoundingBoxGeometry().Bounds.Height, gameStateTracker);
+            gameObject = new GameScoreLabelObject(10, (2 * VERTICAL_LABEL_SPACE) + gameObject.getBoundingBoxGeometry().Bounds.Height, gameSceneBrain);
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+
+            gameObject = new GameStartCountdownLabelObject(GameLoop.getSceneManager().getCanvasWidth() / 2 - 30, GameLoop.getSceneManager().getCanvasHeight() / 2 - 30, gameSceneBrain);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
             ////debug cooldown label objs
@@ -132,80 +135,84 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         protected override List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjectsPerFrame()
         {
-            int deltaTimeMillis = Time.getDeltaTimeMillis();
-
-            this.updateSpawnOffsets(deltaTimeMillis);
-
-            List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
-            ISceneManager sceneManager = GameLoop.getSceneManager();
-            
+            //spawn objs only if game start countdown is expired
             Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
-            GameSceneBrain sceneBrain = (GameSceneBrain) GameLoop.getSceneBrain();
+            GameSceneBrain sceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
+            List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
 
-            Dictionary<String, List<IGameObject>> gameObjectListMapByType = sceneManager.getGameObjectListMapByTag();
-            //userGameObjectList
-            Debug.Assert(gameObjectListMapByType.ContainsKey(Tags.USER_TAG), "the userGameObject must be created.");
-            List<IGameObject> userGameObjectList = userGameObjectList = gameObjectListMapByType[Tags.USER_TAG];
-            Debug.Assert(userGameObjectList.Count > 0, "expected userGameObjectList.Count > 0");
-
-            //friendlyObjectList
-            List<IGameObject> friendlyObjectList;
-            if (gameObjectListMapByType.ContainsKey(Tags.FRUIT_TAG))
+            if (sceneBrain.getGameStartCountdownMillis() <= 0)
             {
-                friendlyObjectList = gameObjectListMapByType[Tags.FRUIT_TAG];
-            }
-            else
-            {
-                friendlyObjectList = new List<IGameObject>();
-            }
 
-            //unfriendlyObjectList
-            List<IGameObject> unfriendlyObjectList;
-            if (gameObjectListMapByType.ContainsKey(Tags.CUT_TAG))
-            {
-                unfriendlyObjectList = gameObjectListMapByType[Tags.CUT_TAG];
-            }
-            else
-            {
-                unfriendlyObjectList = new List<IGameObject>();
-            }
+                int deltaTimeMillis = Time.getDeltaTimeMillis();
 
-            //spawn a new unfriendly obj
-            if (this.shouldSpawnNewUnfriendlyObject(unfriendlyObjectList.Count, sceneBrain.getMaxNumberOfChopAllowed(), this.unfriendlyObjCooldown, this.lastUnfriendlyObjSpawned))
-            {
-                IGameObject gameObject = this.spawnNewUnfriendlyObject(userGameObjectList, friendlyObjectList);
+                this.updateSpawnOffsets(deltaTimeMillis);
 
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+                ISceneManager sceneManager = GameLoop.getSceneManager();
 
-                this.unfriendlyObjCooldown = this.generateNewChopCooldown();
-                this.lastUnfriendlyObjSpawned = 0;
+                Dictionary<String, List<IGameObject>> gameObjectListMapByType = sceneManager.getGameObjectListMapByTag();
+                //userGameObjectList
+                Debug.Assert(gameObjectListMapByType.ContainsKey(Tags.USER_TAG), "the userGameObject must be created.");
+                List<IGameObject> userGameObjectList = userGameObjectList = gameObjectListMapByType[Tags.USER_TAG];
+                Debug.Assert(userGameObjectList.Count > 0, "expected userGameObjectList.Count > 0");
+
+                //friendlyObjectList
+                List<IGameObject> friendlyObjectList;
+                if (gameObjectListMapByType.ContainsKey(Tags.FRUIT_TAG))
+                {
+                    friendlyObjectList = gameObjectListMapByType[Tags.FRUIT_TAG];
+                }
+                else
+                {
+                    friendlyObjectList = new List<IGameObject>();
+                }
+
+                //unfriendlyObjectList
+                List<IGameObject> unfriendlyObjectList;
+                if (gameObjectListMapByType.ContainsKey(Tags.CUT_TAG))
+                {
+                    unfriendlyObjectList = gameObjectListMapByType[Tags.CUT_TAG];
+                }
+                else
+                {
+                    unfriendlyObjectList = new List<IGameObject>();
+                }
+
+                //spawn a new unfriendly obj
+                if (this.shouldSpawnNewUnfriendlyObject(unfriendlyObjectList.Count, sceneBrain.getMaxNumberOfChopAllowed(), this.unfriendlyObjCooldown, this.lastUnfriendlyObjSpawned))
+                {
+                    IGameObject gameObject = this.spawnNewUnfriendlyObject(userGameObjectList, friendlyObjectList);
+
+                    gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+
+                    this.unfriendlyObjCooldown = this.generateNewChopCooldown();
+                    this.lastUnfriendlyObjSpawned = 0;
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), gameObject));
+                    gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), gameObject));
 #endif
-                
-            }
-            else
-            {
-                this.lastUnfriendlyObjSpawned += deltaTimeMillis;
-            }
 
-            //spawn new friendly obj, with potentially different probability distribution
-            if (this.shouldSpawnNewFriendlyObject(friendlyObjectList.Count, sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed(), this.friendlyObjCooldown, this.lastFriendlyObjSpawned))
-            {
-                IGameObject gameObject = this.spawnNewFriendlyObject(friendlyObjectList);
+                }
+                else
+                {
+                    this.lastUnfriendlyObjSpawned += deltaTimeMillis;
+                }
 
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
-                this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
-                this.lastFriendlyObjSpawned = 0;
+                //spawn new friendly obj, with potentially different probability distribution
+                if (this.shouldSpawnNewFriendlyObject(friendlyObjectList.Count, sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed(), this.friendlyObjCooldown, this.lastFriendlyObjSpawned))
+                {
+                    IGameObject gameObject = this.spawnNewFriendlyObject(friendlyObjectList);
+
+                    gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+                    this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
+                    this.lastFriendlyObjSpawned = 0;
 #if DEBUG
-                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), gameObject));
+                    gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), gameObject));
 #endif
+                }
+                else
+                {
+                    this.lastFriendlyObjSpawned += deltaTimeMillis;
+                }
             }
-            else
-            {
-                this.lastFriendlyObjSpawned += deltaTimeMillis;
-            }
-
             return gameObjectParentGameObjectPairList;
         }
 
@@ -340,7 +347,7 @@ namespace ProjectHCI.ReverseFruitNinja
             Geometry boundigBoxGeometry = new EllipseGeometry(new Rect(new Point(0, 0), new Point(image.Width, image.Height)));
             Point gameObjectImageUpperLeftCornerPoint = new Point(targetBoundingBoxCenterPoint.X - (image.Width * 0.5),
                                                                   targetBoundingBoxCenterPoint.Y - (image.Height * 0.5));
-
+            //TODO add parameters
             int timeToLive = random.Next(4000, 6000);
             return new NotUserFriendlyGameObject(gameObjectImageUpperLeftCornerPoint.X,
                                                  gameObjectImageUpperLeftCornerPoint.Y,
