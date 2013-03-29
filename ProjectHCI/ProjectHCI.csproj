@@ -186,6 +186,27 @@
   <ItemGroup>
     <Resource Include="Resources\BackButton.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fruit1.png" />
+    <Resource Include="Resources\fruit10.png" />
+    <Resource Include="Resources\fruit11.png" />
+    <Resource Include="Resources\fruit12.png" />
+    <Resource Include="Resources\fruit13.png" />
+    <Resource Include="Resources\fruit2.png" />
+    <Resource Include="Resources\fruit3.png" />
+    <Resource Include="Resources\fruit4.png" />
+    <Resource Include="Resources\fruit5.png" />
+    <Resource Include="Resources\fruit6.png" />
+    <Resource Include="Resources\fruit7.png" />
+    <Resource Include="Resources\fruit8.png" />
+    <Resource Include="Resources\fruit9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fruit14.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\wave.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

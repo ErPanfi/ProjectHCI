@@ -61,12 +61,19 @@ namespace ProjectHCI.KinectEngine
 
         protected virtual FormattedText formatText(string stringText)
         {
+
+            Typeface typeFace = new Typeface(new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#Made in China"), 
+                                             FontStyles.Normal, 
+                                             FontWeights.Medium, 
+                                             FontStretches.Normal);
+
+
             return new FormattedText(stringText,
-                                            CultureInfo.CurrentCulture,
-                                            FlowDirection.LeftToRight,
-                                            new Typeface("Arial"),          // the font... can be a custom font
-                                            100,                            // font size in em
-                                            Brushes.Black);                 //unused param, we create a geometry from this FormattedText
+                                     CultureInfo.CurrentCulture,
+                                     FlowDirection.LeftToRight,
+                                     typeFace, //new Typeface("Arial"),         // the font... can be a custom font
+                                     60,                            // font size in em
+                                     Brushes.Black);                //unused param, we create a geometry from this FormattedText
         }
 
         protected virtual GeometryDrawing textGeometryDrawing(FormattedText formattedText)
@@ -83,7 +90,7 @@ namespace ProjectHCI.KinectEngine
             */
             geometryDrawing.Brush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             //the glyph's border color, can be a single color, a gradient or an image
-            geometryDrawing.Pen = new Pen(Brushes.Indigo, 3);
+            geometryDrawing.Pen = new Pen(Brushes.Black, 1);
 
             return geometryDrawing;
         }
