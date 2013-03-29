@@ -20,7 +20,7 @@ namespace ProjectHCI.ReverseFruitNinja
         protected KinectSensorHelper kinectSensorHelper;
         private int Z_INDEX = 2;
 
-        protected bool isCut;
+        //protected bool isCut;
 
         #region protected int timeToLiveMillis {public get; public set;}
 
@@ -56,7 +56,7 @@ namespace ProjectHCI.ReverseFruitNinja
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
             this.kinectSensorHelper.initializeKinect();
             this.timeToLiveMillis = 0;
-            this.isCut = false;
+            //this.isCut = false;
         }
 
 
@@ -66,10 +66,10 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="deltaTimeMillis"></param>
         public override void update(int deltaTimeMillis)
         {
-            if (isCut && timeToLiveMillis >= 0)
-            {
-                timeToLiveMillis -= deltaTimeMillis;
-            }
+//             if (isCut && timeToLiveMillis >= 0)
+//             {
+//                 timeToLiveMillis -= deltaTimeMillis;
+//             }
         }
 
 
@@ -88,7 +88,8 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         public override bool isDead()
         {
-            return (isCut && timeToLiveMillis < 0);
+            //return (isCut && timeToLiveMillis < 0);
+            return false;
         }
 
 
