@@ -476,6 +476,7 @@ namespace ProjectHCI.KinectEngine
 
             RotateTransform rotateTransform = new RotateTransform(clockwiseDegreeAngle, xRotationCenter, yRotationCenter);
 
+
             { // transform image
                 TransformGroup transformGroup = new TransformGroup();
                 transformGroup.Children.Add(rotateTransform);
@@ -504,7 +505,10 @@ namespace ProjectHCI.KinectEngine
 
             foreach (SceneNode childSceneNode0 in sceneNode.getChildList())
             {
-                this.recursiveApplyRotation(childSceneNode0, clockwiseDegreeAngle, xRotationCenter, yRotationCenter);
+                double xRotationRelativeToChild = xRotationCenter - (childSceneNode0.getSceneNodeGameObject().getXPosition() - gameObject.getXPosition());
+                double yRotationRelativeToChild = yRotationCenter - (childSceneNode0.getSceneNodeGameObject().getYPosition() - gameObject.getYPosition());
+
+                this.recursiveApplyRotation(childSceneNode0, clockwiseDegreeAngle, xRotationRelativeToChild, yRotationRelativeToChild);
             }
         }
 

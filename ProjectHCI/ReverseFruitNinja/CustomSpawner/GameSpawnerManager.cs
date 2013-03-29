@@ -317,14 +317,22 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
 
+            //inclination is dicided randomly when the cut is display on screen. See NotUserFriendlyGameObject.onRendererDisplayDelegate
 
-            //TODO refine and implement randomly inclined cut
-            bool cutVertically = random.NextDouble() < 0.5;
+            #region oldCode
+            //bool cutVertically = random.NextDouble() < 0.5;
+            //Image image = new Image();
+            //image.Source = new BitmapImage(new Uri(cutVertically ? BitmapUtility.getImgResourcePath(@"slash_vert.png") : BitmapUtility.getImgResourcePath(@"slash_horiz.png")));
+            //image.Width = cutVertically ? 25 : random.Next(300, 800);
+            //image.Height = cutVertically ? random.Next(300, 800) : 25;
+            //image.Stretch = Stretch.Fill;
+            //image.StretchDirection = StretchDirection.Both;
+            #endregion
 
             Image image = new Image();
-            image.Source = new BitmapImage(new Uri(cutVertically ? BitmapUtility.getImgResourcePath(@"slash_vert.png") : BitmapUtility.getImgResourcePath(@"slash_horiz.png")));
-            image.Width = cutVertically ? 25 : random.Next(300, 800);
-            image.Height = cutVertically ? random.Next(300, 800) : 25;
+            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"slash_horiz.png")));
+            image.Width = random.Next(300, 800);
+            image.Height = 25;
             image.Stretch = Stretch.Fill;
             image.StretchDirection = StretchDirection.Both;
 
