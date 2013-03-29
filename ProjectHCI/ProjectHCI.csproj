@@ -184,9 +184,6 @@
     <Resource Include="Resources\hand_control.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\BackButton.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\fruit1.png" />
     <Resource Include="Resources\fruit10.png" />
     <Resource Include="Resources\fruit11.png" />

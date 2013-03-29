@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ProjectHCI.KinectEngine;
 using System.Windows.Media;
+using System.Windows;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
@@ -32,12 +33,16 @@ namespace ProjectHCI.ReverseFruitNinja
         #endregion
         protected override FormattedText formatText(string stringText)
         {
+            Typeface typeFace = new Typeface(new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#Made in China"),
+                                             FontStyles.Normal,
+                                             FontWeights.Medium,
+                                             FontStretches.Normal);
             return new FormattedText(stringText,
                                             System.Globalization.CultureInfo.CurrentCulture,
                                             System.Windows.FlowDirection.LeftToRight,
-                                            new Typeface("Arial"),          // the font... can be a custom font
-                                            50,                             // font size in em
-                                            Brushes.Black);                 //unused param, we create a geometry from this FormattedText
+                                            typeFace,          // the custom embedded font
+                                            60,                // font size in em
+                                            Brushes.Black);    //unused param, we create a geometry from this FormattedText
         }
 
         public override void update(int deltaTimeMillis)

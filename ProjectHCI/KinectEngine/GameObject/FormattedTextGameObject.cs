@@ -62,16 +62,19 @@ namespace ProjectHCI.KinectEngine
         protected virtual FormattedText formatText(string stringText)
         {
 
-            Typeface typeFace = new Typeface(new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#Made in China"), 
-                                             FontStyles.Normal, 
-                                             FontWeights.Medium, 
-                                             FontStretches.Normal);
+            #region miraculous code for embedded font integration - By DC
 
+            //Typeface typeFace = new Typeface(new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#Made in China"),
+            //                                 FontStyles.Normal,
+            //                                 FontWeights.Medium,
+            //                                 FontStretches.Normal);
+
+            #endregion
 
             return new FormattedText(stringText,
                                      CultureInfo.CurrentCulture,
                                      FlowDirection.LeftToRight,
-                                     typeFace, //new Typeface("Arial"),         // the font... can be a custom font
+                                     new Typeface("Arial"),         // the font... can be a custom font
                                      60,                            // font size in em
                                      Brushes.Black);                //unused param, we create a geometry from this FormattedText
         }
