@@ -106,8 +106,8 @@ namespace ProjectHCI.KinectEngine
             if (targetSceneNode == null)
             {
                 //assert that all data of this game object was already removed.
-                Debug.Assert(!this.gameObjectListMapByTag[gameObject.getGameObjectTag()].Contains(gameObject));
-                Debug.Assert(!this.collidableGameObjectListMapByTag[gameObject.getGameObjectTag()].Contains(gameObject));
+                Debug.Assert(!this.gameObjectListMapByTag.ContainsKey(gameObject.getGameObjectTag()) || !this.gameObjectListMapByTag[gameObject.getGameObjectTag()].Contains(gameObject));
+                Debug.Assert(!this.collidableGameObjectListMapByTag.ContainsKey(gameObject.getGameObjectTag()) || !this.collidableGameObjectListMapByTag[gameObject.getGameObjectTag()].Contains(gameObject));
             }
             else
             {
