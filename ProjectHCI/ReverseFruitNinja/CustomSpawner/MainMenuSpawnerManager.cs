@@ -27,7 +27,8 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
 
-        public MainMenuSpawnerManager() : base()
+        public MainMenuSpawnerManager()
+            : base()
         {
             this.stateChanged = true;
             this.spawnerStateFunction = null;
@@ -52,7 +53,7 @@ namespace ProjectHCI.ReverseFruitNinja
         protected override List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjectsPerFrame()
         {
             List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList;
- 
+
             if (this.stateChanged)
             {
                 gameObjectParentGameObjectPairList = this.spawnerStateFunction();
@@ -179,7 +180,7 @@ namespace ProjectHCI.ReverseFruitNinja
             this.spawnerStateFunction = this.spawnMainMenu;
             this.stateChanged = true;
             return gameObjectParentGameObjectPairList;
-            
+
         }
 
 
@@ -211,7 +212,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(420, 350)));
                 ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.newGameButtonActivationDelegate);
-                ButtonGameObject buttonGameObject = new ButtonGameObject(0, 350 - buttonImage.Height *0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
+                ButtonGameObject buttonGameObject = new ButtonGameObject(0, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, this.menuAreaGameObject));
 #if DEBUG
@@ -542,7 +543,7 @@ namespace ProjectHCI.ReverseFruitNinja
             { //fruit 1
 
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"shark.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"user_fruit_button1.png")));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -563,7 +564,7 @@ namespace ProjectHCI.ReverseFruitNinja
             { //fruit 2
 
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"shark.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"user_fruit_button2.png")));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -583,7 +584,7 @@ namespace ProjectHCI.ReverseFruitNinja
             { //fruit 3
 
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"shark.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"user_fruit_button3.png")));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -591,7 +592,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(420, 350)));
                 ButtonGameObject.ActivationDelegate buttonDelegate = new ButtonGameObject.ActivationDelegate(this.fruit3ButtonActivationDelegate);
-                ButtonGameObject buttonGameObject = new ButtonGameObject(470, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
+                ButtonGameObject buttonGameObject = new ButtonGameObject(940, 350 - buttonImage.Height * 0.5, boundingBoxGeometry, buttonImage, true, buttonDelegate);
 
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(buttonGameObject, this.menuAreaGameObject));
 #if DEBUG
@@ -629,7 +630,7 @@ namespace ProjectHCI.ReverseFruitNinja
             this.stateChanged = true;
             this.stateStackTrace.Push(this.spawnerStateFunction);
             this.spawnerStateFunction = newSpawnerState;
-            
+
         }
 
 
