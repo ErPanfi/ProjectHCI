@@ -176,6 +176,11 @@ namespace ProjectHCI.KinectEngine
             }
         }
 
+        public KinectSensor getKinectSensor()
+        {
+            return this.kinectSensor;
+        }
+
 
         ///// <summary>
         ///// 

@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using Microsoft.Kinect;
 using System.Windows;
+using System.Threading;
 
 namespace ProjectHCI.KinectEngine
 {
@@ -38,6 +39,7 @@ namespace ProjectHCI.KinectEngine
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
             this.kinectSensorHelper.initializeKinect();
+            this.calibrateCamera();
 
         }
 
@@ -225,5 +227,66 @@ namespace ProjectHCI.KinectEngine
 
         }
 
+
+        /// <summary>
+        /// prototype for camera calibration. HEEELP!!
+        /// </summary>
+        private void calibrateCamera()
+        {
+            Skeleton skeleton;
+            int deltaAngle = 3;
+
+            int elevationAngle0 = 0;
+            float headJointPositionY0;
+            double screenPositionY0 = base._yPosition; //y iniziale nel mezzo del canvas;
+
+            int elevationAngle1 = 0;
+            float headJointPositionY1;
+            double screenPositionY1 = 0;
+
+
+            KinectSensor sensor = kinectSensorHelper.getKinectSensor();
+            double canvasHeight = GameLoop.getSceneManager().getCanvasHeight();
+
+            /*
+             * a partire dalla posizione iniziale in mezzo allo schermo
+             * ottengo l'angolo iniziale del kinect
+             */
+            do
+            {
+                skeleton = this.kinectSensorHelper.getTrackedSkeleton();
+            } while (skeleton == null);
+
+            if (skeleton != null)
+            {
+                Joint headJoint = skeleton.Joints[JointType.Head];
+                elevationAngle0 = sensor.ElevationAngle;
+                headJointPositionY0 = headJoint.Position.Y;
+            }
+
+            /*sposto il kinect*/
+            if (elevationAngle0 >= 0)
+            {
+                sensor.ElevationAngle = elevationAngle0 - deltaAngle;
+            }
+            else
+            {
+                sensor.ElevationAngle = elevationAngle0 + deltaAngle;
+            }
+            /*cerco la nuova posizione in base al nuovo angolo*/
+            do
+            {
+                skeleton = this.kinectSensorHelper.getTrackedSkeleton();
+            } while (skeleton == null);
+            if (skeleton != null)
+            {
+                Joint headJoint = skeleton.Joints[JointType.Head];
+                elevationAngle1 = sensor.ElevationAngle;
+                headJointPositionY1 = headJoint.Position.Y;
+                screenPositionY1 = (headJointPositionY1 + 1) * 0.5 * canvasHeight;
+            }
+            Thread.Sleep(1000);
+            sensor.ElevationAngle = elevationAngle0 + (int)((0.3 * canvasHeight - screenPositionY0) * (elevationAngle1 - elevationAngle0) / (screenPositionY1 - screenPositionY0));
+        }
     }
 }
