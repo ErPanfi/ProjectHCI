@@ -37,7 +37,7 @@ namespace ProjectHCI.ReverseFruitNinja
         }
 
         #endregion
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -56,7 +56,7 @@ namespace ProjectHCI.ReverseFruitNinja
             Debug.Assert(notCollidableTimeMillis > 0, "expected notCollidableTimeMillis > 0");
             Debug.Assert(notCollidableTimeMillis <= timeToLiveMillis, "expected notCollidableTimeMillis <= timeToLiveMillis");
 
-
+           
 
             base._xPosition = xPosition;
             base._yPosition = yPosition;
@@ -167,6 +167,13 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             //throw new NotSupportedException();
         }
+<<<<<<< HEAD
+=======
+
+        public void cutUserTrigger()
+        {
+        }
+
 
 
 
@@ -231,5 +238,6 @@ namespace ProjectHCI.ReverseFruitNinja
 
             return (((value - oldLowerLimit) * newRange) / oldRange) + newLowerLimit;
         }
+>>>>>>> b1d85781de6c87b9bea363f1831aa3277f12773b
     }
 }
