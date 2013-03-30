@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9A27070C-75EE-4A8F-884A-1ACA1AE16245}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProjectHCI</RootNamespace>
+    <AssemblyName>ProjectHCI</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Kinect, Version=1.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="KinectEngine\CollisionManager\CollisionManager.cs" />
+    <Compile Include="KinectEngine\CollisionManager\ICollisionManager.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\GameObjectSpawnRequest.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\SpawnerManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\BoundingBoxViewerGameObject.cs" />
+    <Compile Include="KinectEngine\GameObject\GameObject.cs" />
+    <Compile Include="KinectEngine\GameObject\FormattedTextGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\DEBUG_CooldownLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameFloatingLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameLengthLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameScoreLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\HandUserGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\ImageGuiGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\NotUserFriendlyGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Tags.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\UserFriendlyGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\HeadUserGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\CenteredScreenAreaGameObject.cs" />
+    <Compile Include="KinectEngine\SceneManager\ISceneManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\Configuration.cs" />
+    <Compile Include="KinectEngine\SceneManager\SceneManager.cs" />
+    <Compile Include="KinectEngine\SceneManager\SceneNode.cs" />
+    <Compile Include="KinectEngine\Sensor\KinectSensorHelper.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\GameDebriefingSceneBrain.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\GameSceneBrain.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\IGameStateTracker.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSpawner\GameDebriefingSpawnerManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSpawner\GameSpawnerManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSpawner\MainMenuSpawnerManager.cs" />
+    <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />
+    <Compile Include="KinectEngine\TimerManager\Time.cs" />
+    <Compile Include="KinectEngine\TimerManager\TimerManager.cs" />
+    <Compile Include="KinectEngine\GameObject\GameObjectEventArgs.cs" />
+    <Compile Include="Utility\BitmapUtility.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KinectEngine\GameLoop\GameLoop.cs" />
+    <Compile Include="KinectEngine\GameObject\IGameObject.cs" />
+    <Compile Include="KinectEngine\SceneBrain\ISceneBrain.cs" />
+    <Compile Include="KinectEngine\SceneBrain\SceneBrain.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\ISpawnerManager.cs" />
+    <Compile Include="KinectEngine\UpdateRenderer\UpdateRenderer.cs" />
+    <Compile Include="KinectEngine\UpdateRenderer\IUpdateRenderer.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <Resource Include="Resources\made_in_china.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\skype.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\shark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\slash_horiz.png" />
+    <Resource Include="Resources\slash_vert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\crosshair.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\clock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\new_game.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\quit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\controls.png" />
+    <Resource Include="Resources\difficulty.png" />
+    <Resource Include="Resources\graphics.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\easy.png" />
+    <Resource Include="Resources\hard.png" />
+    <Resource Include="Resources\normal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\head_control.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hand_control.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

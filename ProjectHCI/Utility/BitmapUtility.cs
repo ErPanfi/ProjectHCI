@@ -54,6 +54,12 @@ namespace ProjectHCI.Utility
             return rgbData;
         }
 
+
+        static public string getImgResourcePath(string imgResourceName)
+        {
+            return @"pack://application:,,,/Resources/" + imgResourceName;
+        }
+
         /// <summary>
         /// Create a new BitmapSource from the given RgbData
         /// </summary>

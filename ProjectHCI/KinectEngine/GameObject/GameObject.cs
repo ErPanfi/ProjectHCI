@@ -20,7 +20,7 @@ namespace ProjectHCI.KinectEngine
         protected Geometry _boundingBoxGeometry;
         protected object _extraData;
         protected String _uid;
-        protected GameObjectTypeEnum _gameObjectTypeEnum;
+        protected String _gameObjectTag = "no_tag";
         protected Image _image;
 
 
@@ -28,18 +28,18 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public void setPosition(double xPosition, double yPosition)
+        public virtual void setPosition(double xPosition, double yPosition)
         {
             _xPosition = xPosition;
             _yPosition = yPosition;
         }
 
-        public double getXPosition()
+        public virtual double getXPosition()
         {
             return _xPosition;
         }
 
-        public double getYPosition()
+        public virtual double getYPosition()
         {
             return _yPosition;
         }
@@ -48,7 +48,7 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public void setBoundingBoxGeometry(Geometry boundingBoxGeometry)
+        public virtual void setBoundingBoxGeometry(Geometry boundingBoxGeometry)
         {
             //for convention the boundingBox position is relative to the gameObject position,
             //so we need to convert this position into game-Object space.
@@ -56,7 +56,7 @@ namespace ProjectHCI.KinectEngine
             _boundingBoxGeometry = boundingBoxGeometry;
         }
 
-        public Geometry getBoundingBoxGeometry()
+        public virtual Geometry getBoundingBoxGeometry()
         {
             return _boundingBoxGeometry;
         }
@@ -64,7 +64,7 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public void setImage(Image image)
+        public virtual void setImage(Image image)
         {
             _image = image;
         }
@@ -79,12 +79,12 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public void setExtraData(object extraData)
+        public virtual void setExtraData(object extraData)
         {
             _extraData = extraData;
         }
 
-        public object getExtraData()
+        public virtual object getExtraData()
         {
             return _extraData;
         }
@@ -92,12 +92,12 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public void setUid(String uid)
+        public virtual void setUid(String uid)
         {
             _uid = uid;
         }
 
-        public String getUid()
+        public virtual String getUid()
         {
             return _uid;
         }
@@ -105,14 +105,14 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        public void setGameObjectTypeEnum(GameObjectTypeEnum gameObjectTypeEnum)
+        public virtual void setGameObjectTag(String gameObjectTag)
         {
-            _gameObjectTypeEnum = gameObjectTypeEnum;
+            _gameObjectTag = gameObjectTag;
         }
 
-        public GameObjectTypeEnum getGameObjectTypeEnum()
+        public virtual String getGameObjectTag()
         {
-            return _gameObjectTypeEnum;
+            return _gameObjectTag;
         }
 
 
@@ -143,175 +143,6 @@ namespace ProjectHCI.KinectEngine
 
         public abstract void onCollisionExitDelegate(IGameObject otherGameObject);
 
-
-
-//        /// <summary>
-//        /// 
-//        /// </summary>
-//        public virtual void onRendererDisplayDelegate()
-//        {
-
-//            if (Application.Current == null)
-//            {
-//                return;
-//            }
-
-
-
-//            ISceneManager sceneManager = GameLoop.getSceneManager();
-//            Geometry boundingBoxAsFrozen = (Geometry) _geometry.GetAsFrozen();
-
-
-//            Application.Current.Dispatcher.Invoke(new Action(
-//                delegate()
-//                {
-                    
-
-//                    Image image = new Image();
-//                    image.Source = (ImageSource) this.getExtraData();
-//                    image.Uid = _uid;
-//                    image.Height = boundingBoxAsFrozen.Bounds.Height;
-//                    image.Width = boundingBoxAsFrozen.Bounds.Width;
-
-//                    sceneManager.boundUiElementToGameObject(image, this);
-//                    sceneManager.getTargetCanvas().Children.Add(image);
-                    
-
-//                    Canvas.SetTop(image, boundingBoxAsFrozen.Bounds.Y);
-//                    Canvas.SetLeft(image, boundingBoxAsFrozen.Bounds.X);
-
-
-//#if DEBUG
-//                    //********************* display boundingBox
-
-
-//                    Brush boundingBoxBrush = this.isCollidable() ? Brushes.Red : Brushes.Yellow;
-//                    GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(boundingBoxBrush, 1.0), boundingBoxAsFrozen);
-
-//                    DrawingImage boundingBoxDrawingImage = new DrawingImage(geometryDrawing);
-
-//                    Image boundingBoxImage = new Image();
-//                    boundingBoxImage.Source = boundingBoxDrawingImage;
-//                    boundingBoxImage.Uid = "BB_" + _uid;
-
-//                    sceneManager.boundUiElementToGameObject(boundingBoxImage, this);
-//                    sceneManager.getTargetCanvas().Children.Add(boundingBoxImage);
-                    
-
-//                    Canvas.SetTop(boundingBoxImage, boundingBoxAsFrozen.Bounds.Y);
-//                    Canvas.SetLeft(boundingBoxImage, boundingBoxAsFrozen.Bounds.X);
-//                    Canvas.SetZIndex(boundingBoxImage, 100);
-//                    //*********************
-//#endif
-
-//                }
-//            )); 
-
-            
-//        }
-
-
-
-
-//        /// <summary>
-//        /// 
-//        /// </summary>
-//        public virtual void onRendererRemoveDelegate()
-//        {
-           
-
-//            ISceneManager sceneManager = GameLoop.getSceneManager();
-
-//            if (Application.Current != null)
-//            {
-//                Application.Current.Dispatcher.Invoke(new Action(
-//                    delegate()
-//                    {
-
-//                        foreach (UIElement uiElement in sceneManager.getUiElementListBoundToGameObject(this))
-//                        {
-//                            sceneManager.getTargetCanvas().Children.Remove(uiElement);
-//                        }
-//                        sceneManager.unboundAllUiElementFromGameObject(this);
-
-//                    }
-//                ));
-//            }
-
-//        }
-
-
-
-
-
-//        /// <summary>
-//        /// 
-//        /// </summary>
-//        public virtual void onRendererUpdateDelegate()
-//        {
-
-//#if DEBUG
-//            //********************* update boundingbox 
-//            if (Application.Current == null)
-//            {
-//                return;
-//            }
-
-
-//            ISceneManager sceneManager = GameLoop.getSceneManager();
-//            Geometry boundingBoxAsFrozen = (Geometry)_geometry.GetAsFrozen();
-
-
-            
-//            Application.Current.Dispatcher.Invoke(new Action(
-//                delegate()
-//                {
-
-//                    Brush boundingBoxBrush = this.isCollidable() ? Brushes.Red : Brushes.Yellow;
-//                    GeometryDrawing geometryDrawing = new GeometryDrawing(null, new Pen(boundingBoxBrush, 1.0), boundingBoxAsFrozen);
-//                    DrawingImage boundingBoxDrawingImage = new DrawingImage(geometryDrawing);
-
-
-//                    foreach (UIElement uiElement0 in sceneManager.getUiElementListBoundToGameObject(this))
-//                    {
-
-//                        if (uiElement0.Uid.Equals("BB_" + _uid))
-//                        {
-//                            UIElement boundingBoxUiElement = uiElement0;
-
-//                            Debug.Assert(boundingBoxUiElement.GetType() == typeof(Image), "expected boundingBoxUiElement typeof Image");
-
-//                            Image boundingBoxImage = (Image)boundingBoxUiElement;
-
-//                            //if gameObject change its "isCollidable" state then change its bounding-box color
-//                            if (!boundingBoxImage.Source.Equals(boundingBoxDrawingImage))
-//                            {
-
-//                                sceneManager.getTargetCanvas().Children.Remove(boundingBoxUiElement);
-//                                sceneManager.unboundUiElementFromGameObject(this, boundingBoxUiElement);
-
-
-//                                Image newBoundingBoxImage = new Image();
-//                                newBoundingBoxImage.Source = boundingBoxDrawingImage;
-//                                newBoundingBoxImage.Uid = "BB_" + _uid;
-
-//                                sceneManager.getTargetCanvas().Children.Add(newBoundingBoxImage);
-//                                sceneManager.boundUiElementToGameObject(newBoundingBoxImage, this);
-
-//                                Canvas.SetTop(newBoundingBoxImage, boundingBoxAsFrozen.Bounds.Y);
-//                                Canvas.SetLeft(newBoundingBoxImage, boundingBoxAsFrozen.Bounds.X);
-//                                Canvas.SetZIndex(newBoundingBoxImage, 100);
-
-//                            }
-
-//                        }
-
-//                    }
-//                }
-//            ));
-//            //********************* 
-//#endif
-//        }
 
 
     }

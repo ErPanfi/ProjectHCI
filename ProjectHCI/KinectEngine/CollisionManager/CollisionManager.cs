@@ -20,7 +20,7 @@ namespace ProjectHCI.KinectEngine
     {
 
         //private ISceneBrain sceneBrain;
-        private ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet;
+        private ISet<KeyValuePair<String, String>> tagCollidablePairSet;
         private List<KeyValuePair<IGameObject, IGameObject>> gameObjectKeyValuePairList;
         private CollisionRecorder collisionRecorder;
         /// <summary>
@@ -46,8 +46,8 @@ namespace ProjectHCI.KinectEngine
             }
 
             collisionRecorder.initializeTest();
-            
-            foreach (KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum> gameObjectKeyValuePair in typeEnumCollidablePairSet)
+
+            foreach (KeyValuePair<String, String> gameObjectKeyValuePair in tagCollidablePairSet)
             {
                 List<IGameObject> firstGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectKeyValuePair.Key);
                 List<IGameObject> secondGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectKeyValuePair.Value);
@@ -110,9 +110,9 @@ namespace ProjectHCI.KinectEngine
         /// initialize set of object's pair inside collision manager
         /// </summary>
         /// <param name="typeCollidablePairSet">set of object's pair</param>
-        public void setCollisionToHandle(ISet<KeyValuePair<GameObjectTypeEnum, GameObjectTypeEnum>> typeEnumCollidablePairSet)
+        public void setCollisionToHandle(ISet<KeyValuePair<String, String>> tagCollidablePairSet)
         {
-            this.typeEnumCollidablePairSet = typeEnumCollidablePairSet;
+            this.tagCollidablePairSet = tagCollidablePairSet;
         }
 
         /// <summary>
@@ -169,8 +169,8 @@ namespace ProjectHCI.KinectEngine
                         if (collisionStateMapByGameObjectPair[gameObjectPair] == false)
                         {
                             
-                            List<IGameObject> firstGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectPair.Key.getGameObjectTypeEnum());
-                            List<IGameObject> secondGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectPair.Value.getGameObjectTypeEnum());
+                            List<IGameObject> firstGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectPair.Key.getGameObjectTag());
+                            List<IGameObject> secondGameObjectList = sceneManager.getCollaidableGameObjectList(gameObjectPair.Value.getGameObjectTag());
 
                             if(firstGameObjectList.Contains(gameObjectPair.Key)){
                                 gameObjectPair.Key.onCollisionExitDelegate(gameObjectPair.Value);

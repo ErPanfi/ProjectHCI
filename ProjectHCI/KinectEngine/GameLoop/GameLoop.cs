@@ -5,6 +5,7 @@ using System.Text;
 
 using System.Threading;
 using System.Diagnostics;
+using System.Windows;
 
 namespace ProjectHCI.KinectEngine
 {
@@ -89,7 +90,6 @@ namespace ProjectHCI.KinectEngine
                 this.spawnerManager.awaken();
                 this.timerManager.tick();
                 List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList = this.collisionManager.createCollisionList();
-                //List<KeyValuePair<IGameObject, IGameObject>> collidedGameObjectPairList = null;
                 this.sceneBrain.think(collidedGameObjectPairList);
                 this.updateRenderer.drawObject();
 
@@ -98,12 +98,17 @@ namespace ProjectHCI.KinectEngine
 
 
         /// <summary>
-        /// Stops the thread as soon as possible, usually this method must not be invoked, 
-        /// the game-loop thread terminates automatically when the application closes.
+        /// 
         /// </summary>
         public void stop()
         {
             this.gameStillRunning = false;
+            Application.Current.Dispatcher.Invoke(new Action(
+            delegate()
+            {
+                Application.Current.MainWindow.Close();
+            }
+            ));
         }
 
 

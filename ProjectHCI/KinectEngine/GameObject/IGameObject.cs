@@ -9,14 +9,14 @@ using System.Windows.Controls;
 
 namespace ProjectHCI.KinectEngine
 {
-    public enum GameObjectTypeEnum
-    {
-        DebugObject,
-        UserObject,
-        FriendlyObject,
-        UnfriendlyObject,
-        UIObject
-    }
+    //public enum GameObjectTypeEnum
+    //{
+    //    DebugObject,
+    //    UserObject,
+    //    FriendlyObject,
+    //    UnfriendlyObject,
+    //    UIObject
+    //}
 
     public interface IGameObject
     {
@@ -61,9 +61,9 @@ namespace ProjectHCI.KinectEngine
 
 
 
-        void setGameObjectTypeEnum(GameObjectTypeEnum gameObjectTypeEnum);
+        void setGameObjectTag(String gameObjectTag);
 
-        GameObjectTypeEnum getGameObjectTypeEnum();
+        String getGameObjectTag();
 
 
 

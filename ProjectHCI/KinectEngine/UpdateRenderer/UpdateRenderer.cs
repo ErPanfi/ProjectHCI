@@ -14,7 +14,7 @@ namespace ProjectHCI.KinectEngine
     public class UpdateRenderer : IUpdateRenderer
     {
 
-        private Dictionary<GameObjectTypeEnum, List<IGameObject>> prevFrameGameObjectListMapByType;
+        private Dictionary<String, List<IGameObject>> prevFrameGameObjectListMapByTag;
 
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace ProjectHCI.KinectEngine
         /// </summary>
         public UpdateRenderer()
         {
-            this.prevFrameGameObjectListMapByType = new Dictionary<GameObjectTypeEnum, List<IGameObject>>();
+            this.prevFrameGameObjectListMapByTag = new Dictionary<String, List<IGameObject>>();
         }
 
 
@@ -33,21 +33,21 @@ namespace ProjectHCI.KinectEngine
         public void drawObject()
         {
 
-            Dictionary<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByType = GameLoop.getSceneManager().getGameObjectListMapByTypeEnum();
-            Debug.Assert(gameObjectListMapByType != null, "expected gameObjectListMapByType != null");
+            Dictionary<String, List<IGameObject>> gameObjectListMapByTag = GameLoop.getSceneManager().getGameObjectListMapByTag();
+            Debug.Assert(gameObjectListMapByTag != null, "expected gameObjectListMapByType != null");
 
 
-            foreach (KeyValuePair<GameObjectTypeEnum, List<IGameObject>> gameObjectListMapByTypeEntry0 in gameObjectListMapByType)
+            foreach (KeyValuePair<String, List<IGameObject>> gameObjectListMapByTag0 in gameObjectListMapByTag)
             {
 
 
-                GameObjectTypeEnum gameObjectType0 = gameObjectListMapByTypeEntry0.Key;
-                List<IGameObject> gameObjectList0 = gameObjectListMapByTypeEntry0.Value;
+                String gameObjectTag0 = gameObjectListMapByTag0.Key;
+                List<IGameObject> gameObjectList0 = gameObjectListMapByTag0.Value;
 
-                if (this.prevFrameGameObjectListMapByType.ContainsKey(gameObjectType0))
+                if (this.prevFrameGameObjectListMapByTag.ContainsKey(gameObjectTag0))
                 {
                     
-                    List<IGameObject> prevGameObjectList0 = this.prevFrameGameObjectListMapByType[gameObjectType0];
+                    List<IGameObject> prevGameObjectList0 = this.prevFrameGameObjectListMapByTag[gameObjectTag0];
 
 
                     //we use List and not directly the Enumerable type because changing the list, witch their are based on, raise an exception.
@@ -63,7 +63,7 @@ namespace ProjectHCI.KinectEngine
                         newGameObject00.onRendererDisplayDelegate();
 
                         //prepare the structure for the next frame
-                        this.prevFrameGameObjectListMapByType[gameObjectType0].Add(newGameObject00);
+                        this.prevFrameGameObjectListMapByTag[gameObjectTag0].Add(newGameObject00);
                     }
 
                     //remove deadGameObject from GUI
@@ -72,7 +72,7 @@ namespace ProjectHCI.KinectEngine
                         deadGameObject00.onRendererRemoveDelegate();
 
                         //prepare the structure for the next frame
-                        this.prevFrameGameObjectListMapByType[gameObjectType0].Remove(deadGameObject00);
+                        this.prevFrameGameObjectListMapByTag[gameObjectTag0].Remove(deadGameObject00);
                     }
 
                     //update gameObject in the GUI
@@ -88,7 +88,7 @@ namespace ProjectHCI.KinectEngine
                 else
                 {
 
-                    this.prevFrameGameObjectListMapByType.Add(gameObjectType0, new List<IGameObject>(20));
+                    this.prevFrameGameObjectListMapByTag.Add(gameObjectTag0, new List<IGameObject>(20));
 
                     //display new gameObject to GUI
                     foreach (IGameObject gameObject00 in gameObjectList0)
@@ -96,7 +96,7 @@ namespace ProjectHCI.KinectEngine
                         gameObject00.onRendererDisplayDelegate();
 
                         //prepare the structure for the next frame
-                        this.prevFrameGameObjectListMapByType[gameObjectType0].Add(gameObject00);
+                        this.prevFrameGameObjectListMapByTag[gameObjectTag0].Add(gameObject00);
                     }
                 }
             }

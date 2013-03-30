@@ -1,0 +1,103 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using System.Windows.Media;
+using System.Windows.Controls;
+
+
+namespace ProjectHCI.KinectEngine
+{
+    public enum GameObjectTypeEnum
+    {
+        DebugObject,
+        UserObject,
+        FriendlyObject,
+        UnfriendlyObject,
+        UIObject
+    }
+
+    public interface IGameObject
+    {
+
+ 
+        void setPosition(double xPosition, double yPosition);
+
+        double getXPosition();
+
+        double getYPosition();
+
+
+
+
+
+        void setBoundingBoxGeometry(Geometry boundingBoxGeometry);
+
+        Geometry getBoundingBoxGeometry();
+
+
+
+
+        void setImage(Image image);
+
+        Image getImage();
+
+       
+
+
+
+        void setExtraData(object extraData);
+
+        object getExtraData();
+
+
+
+
+        void setUid(String uid);
+
+        String getUid();
+
+
+
+
+        void setGameObjectTypeEnum(GameObjectTypeEnum gameObjectTypeEnum);
+
+        GameObjectTypeEnum getGameObjectTypeEnum();
+
+
+
+
+        void update(int deltaTimeMillis);
+
+
+
+
+        bool isCollidable();
+
+        bool isDead();
+
+
+<<<<<<< HEAD
+
+
+
+=======
+>>>>>>> b22aa6005d2725d4f5001dd263b046152c83d66b
+        void onRendererUpdateDelegate();
+
+        void onRendererDisplayDelegate();
+
+        void onRendererRemoveDelegate();
+
+
+
+
+        void onCollisionEnterDelegate(IGameObject otherGameObject);
+
+        void onCollisionExitDelegate(IGameObject otherGameObject);
+        
+        
+
+    }
+}

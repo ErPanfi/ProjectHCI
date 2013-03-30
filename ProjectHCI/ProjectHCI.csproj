@@ -58,25 +58,40 @@
     </ApplicationDefinition>
     <Compile Include="KinectEngine\CollisionManager\CollisionManager.cs" />
     <Compile Include="KinectEngine\CollisionManager\ICollisionManager.cs" />
-    <Compile Include="KinectEngine\GameObject\BoundingBoxViewrGameObject.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\GameObjectSpawnRequest.cs" />
+    <Compile Include="KinectEngine\SpawnerManager\SpawnerManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\BoundingBoxViewerGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\NotUserFriendlyGameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\UIButtonGameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\UIObjectListener.cs" />
-    <Compile Include="KinectEngine\GameObject\UserFriendlyGameObject.cs" />
-    <Compile Include="KinectEngine\GameObject\UserGameObject.cs" />
-    <Compile Include="KinectEngine\SceneBrain\ISceneManager.cs" />
-    <Compile Include="KinectEngine\SceneBrain\Configuration.cs" />
-    <Compile Include="KinectEngine\SceneBrain\SceneManager.cs" />
-    <Compile Include="KinectEngine\SceneBrain\SceneNode.cs" />
+    <Compile Include="KinectEngine\GameObject\FormattedTextGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameStartCountdownLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\DEBUG_CooldownLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameFloatingLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameLengthLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameScoreLabelObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\HandUserGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\ImageGuiGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\NotUserFriendlyGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Tags.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\UserFriendlyGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\HeadUserGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\CenteredScreenAreaGameObject.cs" />
+    <Compile Include="KinectEngine\SceneManager\ISceneManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\Configuration.cs" />
+    <Compile Include="KinectEngine\SceneManager\SceneManager.cs" />
+    <Compile Include="KinectEngine\SceneManager\SceneNode.cs" />
     <Compile Include="KinectEngine\Sensor\KinectSensorHelper.cs" />
-    <Compile Include="KinectEngine\SpawnerManager\FakeSpawner.cs" />
-    <Compile Include="KinectEngine\SpawnerManager\GameSpawnerManager.cs" />
-    <Compile Include="KinectEngine\SpawnerManager\MainMenuSpawnerManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\GameDebriefingSceneBrain.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\GameSceneBrain.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSceneBrain\IGameStateTracker.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSpawner\GameDebriefingSpawnerManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSpawner\GameSpawnerManager.cs" />
+    <Compile Include="ReverseFruitNinja\CustomSpawner\MainMenuSpawnerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\ITimerManager.cs" />
     <Compile Include="KinectEngine\TimerManager\Time.cs" />
     <Compile Include="KinectEngine\TimerManager\TimerManager.cs" />
     <Compile Include="KinectEngine\GameObject\GameObjectEventArgs.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Hourglass\HourglassGUIGameObject.cs" />
     <Compile Include="Utility\BitmapUtility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -121,6 +136,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Resource Include="Resources\made_in_china.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\skype.png" />
@@ -133,12 +149,78 @@
     <Resource Include="Resources\slash_vert.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ExitButton.png" />
-    <Resource Include="Resources\NewGameButton.png" />
-    <Resource Include="Resources\OptionsButton.png" />
+    <Resource Include="Resources\new_game.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\crosshair.gif" />
+    <Resource Include="Resources\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\quit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\controls.png" />
+    <Resource Include="Resources\difficulty.png" />
+    <Resource Include="Resources\graphics.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\easy.png" />
+    <Resource Include="Resources\hard.png" />
+    <Resource Include="Resources\normal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\head_control.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hand_control.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fruit1.png" />
+    <Resource Include="Resources\fruit10.png" />
+    <Resource Include="Resources\fruit11.png" />
+    <Resource Include="Resources\fruit12.png" />
+    <Resource Include="Resources\fruit13.png" />
+    <Resource Include="Resources\fruit2.png" />
+    <Resource Include="Resources\fruit3.png" />
+    <Resource Include="Resources\fruit4.png" />
+    <Resource Include="Resources\fruit5.png" />
+    <Resource Include="Resources\fruit6.png" />
+    <Resource Include="Resources\fruit7.png" />
+    <Resource Include="Resources\fruit8.png" />
+    <Resource Include="Resources\fruit9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fruit14.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\wave.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fruit_user1.png" />
+    <Resource Include="Resources\fruit_user2.png" />
+    <Resource Include="Resources\fruit_user3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\user_fruit_button1.png" />
+    <Resource Include="Resources\user_fruit_button2.png" />
+    <Resource Include="Resources\user_fruit_button3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Hourglass_1.png" />
+    <Resource Include="Resources\Hourglass_2.png" />
+    <Resource Include="Resources\Hourglass_3.png" />
+    <Resource Include="Resources\Hourglass_4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
