@@ -192,10 +192,10 @@ namespace ProjectHCI.ReverseFruitNinja
         }
 
         protected double mapValueToNewRange(double value,
-                                          double oldLowerLimit,
-                                          double oldHigherLimit,
-                                          double newLowerLimit,
-                                          double newHigherLimit)
+                                            double oldLowerLimit,
+                                            double oldHigherLimit,
+                                            double newLowerLimit,
+                                            double newHigherLimit)
         {
 
             double oldRange = oldHigherLimit - oldLowerLimit;
