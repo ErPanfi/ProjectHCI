@@ -16,7 +16,11 @@ namespace ProjectHCI.ReverseFruitNinja
     public class CutGameObject : GameObject
     {
 
+        private static int nextZIndex = 5;
+
         private int collidableTimeMillis;
+        private int currentTimeToLiveMillis;
+        private ImageSource originalImageSource;
 
         #region protected timeToLiveMillis {public get; public set;}
 
@@ -62,7 +66,10 @@ namespace ProjectHCI.ReverseFruitNinja
             base._gameObjectTag = Tags.CUT_TAG;
             base._image = image;
 
+            this.originalImageSource = image.Source.Clone();
+
             this.timeToLiveMillis = timeToLiveMillis;
+            this.currentTimeToLiveMillis = timeToLiveMillis;
             this.collidableTimeMillis = this.timeToLiveMillis - notCollidableTimeMillis;
         }
 
@@ -73,7 +80,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="deltaTimeMillis"></param>
         public override void update(int deltaTimeMillis)
         {
-            this.timeToLiveMillis -= deltaTimeMillis;
+            this.currentTimeToLiveMillis -= deltaTimeMillis;
         }
 
         /// <summary>
@@ -82,7 +89,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         public override bool isCollidable()
         {
-            return this.timeToLiveMillis <= collidableTimeMillis;
+            return this.currentTimeToLiveMillis <= collidableTimeMillis;
         }
 
         /// <summary>
@@ -91,7 +98,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         public override bool isDead()
         {
-            return this.timeToLiveMillis <= 0;
+            return this.currentTimeToLiveMillis <= 0;
         }
 
 
@@ -109,7 +116,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.applyRotation(this, new Random().Next(0, 360), this.getImage().Width * 0.5, this.getImage().Height * 0.5, true, true);
-            sceneManager.canvasDisplayImage(this, 5);
+
+            this.getImage().Source = this.animateImageColor();
+
+            sceneManager.canvasDisplayImage(this, nextZIndex++);
 
 
 
@@ -122,22 +132,7 @@ namespace ProjectHCI.ReverseFruitNinja
         public override void onRendererUpdateDelegate()
         {
 
-            const int Blue = 0;
-            const int Green = 1;
-            const int Red = 2;
-
-            RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)this.getImage().Source);
-
-            for (int i = 0; i < rgbData.dataLength; i += 4)
-            {
-                rgbData.rawRgbByteArray[i + Blue] = 0;	 //blue
-                rgbData.rawRgbByteArray[i + Green] = 0; //green;
-                rgbData.rawRgbByteArray[i + Red] = 0;
-            }
-            BitmapSource bitmapSource = BitmapUtility.createBitmapSource(rgbData);
-
-            this.getImage().Source = bitmapSource;
-
+            this.getImage().Source = this.animateImageColor();
             GameLoop.getSceneManager().canvasUpdateImage(this);
         }
 
@@ -152,7 +147,6 @@ namespace ProjectHCI.ReverseFruitNinja
             sceneManager.canvasRemoveImage(this);
 
         }
-
 
 
 
@@ -176,6 +170,71 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public void cutUserTrigger()
         {
+        }
+
+
+
+
+
+
+
+        private ImageSource animateImageColor()
+        {
+            if (this.currentTimeToLiveMillis > collidableTimeMillis)
+            {
+
+
+                const int BlueChannelIndex = 0;
+                const int GreenChannelIndex = 1;
+                const int RedChannelIndex = 2;
+
+                RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)this.getImage().Source);
+
+                for (int i = 0; i < rgbData.dataLength; i += 4)
+                {
+                    //blue decrease cause currentTimeToLiveMillis is decreased
+                    //rgbData.rawRgbByteArray[i + BlueChannelIndex] = (byte)this.mapValueToNewRange(this.currentTimeToLiveMillis - this.collidableTimeMillis,
+                    //                                                                             0,
+                    //                                                                             this.timeToLiveMillis - this.collidableTimeMillis,
+                    //                                                                             0,
+                    //                                                                             255);
+
+                    rgbData.rawRgbByteArray[i + BlueChannelIndex] = 0;
+                    rgbData.rawRgbByteArray[i + GreenChannelIndex] = 0;
+
+                    //red increase cause this.timeToLiveMillis - this.currentTimeToLiveMillis
+                    rgbData.rawRgbByteArray[i + RedChannelIndex] = (byte)this.mapValueToNewRange(this.timeToLiveMillis - this.currentTimeToLiveMillis,
+                                                                                                 0,
+                                                                                                 this.timeToLiveMillis - this.collidableTimeMillis,
+                                                                                                 0,
+                                                                                                 255);
+                }
+                return BitmapUtility.createBitmapSource(rgbData);
+
+            }
+            else
+            {
+                return originalImageSource;
+            }
+        }
+
+
+
+
+
+
+
+        protected double mapValueToNewRange(double value,
+                                            double oldLowerLimit,
+                                            double oldHigherLimit,
+                                            double newLowerLimit,
+                                            double newHigherLimit)
+        {
+
+            double oldRange = oldHigherLimit - oldLowerLimit;
+            double newRange = newHigherLimit - newLowerLimit;
+
+            return (((value - oldLowerLimit) * newRange) / oldRange) + newLowerLimit;
         }
     }
 }
