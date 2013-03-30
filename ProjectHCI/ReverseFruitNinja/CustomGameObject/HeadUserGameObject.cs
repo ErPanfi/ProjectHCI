@@ -56,6 +56,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
             this.kinectSensorHelper.initializeKinect();
+            this.calibrateCamera();
             this.timeToLiveMillis = 0;
         }
 
