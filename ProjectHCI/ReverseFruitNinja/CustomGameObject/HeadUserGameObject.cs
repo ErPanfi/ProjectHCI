@@ -57,7 +57,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
             this.kinectSensorHelper.initializeKinect();
-            this.calibrateCamera();
+            //this.calibrateCamera();
             this.timeToLiveMillis = 0;
 
         }
@@ -204,16 +204,10 @@ namespace ProjectHCI.ReverseFruitNinja
             return (((value - oldLowerLimit) * newRange) / oldRange) + newLowerLimit;
         }
 
-        public void cutTrigger()
-        {
-            GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, "Dead!!!"), null));
-        }
-
-
         /// <summary>
         /// prototype for camera calibration. HEEELP!!
         /// </summary>
-        private void calibrateCamera()
+        public void calibrateCamera()
         {
             Skeleton skeleton;
             int deltaAngle = 3;

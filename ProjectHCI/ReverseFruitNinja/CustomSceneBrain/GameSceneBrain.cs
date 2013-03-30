@@ -34,7 +34,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #region protected int gameStartCountdownMillis {public get; set;}
 
-        public const int GAME_START_COUNTDOWN_MILLIS = 15000;
+        public const int GAME_START_COUNTDOWN_MILLIS = 20000;
 
         protected int gameStartCountdownMillis;
 
@@ -159,12 +159,12 @@ namespace ProjectHCI.ReverseFruitNinja
 
         protected void bonusCollected(FruitGameObject collectedBonusObject)
         {
-            this.currentScore += collectedBonusObject.collectionTrigger();
+            this.currentScore += collectedBonusObject.getFruitCollectionPoints();
         }
 
         protected void bonusDead(FruitGameObject deadBonusObject)
         {
-            this.currentScore += deadBonusObject.cutTrigger();
+            this.currentScore += deadBonusObject.getFruitDeathPoints();
         }
 
         protected void userDeadTrigger(List<IGameObject> collidedCuts)
@@ -177,39 +177,7 @@ namespace ProjectHCI.ReverseFruitNinja
                 //remove all object from scene, except the cuts which killed the user
                 foreach (KeyValuePair<String, List<IGameObject>> gameObjectList0 in sceneManager.getGameObjectListMapByTag())
                 {
-                    //we must remove all visible objects from scene
-                    foreach (IGameObject gameObject00 in gameObjectList0.Value)
-                    {
-                        //invoke the correct trigger for each object
-                        switch (gameObjectList0.Key)
-                        {
-                            case Tags.DEBUG_TAG :   //debug objs are removed implicitly
-                                break;
-                            case Tags.USER_TAG:
-                                ((HeadUserGameObject)gameObject00).cutTrigger();
-                                goto default;   //fallback in default case
-
-                            case Tags.CUT_TAG:
-                                if (collidedCuts.Contains(gameObject00))
-                                {
-                                    ((CutGameObject)gameObject00).cutUserTrigger();
-                                }
-                                goto default;   //fallback in default case
-
-                            default:
-                                //can't remove now: collection in use
-                                objsToRemove.Add(gameObject00);
-                                break;
-                        }
-                    }       //end inner foreach
-                }       //end outer foreach
-            }
-            else    //multiplayer! :-)
-            {
-                //just put user as cut, without stopping anything else
-                foreach (IGameObject gameObject0 in sceneManager.getGameObjectListMapByTag()[Tags.USER_TAG])
-                {
-                    ((HeadUserGameObject)gameObject0).cutTrigger();
+                    objsToRemove = (List<IGameObject>)objsToRemove.Concat(gameObjectList0.Value);
                 }
             }
 

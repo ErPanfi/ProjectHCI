@@ -375,12 +375,15 @@ namespace ProjectHCI.ReverseFruitNinja
             double halfCanvasWidth = GameLoop.getSceneManager().getCanvasWidth() * 0.5;
             double halfCanvasHeight = GameLoop.getSceneManager().getCanvasHeight() * 0.5;
 
-            return new HeadUserGameObject(halfCanvasWidth - image.Width * 0.5,
+            HeadUserGameObject ret = new HeadUserGameObject(halfCanvasWidth - image.Width * 0.5,
                                       halfCanvasHeight - image.Height * 0.5,
                                       boundingBoxGeometry,
                                       image,
                                       SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
 
+            //ret.calibrateCamera();
+
+            return ret;
         }
 
 

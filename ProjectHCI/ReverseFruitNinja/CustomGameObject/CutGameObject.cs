@@ -173,9 +173,5 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             //throw new NotSupportedException();
         }
-
-        public void cutUserTrigger()
-        {
-        }
     }
 }
