@@ -170,6 +170,15 @@ namespace ProjectHCI.KinectEngine
                 return this.trackedSkeleton;
             }
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public KinectSensor getKinectSensor()
+        {
+            return this.kinectSensor;
+        }
 
 
         ///// <summary>
