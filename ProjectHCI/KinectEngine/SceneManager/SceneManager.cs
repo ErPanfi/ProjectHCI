@@ -270,7 +270,7 @@ namespace ProjectHCI.KinectEngine
             double imageHeight = gameObject.getImage().Height;
             Stretch streachImage = gameObject.getImage().Stretch;
             StretchDirection streachDirection = gameObject.getImage().StretchDirection;
-            Transform renderTransformFrozen = (Transform)gameObject.getImage().RenderTransform.GetAsFrozen();
+            Transform renderTransformFrozen = gameObject.getImage().RenderTransform != null ? (Transform)gameObject.getImage().RenderTransform.GetAsFrozen() : null;
 
             
 
@@ -377,13 +377,13 @@ namespace ProjectHCI.KinectEngine
         /// <param name="clockwiseDegreeAngle"></param>
         /// <param name="xRotationCenter"></param>
         /// <param name="yRotationCenter"></param>
-        public void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRotationCenter, double yRotationCenter, bool propagateToChild)
+        public void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRotationCenter, double yRotationCenter, bool affectBoundingBox, bool propagateToChild)
         {
             Debug.Assert(gameObject != null, "expected gameObject != null");
             SceneNode targetSceneNode = SceneNode.getSceneNodeByGameObject(this.sceneNodeTree, gameObject);
             Debug.Assert(targetSceneNode != null, "gameObject not found in the scene node tree");
 
-            this.recursiveApplyRotation(targetSceneNode, clockwiseDegreeAngle, xRotationCenter, yRotationCenter, propagateToChild);
+            this.recursiveApplyRotation(targetSceneNode, clockwiseDegreeAngle, xRotationCenter, yRotationCenter,affectBoundingBox, propagateToChild);
 
         }
 
@@ -496,8 +496,7 @@ namespace ProjectHCI.KinectEngine
 
             if (gameObject.getBoundingBoxGeometry() != null)
             {
-                gameObject.getBoundingBoxGeometry().Transform = new TranslateTransform(gameObject.getXPosition(), 
-                                                                                       gameObject.getYPosition());
+                gameObject.getBoundingBoxGeometry().Transform = new TranslateTransform(gameObject.getXPosition(), gameObject.getYPosition());
             }
             
             if (propagateToChild)
@@ -518,7 +517,7 @@ namespace ProjectHCI.KinectEngine
         /// <param name="clockwiseDegreeAngle"></param>
         /// <param name="xRotationCenter"></param>
         /// <param name="yRotationCenter"></param>
-        public void recursiveApplyRotation(SceneNode sceneNode, double clockwiseDegreeAngle, double xRotationCenter, double yRotationCenter, bool propagateToChild)
+        public void recursiveApplyRotation(SceneNode sceneNode, double clockwiseDegreeAngle, double xRotationCenter, double yRotationCenter, bool affectBoundingBox, bool propagateToChild)
         {
             IGameObject gameObject = sceneNode.getSceneNodeGameObject();
 
@@ -529,14 +528,18 @@ namespace ProjectHCI.KinectEngine
             { // transform image
                 TransformGroup transformGroup = new TransformGroup();
                 transformGroup.Children.Add(rotateTransform);
-                transformGroup.Children.Add(gameObject.getImage().RenderTransform);
+                if (gameObject.getImage().RenderTransform != null)
+                {
+                    transformGroup.Children.Add(gameObject.getImage().RenderTransform);
+                }
+                
 
                 gameObject.getImage().RenderTransform = transformGroup;
             }
             
 
             // transform geometry
-            if (gameObject.getBoundingBoxGeometry() != null)
+            if (affectBoundingBox && gameObject.getBoundingBoxGeometry() != null)
             {
                 TransformGroup transformGroup = new TransformGroup();
                 transformGroup.Children.Add(rotateTransform);
@@ -551,7 +554,7 @@ namespace ProjectHCI.KinectEngine
                 double xRotationRelativeToChild = xRotationCenter - (childSceneNode0.getSceneNodeGameObject().getXPosition() - gameObject.getXPosition());
                 double yRotationRelativeToChild = yRotationCenter - (childSceneNode0.getSceneNodeGameObject().getYPosition() - gameObject.getYPosition());
 
-                this.recursiveApplyRotation(childSceneNode0, clockwiseDegreeAngle, xRotationRelativeToChild, yRotationRelativeToChild, propagateToChild);
+                this.recursiveApplyRotation(childSceneNode0, clockwiseDegreeAngle, xRotationRelativeToChild, yRotationRelativeToChild, affectBoundingBox, propagateToChild);
             }
         }
 
@@ -732,6 +735,12 @@ namespace ProjectHCI.KinectEngine
                 || (    this.gameObjectListMapByTag.ContainsKey(gameObject.getGameObjectTag())
                     &&  this.gameObjectListMapByTag[gameObject.getGameObjectTag()].Contains(gameObject));
 
+        }
+
+
+        public void clearImageTransformation(IGameObject gameObject)
+        {
+            gameObject.getImage().RenderTransform = null;
         }
     }
 }

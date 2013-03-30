@@ -337,7 +337,7 @@ namespace ProjectHCI.ReverseFruitNinja
             #endregion
 
             Image image = new Image();
-            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"slash_horiz.png")));
+            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"cut.png")));
             image.Width = random.Next(300, 800);
             image.Height = 25;
             image.Stretch = Stretch.Fill;
@@ -367,10 +367,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
             Image image = new Image();
             image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(currentConfiguration.userFruitImage)));
-            image.Height = 200;
-            image.Width = 200;
+            image.Height = 160;
+            image.Width = 160;
 
-            Geometry boundingBoxGeometry = new EllipseGeometry(new Point(100, 110), 50, 50);
+            Geometry boundingBoxGeometry = new EllipseGeometry(new Point(80, 80), 50, 50);
 
             double halfCanvasWidth = GameLoop.getSceneManager().getCanvasWidth() * 0.5;
             double halfCanvasHeight = GameLoop.getSceneManager().getCanvasHeight() * 0.5;

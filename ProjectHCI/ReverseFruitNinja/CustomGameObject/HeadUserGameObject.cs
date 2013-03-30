@@ -21,6 +21,7 @@ namespace ProjectHCI.ReverseFruitNinja
         protected KinectSensorHelper kinectSensorHelper;
         private int Z_INDEX = 2;
 
+
         //protected bool isCut;
 
         #region protected int timeToLiveMillis {public get; public set;}
@@ -58,6 +59,7 @@ namespace ProjectHCI.ReverseFruitNinja
             this.kinectSensorHelper.initializeKinect();
             this.calibrateCamera();
             this.timeToLiveMillis = 0;
+
         }
 
 
@@ -111,7 +113,10 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="mainWindowCanvas"></param>
         public override void onRendererUpdateDelegate()
         {
+
+
             ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.clearImageTransformation(this);
 
             Skeleton skeleton = this.kinectSensorHelper.getTrackedSkeleton();
 
@@ -125,37 +130,32 @@ namespace ProjectHCI.ReverseFruitNinja
                     double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0, 1.0, 0, sceneManager.getCanvasWidth());
                     double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y, 1.0, -1.0, 0, sceneManager.getCanvasHeight());
 
-                    #region old commented code
-                    //TransformGroup transformGroup = new TransformGroup();
-
-                    ////translate component
-                    //transformGroup.Children.Add(new TranslateTransform( this._xPosition - xScreenPosition, this._yPosition - yScreenPosition));
-
-
-                    ////calculate rotation
-                    //if (shoulderCenterJoint.TrackingState == JointTrackingState.Tracked)
-                    //{
-
-                    //    Vector shoulderCenterVector = new Vector(shoulderCenterJoint.Position.X, shoulderCenterJoint.Position.Y);
-                    //    Vector headVector = new Vector(headJoint.Position.X, headJoint.Position.Y);
-
-                    //    Vector shoulderCenterToHeadVector = Vector.Subtract(headVector, shoulderCenterVector);
-                    //    shoulderCenterToHeadVector.Normalize();
-
-                    //    Vector skeletonUpVector = new Vector(0, 1.0);
-
-                    //    double rotationAngle = Vector.AngleBetween(skeletonUpVector, shoulderCenterToHeadVector);
-
-                    //    double xRotationCenter = this._xPosition + this._image.Width * 0.5;
-                    //    double yRotationCenter = this._yPosition + this._image.Height * 0.5;
-
-
-                    //    transformGroup.Children.Add(new RotateTransform(-1 * rotationAngle, xRotationCenter, yRotationCenter));
-
-                    //}
-                    #endregion
 
                     sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition(), true);
+
+
+                    //calculate rotation
+                    if (shoulderCenterJoint.TrackingState == JointTrackingState.Tracked || shoulderCenterJoint.TrackingState == JointTrackingState.Inferred)
+                    {
+
+                        Vector shoulderCenterVector = new Vector(shoulderCenterJoint.Position.X, shoulderCenterJoint.Position.Y);
+                        Vector headVector = new Vector(headJoint.Position.X, headJoint.Position.Y);
+
+                        Vector shoulderCenterToHeadVector = Vector.Subtract(headVector, shoulderCenterVector);
+                        shoulderCenterToHeadVector.Normalize();
+
+                        //we are in mirror mode so the object need to rotate in the opposite direction.
+                        double rotationAngle = -1 * Vector.AngleBetween(new Vector(0, 1), shoulderCenterToHeadVector);
+
+                        double xRotationCenter = this._image.Width * 0.5;
+                        double yRotationCenter = this._image.Height * 0.5;
+
+
+                        sceneManager.applyRotation(this, rotationAngle, xRotationCenter, yRotationCenter, false, false);
+
+                    }
+
+                    
                 }
 
             }
