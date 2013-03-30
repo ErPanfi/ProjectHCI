@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    public class UserFriendlyGameObject : GameObject
+    public class FruitGameObject : GameObject
     {
 
         public const int FRUIT_COLLECTION_POINTS = 10;
@@ -48,7 +48,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="boundingBoxGeometry"></param>
         /// <param name="image"></param>
         /// <param name="timeToLiveMillis"></param>
-        public UserFriendlyGameObject(double xPosition,
+        public FruitGameObject(double xPosition,
                                       double yPosition,
                                       Geometry boundingBoxGeometry,
                                       Image image,
@@ -135,8 +135,19 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="otherGameObject"></param>
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
-            //Debug.WriteLine("frutto colpito");
-            //throw new NotSupportedException();
+            switch (otherGameObject.getGameObjectTag())
+            {
+                case Tags.CUT_TAG:
+                    this.isCut = true;
+                    //create floating death label
+                    GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, GameFloatingLabelObject.points2string(FRUIT_DEATH_POINTS)), null));
+                    break;
+                case Tags.USER_TAG:
+                    this.isCollected = true;
+                    //create floating death label
+                    GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, GameFloatingLabelObject.points2string(FRUIT_COLLECTION_POINTS)), null));
+                    break;
+            }
         }
 
         /// <summary>
@@ -175,23 +186,13 @@ namespace ProjectHCI.ReverseFruitNinja
         //}
         #endregion
 
-        public int cutTrigger()
+        public int getFruitDeathPoints()
         {
-            //this.fadeImage();
-            this.isCut = true;
-            //create floating death label
-            GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, GameFloatingLabelObject.points2string(FRUIT_DEATH_POINTS)), null));
-
             return FRUIT_DEATH_POINTS;
         }
 
-        public int collectionTrigger()
+        public int getFruitCollectionPoints()
         {
-            //this.fadeImage();
-            this.isCollected = true;
-            //create floating death label
-            GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, GameFloatingLabelObject.points2string(FRUIT_COLLECTION_POINTS)), null));
-
             return FRUIT_COLLECTION_POINTS;
         }
     }

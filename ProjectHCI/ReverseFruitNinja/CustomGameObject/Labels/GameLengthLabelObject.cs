@@ -41,7 +41,7 @@ namespace ProjectHCI.ReverseFruitNinja
                                             System.Globalization.CultureInfo.CurrentCulture,
                                             System.Windows.FlowDirection.LeftToRight,
                                             typeFace,          // the custom embedded font
-                                            60,                // font size in em
+                                            70,                // font size in em
                                             Brushes.Black);    //unused param, we create a geometry from this FormattedText
         }
 
@@ -56,7 +56,7 @@ namespace ProjectHCI.ReverseFruitNinja
             currentMillis %= 60000;
             int ss = currentMillis / 1000;
 
-            this.setText(this.labelHeader + hh + ":" + mm + ":" + ss);
+            this.setText(this.labelHeader + (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss);
         }
     }
 }

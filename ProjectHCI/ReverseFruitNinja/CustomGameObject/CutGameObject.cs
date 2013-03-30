@@ -8,13 +8,19 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using System.Windows;
 using ProjectHCI.KinectEngine;
+using ProjectHCI.Utility;
+using System.Windows.Media.Imaging;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    public class NotUserFriendlyGameObject : GameObject
+    public class CutGameObject : GameObject
     {
 
+        private static int nextZIndex = 5;
+
         private int collidableTimeMillis;
+        private int currentTimeToLiveMillis;
+        private ImageSource originalImageSource;
 
         #region protected timeToLiveMillis {public get; public set;}
 
@@ -31,7 +37,7 @@ namespace ProjectHCI.ReverseFruitNinja
         }
 
         #endregion
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -39,7 +45,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="imageSource"></param>
         /// <param name="timeToLiveMillis"></param>
         /// <param name="chopDurationMillis"></param>
-        public NotUserFriendlyGameObject(double xPosition,
+        public CutGameObject(double xPosition,
                                          double yPosition,
                                          Geometry boundingBoxGeometry,
                                          Image image,
@@ -50,7 +56,7 @@ namespace ProjectHCI.ReverseFruitNinja
             Debug.Assert(notCollidableTimeMillis > 0, "expected notCollidableTimeMillis > 0");
             Debug.Assert(notCollidableTimeMillis <= timeToLiveMillis, "expected notCollidableTimeMillis <= timeToLiveMillis");
 
-           
+
 
             base._xPosition = xPosition;
             base._yPosition = yPosition;
@@ -60,7 +66,10 @@ namespace ProjectHCI.ReverseFruitNinja
             base._gameObjectTag = Tags.CUT_TAG;
             base._image = image;
 
+            this.originalImageSource = image.Source.Clone();
+
             this.timeToLiveMillis = timeToLiveMillis;
+            this.currentTimeToLiveMillis = timeToLiveMillis;
             this.collidableTimeMillis = this.timeToLiveMillis - notCollidableTimeMillis;
         }
 
@@ -71,7 +80,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="deltaTimeMillis"></param>
         public override void update(int deltaTimeMillis)
         {
-            this.timeToLiveMillis -= deltaTimeMillis;
+            this.currentTimeToLiveMillis -= deltaTimeMillis;
         }
 
         /// <summary>
@@ -80,7 +89,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         public override bool isCollidable()
         {
-            return this.timeToLiveMillis <= collidableTimeMillis;
+            return this.currentTimeToLiveMillis <= collidableTimeMillis;
         }
 
         /// <summary>
@@ -89,7 +98,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         public override bool isDead()
         {
-            return this.timeToLiveMillis <= 0;
+            return this.currentTimeToLiveMillis <= 0;
         }
 
 
@@ -106,8 +115,11 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
             ISceneManager sceneManager = GameLoop.getSceneManager();
-            sceneManager.canvasDisplayImage(this, 5);
-            sceneManager.applyRotation(this, new Random().Next(0, 360), this.getImage().Width * 0.5, this.getImage().Height * 0.5, true);
+            sceneManager.applyRotation(this, new Random().Next(0, 360), this.getImage().Width * 0.5, this.getImage().Height * 0.5, true, true);
+
+            this.getImage().Source = this.animateImageColor();
+
+            sceneManager.canvasDisplayImage(this, nextZIndex++);
 
 
 
@@ -119,6 +131,8 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         public override void onRendererUpdateDelegate()
         {
+
+            this.getImage().Source = this.animateImageColor();
             GameLoop.getSceneManager().canvasUpdateImage(this);
         }
 
@@ -133,7 +147,6 @@ namespace ProjectHCI.ReverseFruitNinja
             sceneManager.canvasRemoveImage(this);
 
         }
-
 
 
 
@@ -155,8 +168,68 @@ namespace ProjectHCI.ReverseFruitNinja
             //throw new NotSupportedException();
         }
 
-        public void cutUserTrigger()
+
+
+
+
+
+        private ImageSource animateImageColor()
         {
+            if (this.currentTimeToLiveMillis > collidableTimeMillis)
+            {
+
+
+                const int BlueChannelIndex = 0;
+                const int GreenChannelIndex = 1;
+                const int RedChannelIndex = 2;
+
+                RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)this.getImage().Source);
+
+                for (int i = 0; i < rgbData.dataLength; i += 4)
+                {
+                    //blue decrease cause currentTimeToLiveMillis is decreased
+                    //rgbData.rawRgbByteArray[i + BlueChannelIndex] = (byte)this.mapValueToNewRange(this.currentTimeToLiveMillis - this.collidableTimeMillis,
+                    //                                                                             0,
+                    //                                                                             this.timeToLiveMillis - this.collidableTimeMillis,
+                    //                                                                             0,
+                    //                                                                             255);
+
+                    rgbData.rawRgbByteArray[i + BlueChannelIndex] = 0;
+                    rgbData.rawRgbByteArray[i + GreenChannelIndex] = 0;
+
+                    //red increase cause this.timeToLiveMillis - this.currentTimeToLiveMillis
+                    rgbData.rawRgbByteArray[i + RedChannelIndex] = (byte)this.mapValueToNewRange(this.timeToLiveMillis - this.currentTimeToLiveMillis,
+                                                                                                 0,
+                                                                                                 this.timeToLiveMillis - this.collidableTimeMillis,
+                                                                                                 0,
+                                                                                                 255);
+                }
+                return BitmapUtility.createBitmapSource(rgbData);
+
+            }
+            else
+            {
+                return originalImageSource;
+            }
+        }
+
+
+
+
+
+
+
+        protected double mapValueToNewRange(double value,
+                                            double oldLowerLimit,
+                                            double oldHigherLimit,
+                                            double newLowerLimit,
+                                            double newHigherLimit)
+        {
+
+            double oldRange = oldHigherLimit - oldLowerLimit;
+            double newRange = newHigherLimit - newLowerLimit;
+
+            return (((value - oldLowerLimit) * newRange) / oldRange) + newLowerLimit;
         }
     }
 }

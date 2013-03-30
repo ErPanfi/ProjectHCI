@@ -70,10 +70,10 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameScoreLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HandUserGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\ImageGuiGameObject.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\NotUserFriendlyGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\CutGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Tags.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\UserFriendlyGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\FruitGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HeadUserGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\CenteredScreenAreaGameObject.cs" />
     <Compile Include="KinectEngine\SceneManager\ISceneManager.cs" />
@@ -137,12 +137,6 @@
     </None>
     <AppDesigner Include="Properties\" />
     <Resource Include="Resources\made_in_china.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\skype.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\shark.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\slash_horiz.png" />
@@ -221,6 +215,9 @@
     <Resource Include="Resources\Hourglass_2.png" />
     <Resource Include="Resources\Hourglass_3.png" />
     <Resource Include="Resources\Hourglass_4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cut.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

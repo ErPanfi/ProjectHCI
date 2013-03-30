@@ -43,7 +43,7 @@ namespace ProjectHCI.KinectEngine
 
         void applyTranslation(IGameObject gameObject, double xOffset, double yOffset, bool propagateToChild);
 
-        void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRelativeRotationCenter, double yRelativeRotationCenter, bool propagateToChild);
+        void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRelativeRotationCenter, double yRelativeRotationCenter, bool affectBoundingBox, bool propagateToChild);
 
         void applyScale(IGameObject gameObject, double xScale, double yScale, double xCenter, double yCenter, bool propagateToChild);
 
@@ -59,6 +59,9 @@ namespace ProjectHCI.KinectEngine
 
         double getCanvasHeight();
 
+
+
+        void clearImageTransformation(IGameObject gameObject);
 
 
 
