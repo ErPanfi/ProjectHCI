@@ -153,10 +153,12 @@ namespace ProjectHCI.ReverseFruitNinja
                     //}
                     #endregion
 
-                    sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition());
+                    sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition(), true);
                 }
 
-            }           
+            }
+
+            sceneManager.canvasUpdateImage(this);
         }
 
 

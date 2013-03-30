@@ -107,7 +107,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.canvasDisplayImage(this, 5);
-            sceneManager.applyRotation(this, new Random().Next(0, 360), this.getImage().Width * 0.5, this.getImage().Height * 0.5);
+            sceneManager.applyRotation(this, new Random().Next(0, 360), this.getImage().Width * 0.5, this.getImage().Height * 0.5, true);
 
 
 
@@ -119,7 +119,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         public override void onRendererUpdateDelegate()
         {
-            //do nothing... maybe change color
+            GameLoop.getSceneManager().canvasUpdateImage(this);
         }
 
 

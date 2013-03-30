@@ -43,7 +43,7 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             base.update(deltaTimeMillis);
             //also translate label higher
-            GameLoop.getSceneManager().applyTranslation(this, 0, VERTICAL_TRANSACTION_OFFSET_PER_MILLIS * deltaTimeMillis);
+            GameLoop.getSceneManager().applyTranslation(this, 0, VERTICAL_TRANSACTION_OFFSET_PER_MILLIS * deltaTimeMillis, true);
         }
     }
 }

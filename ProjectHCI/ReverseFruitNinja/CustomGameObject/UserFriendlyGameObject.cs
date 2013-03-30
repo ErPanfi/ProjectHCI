@@ -109,8 +109,7 @@ namespace ProjectHCI.ReverseFruitNinja
                 return;
             }
 
-            ISceneManager sceneManager = GameLoop.getSceneManager();
-            sceneManager.canvasDisplayImage(this, 0);
+            GameLoop.getSceneManager().canvasDisplayImage(this, 0);
             displayed = true;
         }
 
@@ -119,7 +118,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         public override void onRendererUpdateDelegate()
         {
-            //do nothing, maybe bounching icon
+            GameLoop.getSceneManager().canvasUpdateImage(this);
         }
 
         /// <summary>
@@ -127,8 +126,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         public override void onRendererRemoveDelegate()
         {
-            ISceneManager sceneManager = GameLoop.getSceneManager();
-            sceneManager.canvasRemoveImage(this);
+            GameLoop.getSceneManager().canvasRemoveImage(this);
         }
 
         /// <summary>
@@ -137,7 +135,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="otherGameObject"></param>
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
-            Debug.WriteLine("frutto colpito");
+            //Debug.WriteLine("frutto colpito");
             //throw new NotSupportedException();
         }
 

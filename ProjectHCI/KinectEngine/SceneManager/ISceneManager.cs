@@ -41,11 +41,11 @@ namespace ProjectHCI.KinectEngine
 
         void canvasRemoveImage(IGameObject gameObject);
 
-        void applyTranslation(IGameObject gameObject, double xOffset, double yOffset);
+        void applyTranslation(IGameObject gameObject, double xOffset, double yOffset, bool propagateToChild);
 
-        void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRelativeRotationCenter, double yRelativeRotationCenter);
+        void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRelativeRotationCenter, double yRelativeRotationCenter, bool propagateToChild);
 
-        void applyScale(IGameObject gameObject, double xScale, double yScale, double xCenter, double yCenter);
+        void applyScale(IGameObject gameObject, double xScale, double yScale, double xCenter, double yCenter, bool propagateToChild);
 
 
 

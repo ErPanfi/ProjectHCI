@@ -51,7 +51,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public override void onRendererUpdateDelegate()
         {
-            // do nothing
+            GameLoop.getSceneManager().canvasUpdateImage(this);
         }
 
         public override void onRendererRemoveDelegate()

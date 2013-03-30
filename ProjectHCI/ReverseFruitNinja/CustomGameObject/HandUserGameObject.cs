@@ -74,10 +74,12 @@ namespace ProjectHCI.ReverseFruitNinja
                     double yScreenPosition = this.mapValueToNewRange(yHandJointPosition, 0.4, -0.4, 0, sceneManager.getCanvasHeight() - this.getImage().Height);
 
            
-                    sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition());
+                    sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition(), true);
 
                 }
             }
+
+            sceneManager.canvasUpdateImage(this);
         }
 
         public override bool isCollidable()

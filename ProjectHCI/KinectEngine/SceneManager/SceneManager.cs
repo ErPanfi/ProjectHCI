@@ -134,6 +134,21 @@ namespace ProjectHCI.KinectEngine
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -173,6 +188,21 @@ namespace ProjectHCI.KinectEngine
                 return new List<IGameObject>();
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -298,13 +328,33 @@ namespace ProjectHCI.KinectEngine
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="gameObject"></param>
         /// <param name="xCanvasPosition"></param>
         /// <param name="yCanvasPosition"></param>
-        public void applyTranslation(IGameObject gameObject, double xOffset, double yOffset)
+        public void applyTranslation(IGameObject gameObject, double xOffset, double yOffset, bool propagateToChild)
         {
 
             Debug.Assert(gameObject != null, "expected gameObject != null");
@@ -316,7 +366,7 @@ namespace ProjectHCI.KinectEngine
                 return;
             }
 
-            this.recursiveApplyTranslation(targetSceneNode, xOffset, yOffset);
+            this.recursiveApplyTranslation(targetSceneNode, xOffset, yOffset, propagateToChild);
         }
 
 
@@ -327,45 +377,32 @@ namespace ProjectHCI.KinectEngine
         /// <param name="clockwiseDegreeAngle"></param>
         /// <param name="xRotationCenter"></param>
         /// <param name="yRotationCenter"></param>
-        public void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRotationCenter, double yRotationCenter)
+        public void applyRotation(IGameObject gameObject, double clockwiseDegreeAngle, double xRotationCenter, double yRotationCenter, bool propagateToChild)
         {
             Debug.Assert(gameObject != null, "expected gameObject != null");
             SceneNode targetSceneNode = SceneNode.getSceneNodeByGameObject(this.sceneNodeTree, gameObject);
             Debug.Assert(targetSceneNode != null, "gameObject not found in the scene node tree");
 
-            this.recursiveApplyRotation(targetSceneNode, clockwiseDegreeAngle, xRotationCenter, yRotationCenter);
+            this.recursiveApplyRotation(targetSceneNode, clockwiseDegreeAngle, xRotationCenter, yRotationCenter, propagateToChild);
 
         }
 
-
-        public void applyScale(IGameObject gameObject, double xScale, double yScale, double xCenter, double yCenter)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <param name="xScale"></param>
+        /// <param name="yScale"></param>
+        /// <param name="xCenter"></param>
+        /// <param name="yCenter"></param>
+        /// <param name="propagateToChild"></param>
+        public void applyScale(IGameObject gameObject, double xScale, double yScale, double xCenter, double yCenter, bool propagateToChild)
         {
+            Debug.Assert(gameObject != null, "expected gameObject != null");
+            SceneNode targetSceneNode = SceneNode.getSceneNodeByGameObject(this.sceneNodeTree, gameObject);
+            Debug.Assert(targetSceneNode != null, "gameObject not found in the scene node tree");
 
-
-            ScaleTransform scaleTransform = new ScaleTransform(xScale, yScale, xCenter, yCenter);
-
-            TransformGroup imageTransformGroup = new TransformGroup();
-            imageTransformGroup.Children.Add(scaleTransform);
-            imageTransformGroup.Children.Add(gameObject.getImage().RenderTransform);
-            
-
-            gameObject.getImage().RenderTransform = imageTransformGroup;
-
-
-            if (gameObject.getBoundingBoxGeometry() != null)
-            {
-                TransformGroup geometryTransformGroup = new TransformGroup();
-                geometryTransformGroup.Children.Add(scaleTransform);
-                geometryTransformGroup.Children.Add(gameObject.getBoundingBoxGeometry().Transform);
-
-                gameObject.getBoundingBoxGeometry().Transform = geometryTransformGroup;
-            }
-            
-
-
-
-            this.canvasUpdateImage(gameObject);
-
+            this.recursiveApplyScale(targetSceneNode, xScale, yScale, xCenter, yCenter, propagateToChild);
         }
 
 
@@ -374,6 +411,22 @@ namespace ProjectHCI.KinectEngine
         {
             return this.uiThreadImageUidMapByGameObject.ContainsKey(gameObject);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -435,7 +488,7 @@ namespace ProjectHCI.KinectEngine
         /// <param name="sceneNode"></param>
         /// <param name="transformGroup"></param>
         /// <param name="zIndex"></param>
-        private void recursiveApplyTranslation(SceneNode sceneNode, double xOffset, double yOffset)
+        private void recursiveApplyTranslation(SceneNode sceneNode, double xOffset, double yOffset, bool propagateToChild)
         {
 
             IGameObject gameObject = sceneNode.getSceneNodeGameObject();
@@ -446,17 +499,13 @@ namespace ProjectHCI.KinectEngine
                 gameObject.getBoundingBoxGeometry().Transform = new TranslateTransform(gameObject.getXPosition(), 
                                                                                        gameObject.getYPosition());
             }
-
-
-            if (this.uiThreadImageUidMapByGameObject.ContainsKey(gameObject))
+            
+            if (propagateToChild)
             {
-                this.canvasUpdateImage(gameObject);
-            }
-
-
-            foreach (SceneNode childSceneNode0 in sceneNode.getChildList())
-            {
-                this.recursiveApplyTranslation(childSceneNode0, xOffset, yOffset);
+                foreach (SceneNode childSceneNode0 in sceneNode.getChildList())
+                {
+                    this.recursiveApplyTranslation(childSceneNode0, xOffset, yOffset, propagateToChild);
+                }
             }
 
         }
@@ -469,7 +518,7 @@ namespace ProjectHCI.KinectEngine
         /// <param name="clockwiseDegreeAngle"></param>
         /// <param name="xRotationCenter"></param>
         /// <param name="yRotationCenter"></param>
-        public void recursiveApplyRotation(SceneNode sceneNode, double clockwiseDegreeAngle, double xRotationCenter, double yRotationCenter)
+        public void recursiveApplyRotation(SceneNode sceneNode, double clockwiseDegreeAngle, double xRotationCenter, double yRotationCenter, bool propagateToChild)
         {
             IGameObject gameObject = sceneNode.getSceneNodeGameObject();
 
@@ -496,21 +545,81 @@ namespace ProjectHCI.KinectEngine
                 gameObject.getBoundingBoxGeometry().Transform = transformGroup;
             }
 
-
-            if (this.uiThreadImageUidMapByGameObject.ContainsKey(gameObject))
-            {
-                this.canvasUpdateImage(gameObject);
-            }
-
-
+            
             foreach (SceneNode childSceneNode0 in sceneNode.getChildList())
             {
                 double xRotationRelativeToChild = xRotationCenter - (childSceneNode0.getSceneNodeGameObject().getXPosition() - gameObject.getXPosition());
                 double yRotationRelativeToChild = yRotationCenter - (childSceneNode0.getSceneNodeGameObject().getYPosition() - gameObject.getYPosition());
 
-                this.recursiveApplyRotation(childSceneNode0, clockwiseDegreeAngle, xRotationRelativeToChild, yRotationRelativeToChild);
+                this.recursiveApplyRotation(childSceneNode0, clockwiseDegreeAngle, xRotationRelativeToChild, yRotationRelativeToChild, propagateToChild);
             }
         }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sceneNode"></param>
+        /// <param name="xScale"></param>
+        /// <param name="yScale"></param>
+        /// <param name="xCenter"></param>
+        /// <param name="yCenter"></param>
+        /// <param name="propagateToChild"></param>
+        private void recursiveApplyScale(SceneNode sceneNode, double xScale, double yScale, double xCenter, double yCenter, bool propagateToChild)
+        {
+
+            IGameObject gameObject = sceneNode.getSceneNodeGameObject();
+
+
+            ScaleTransform scaleTransform = new ScaleTransform(xScale, yScale, xCenter, yCenter);
+
+
+            if (gameObject.getImage() != null)
+            {
+                TransformGroup transformGroup = new TransformGroup();
+                transformGroup.Children.Add(scaleTransform);
+                transformGroup.Children.Add(gameObject.getImage().RenderTransform);
+
+                gameObject.getImage().RenderTransform = transformGroup;
+            }
+            
+
+
+            if (gameObject.getBoundingBoxGeometry() != null)
+            {
+                TransformGroup geometryTransformGroup = new TransformGroup();
+                geometryTransformGroup.Children.Add(scaleTransform);
+                geometryTransformGroup.Children.Add(gameObject.getBoundingBoxGeometry().Transform);
+
+                gameObject.getBoundingBoxGeometry().Transform = geometryTransformGroup;
+            }
+
+
+            if (propagateToChild)
+            {
+                foreach (SceneNode childSceneNode0 in sceneNode.getChildList())
+                {
+                    this.recursiveApplyScale(childSceneNode0, xScale, yScale, xCenter, yCenter, propagateToChild);
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -548,6 +657,21 @@ namespace ProjectHCI.KinectEngine
             Canvas.SetLeft(uiElement, xPosition);
             Canvas.SetZIndex(uiElement, zIndex);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

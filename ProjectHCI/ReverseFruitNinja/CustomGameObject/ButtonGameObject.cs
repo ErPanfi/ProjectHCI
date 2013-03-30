@@ -134,7 +134,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         public override void onRendererUpdateDelegate()
         {
-            //do nothing
+            GameLoop.getSceneManager().canvasUpdateImage(this);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             if (otherGameObject.getGameObjectTag() == Tags.USER_TAG)
             {
-                GameLoop.getSceneManager().applyScale(this, 1.2, 1.2, this.getImage().Width * 0.5, this.getImage().Height * 0.5);
+                GameLoop.getSceneManager().applyScale(this, 1.2, 1.2, this.getImage().Width * 0.5, this.getImage().Height * 0.5, true);
                 this.pointedByObject = true;
                 this.runningHourglass = new HourglassGUIGameObject(otherGameObject, new string[] { @"Hourglass_1.png", @"Hourglass_2.png", @"Hourglass_3.png", @"Hourglass_4.png" });
                 GameLoop.getSceneManager().addGameObject(runningHourglass, otherGameObject);
@@ -170,7 +170,7 @@ namespace ProjectHCI.ReverseFruitNinja
             if (otherGameObject.getGameObjectTag() == Tags.USER_TAG)
             {
                 ISceneManager sceneManager = GameLoop.getSceneManager();
-                sceneManager.applyScale(this, 1 / 1.2, 1 / 1.2, this.getImage().Width * 0.5, this.getImage().Height * 0.5);
+                sceneManager.applyScale(this, 1 / 1.2, 1 / 1.2, this.getImage().Width * 0.5, this.getImage().Height * 0.5, true);
                 this.pointedByObject = false;
                 this.internalCountDown = USER_INTERACTION_DELAY;
                 if (this.runningHourglass != null)

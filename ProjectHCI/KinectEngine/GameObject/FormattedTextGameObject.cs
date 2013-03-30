@@ -130,16 +130,20 @@ namespace ProjectHCI.KinectEngine
 
         public override void onRendererUpdateDelegate()
         {
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+
             if (this.isTextChanged)
             {
                 base._image = this.createImageFromText(this.text);
                 base._boundingBoxGeometry = new RectangleGeometry(((DrawingImage)base._image.Source).Drawing.Bounds);
 
-                ISceneManager sceneManager = GameLoop.getSceneManager();
+                
                 sceneManager.canvasUpdateImage(this);
 
                 this.isTextChanged = false;
             }
+
+            sceneManager.canvasUpdateImage(this);
         }
 
         public override void onRendererRemoveDelegate()
