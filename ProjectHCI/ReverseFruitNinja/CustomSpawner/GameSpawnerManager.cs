@@ -366,11 +366,11 @@ namespace ProjectHCI.ReverseFruitNinja
         {
 
             Image image = new Image();
-            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"shark.png")));
-            image.Height = 200;
-            image.Width = 200;
+            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"fruit_user1.png")));
+            image.Height = 160;
+            image.Width = 160;
 
-            Geometry boundingBoxGeometry = new EllipseGeometry(new Point(100, 110), 50, 50);
+            Geometry boundingBoxGeometry = new EllipseGeometry(new Point(80, 80), 50, 50);
 
             double halfCanvasWidth = GameLoop.getSceneManager().getCanvasWidth() * 0.5;
             double halfCanvasHeight = GameLoop.getSceneManager().getCanvasHeight() * 0.5;

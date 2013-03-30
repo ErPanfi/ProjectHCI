@@ -139,12 +139,6 @@
     <Resource Include="Resources\made_in_china.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\skype.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\shark.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\slash_horiz.png" />
     <Resource Include="Resources\slash_vert.png" />
   </ItemGroup>
