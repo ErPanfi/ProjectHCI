@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    public class UserFriendlyGameObject : GameObject
+    public class FruitGameObject : GameObject
     {
 
         public const int FRUIT_COLLECTION_POINTS = 10;
@@ -48,7 +48,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="boundingBoxGeometry"></param>
         /// <param name="image"></param>
         /// <param name="timeToLiveMillis"></param>
-        public UserFriendlyGameObject(double xPosition,
+        public FruitGameObject(double xPosition,
                                       double yPosition,
                                       Geometry boundingBoxGeometry,
                                       Image image,

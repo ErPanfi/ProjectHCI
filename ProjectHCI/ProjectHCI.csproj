@@ -70,10 +70,10 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameScoreLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HandUserGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\ImageGuiGameObject.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\NotUserFriendlyGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\CutGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Tags.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\UserFriendlyGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\FruitGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HeadUserGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\CenteredScreenAreaGameObject.cs" />
     <Compile Include="KinectEngine\SceneManager\ISceneManager.cs" />

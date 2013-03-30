@@ -178,9 +178,9 @@ namespace ProjectHCI.ReverseFruitNinja
                 }
 
                 //spawn a new unfriendly obj
-                if (this.shouldSpawnNewUnfriendlyObject(unfriendlyObjectList.Count, sceneBrain.getMaxNumberOfChopAllowed(), this.unfriendlyObjCooldown, this.lastUnfriendlyObjSpawned))
+                if (this.shouldSpawnNewCutGameObject(unfriendlyObjectList.Count, sceneBrain.getMaxNumberOfChopAllowed(), this.unfriendlyObjCooldown, this.lastUnfriendlyObjSpawned))
                 {
-                    IGameObject gameObject = this.spawnNewUnfriendlyObject(userGameObjectList, friendlyObjectList);
+                    IGameObject gameObject = this.spawnNewCutGameObject(userGameObjectList, friendlyObjectList);
 
                     gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
@@ -197,9 +197,9 @@ namespace ProjectHCI.ReverseFruitNinja
                 }
 
                 //spawn new friendly obj, with potentially different probability distribution
-                if (this.shouldSpawnNewFriendlyObject(friendlyObjectList.Count, sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed(), this.friendlyObjCooldown, this.lastFriendlyObjSpawned))
+                if (this.shouldSpawnNewFruitGameObject(friendlyObjectList.Count, sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed(), this.friendlyObjCooldown, this.lastFriendlyObjSpawned))
                 {
-                    IGameObject gameObject = this.spawnNewFriendlyObject(friendlyObjectList);
+                    IGameObject gameObject = this.spawnNewFruitGameObject(friendlyObjectList);
 
                     gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
                     this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
@@ -227,7 +227,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="maxObjectsNum">The maximum number of non-dead friendly objects allowed in the scene.</param>
         /// <returns>Returns true iff a new friendly object must be spawned.</returns>
         /// <remarks>Only one object per cycle should spawn</remarks>
-        protected bool shouldSpawnNewFriendlyObject(int presentGameObjectsNum, int maxGameObjectsNum, int objectSpawnCooldown, int elapsedCooldown)
+        protected bool shouldSpawnNewFruitGameObject(int presentGameObjectsNum, int maxGameObjectsNum, int objectSpawnCooldown, int elapsedCooldown)
         {
             //currently use the same probability function of unfriendly objs, left duped method for any diversion
             //it's more unlikely to spawn something if there's already many objs in the screen
@@ -247,7 +247,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="maxGameObjectsNum">The maximum number of non-dead gameObjects of a specific type  allowed in the scene.</param>
         /// <returns>Returns true iff a new gameObject of a specific type must be spawned.</returns>
         /// <remarks>Only one object per cycle should spawn</remarks>
-        protected bool shouldSpawnNewUnfriendlyObject(int presentGameObjectsNum, int maxGameObjectsNum, int objectSpawnCooldown, int elapsedCooldown)
+        protected bool shouldSpawnNewCutGameObject(int presentGameObjectsNum, int maxGameObjectsNum, int objectSpawnCooldown, int elapsedCooldown)
         {
             //it's more unlikely to spawn something if there's already many objs in the screen
             
@@ -280,7 +280,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         /// <param name="presentObjs">The currently existing non-dead friendly objects (users objects excluded)</param>
         /// <returns>The newly created friendly object</returns>
-        protected IGameObject spawnNewFriendlyObject(List<IGameObject> presentObjs)
+        protected IGameObject spawnNewFruitGameObject(List<IGameObject> presentObjs)
         {
 
 
@@ -296,7 +296,7 @@ namespace ProjectHCI.ReverseFruitNinja
             int yPosition = random.Next(0, (int)GameLoop.getSceneManager().getCanvasHeight());
 
 
-            return new UserFriendlyGameObject(xPosition, yPosition, boundingBoxGeometry, image, random.Next(4000, 6000));
+            return new FruitGameObject(xPosition, yPosition, boundingBoxGeometry, image, random.Next(4000, 6000));
         }
 
 
@@ -307,7 +307,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="friendlyGameObjectList">The non-dead friendly objects currently existing in the scene</param>
         /// <param name="userGameObjectList">The non-dead user objects currently existing in the scene</param>
         /// <returns>The newly created unfriendly object</returns>
-        protected IGameObject spawnNewUnfriendlyObject(List<IGameObject> userGameObjectList, List<IGameObject> friendlyGameObjectList)
+        protected IGameObject spawnNewCutGameObject(List<IGameObject> userGameObjectList, List<IGameObject> friendlyGameObjectList)
         {
 
             //choose the target of the cut
@@ -349,7 +349,7 @@ namespace ProjectHCI.ReverseFruitNinja
                                                                   targetBoundingBoxCenterPoint.Y - (image.Height * 0.5));
 
             int timeToLive = random.Next(currentConfiguration.minChopLifetimeMillis, currentConfiguration.maxChopLifetimeMillis);
-            return new NotUserFriendlyGameObject(gameObjectImageUpperLeftCornerPoint.X,
+            return new CutGameObject(gameObjectImageUpperLeftCornerPoint.X,
                                                  gameObjectImageUpperLeftCornerPoint.Y,
                                                  boundigBoxGeometry,
                                                  image,

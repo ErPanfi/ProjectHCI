@@ -8,10 +8,12 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using System.Windows;
 using ProjectHCI.KinectEngine;
+using ProjectHCI.Utility;
+using System.Windows.Media.Imaging;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    public class NotUserFriendlyGameObject : GameObject
+    public class CutGameObject : GameObject
     {
 
         private int collidableTimeMillis;
@@ -39,7 +41,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="imageSource"></param>
         /// <param name="timeToLiveMillis"></param>
         /// <param name="chopDurationMillis"></param>
-        public NotUserFriendlyGameObject(double xPosition,
+        public CutGameObject(double xPosition,
                                          double yPosition,
                                          Geometry boundingBoxGeometry,
                                          Image image,
@@ -119,6 +121,23 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         public override void onRendererUpdateDelegate()
         {
+
+            const int Blue = 0;
+            const int Green = 1;
+            const int Red = 2;
+
+            RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)this.getImage().Source);
+
+            for (int i = 0; i < rgbData.dataLength; i += 4)
+            {
+                rgbData.rawRgbByteArray[i + Blue] = 0;	 //blue
+                rgbData.rawRgbByteArray[i + Green] = 0; //green;
+                rgbData.rawRgbByteArray[i + Red] = 0;
+            }
+            BitmapSource bitmapSource = BitmapUtility.createBitmapSource(rgbData);
+
+            this.getImage().Source = bitmapSource;
+
             GameLoop.getSceneManager().canvasUpdateImage(this);
         }
 

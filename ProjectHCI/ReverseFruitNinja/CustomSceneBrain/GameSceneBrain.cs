@@ -99,7 +99,7 @@ namespace ProjectHCI.ReverseFruitNinja
                         switch (collidedObjs0.Value.getGameObjectTag())
 	                        {
                                 case Tags.FRUIT_TAG:
-                                    this.bonusCollected((UserFriendlyGameObject)collidedObjs0.Value);
+                                    this.bonusCollected((FruitGameObject)collidedObjs0.Value);
                                     break;
 
                                 case Tags.CUT_TAG:
@@ -117,11 +117,11 @@ namespace ProjectHCI.ReverseFruitNinja
                         switch (collidedObjs0.Value.getGameObjectTag())
 	                    {
                             case Tags.USER_TAG:
-                                this.bonusCollected((UserFriendlyGameObject)collidedObjs0.Key);
+                                this.bonusCollected((FruitGameObject)collidedObjs0.Key);
                                 break;
 
                             case Tags.CUT_TAG:
-                                this.bonusDead((UserFriendlyGameObject)collidedObjs0.Key);
+                                this.bonusDead((FruitGameObject)collidedObjs0.Key);
                                 break;
 	                    }
                         break;
@@ -139,7 +139,7 @@ namespace ProjectHCI.ReverseFruitNinja
                                 break;
 
                             case Tags.FRUIT_TAG :
-                                this.bonusDead((UserFriendlyGameObject)collidedObjs0.Value);
+                                this.bonusDead((FruitGameObject)collidedObjs0.Value);
                                 break;
 	                    }
                         break;
@@ -157,12 +157,12 @@ namespace ProjectHCI.ReverseFruitNinja
             base.think(collidedGameObjectPairList);
         }
 
-        protected void bonusCollected(UserFriendlyGameObject collectedBonusObject)
+        protected void bonusCollected(FruitGameObject collectedBonusObject)
         {
             this.currentScore += collectedBonusObject.collectionTrigger();
         }
 
-        protected void bonusDead(UserFriendlyGameObject deadBonusObject)
+        protected void bonusDead(FruitGameObject deadBonusObject)
         {
             this.currentScore += deadBonusObject.cutTrigger();
         }
@@ -192,7 +192,7 @@ namespace ProjectHCI.ReverseFruitNinja
                             case Tags.CUT_TAG:
                                 if (collidedCuts.Contains(gameObject00))
                                 {
-                                    ((NotUserFriendlyGameObject)gameObject00).cutUserTrigger();
+                                    ((CutGameObject)gameObject00).cutUserTrigger();
                                 }
                                 goto default;   //fallback in default case
 
