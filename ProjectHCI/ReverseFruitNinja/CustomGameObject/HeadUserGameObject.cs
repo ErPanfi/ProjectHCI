@@ -127,8 +127,13 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 if (headJoint.TrackingState == JointTrackingState.Tracked)
                 {
-                    double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0, 1.0, 0, sceneManager.getCanvasWidth());
-                    double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y, 1.0, -1.0, 0, sceneManager.getCanvasHeight());
+
+                    double xHeadJointPosition = Math.Abs(headJoint.Position.X) > 0.5 ? 0.5 * Math.Sign(headJoint.Position.X) : headJoint.Position.X;
+                    double yHeadJointPosition = Math.Abs(headJoint.Position.Y) > 0.5 ? 0.5 * Math.Sign(headJoint.Position.Y) : headJoint.Position.Y;
+
+
+                    double xScreenPosition = this.mapValueToNewRange(xHeadJointPosition, -0.5, 0.5, 0, sceneManager.getCanvasWidth());
+                    double yScreenPosition = this.mapValueToNewRange(yHeadJointPosition, 0.5, -0.5, 0, sceneManager.getCanvasHeight());
 
 
                     sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition(), true);
