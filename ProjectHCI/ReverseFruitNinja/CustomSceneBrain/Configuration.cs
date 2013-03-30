@@ -59,6 +59,160 @@ namespace ProjectHCI.ReverseFruitNinja
         }
 	    #endregion
 
+        #region int minChopLifetimeMillis
+
+        public const int MIN_CHOP_LIFETIME_MILLIS_DEFAULT = 2000;
+
+        private int _minChopLifetimeMillis;
+
+        public int minChopLifetimeMillis
+        {
+            get
+            {
+                return _minChopLifetimeMillis;
+            }
+
+            set
+            {
+                if (value != 0)
+                {
+                    _minChopLifetimeMillis = MIN_CHOP_LIFETIME_MILLIS_DEFAULT;
+                }
+                else
+                {
+                    _minChopLifetimeMillis = value;
+                }
+            }
+        }
+        #endregion
+
+        #region int maxChopLifetimeMillis
+
+        public const int MAX_CHOP_LIFETIME_MILLIS_DEFAULT = 6000;
+
+        private int _maxChopLifetimeMillis;
+
+        public int maxChopLifetimeMillis
+        {
+            get
+            {
+                return _maxChopLifetimeMillis;
+            }
+
+            set
+            {
+                if (value != 0)
+                {
+                    _maxChopLifetimeMillis = value;
+                }
+                else
+                {
+                    _maxChopLifetimeMillis = MAX_CHOP_LIFETIME_MILLIS_DEFAULT;
+                }
+            }
+        }
+
+        #endregion
+
+        #region difficulty settings
+        public enum GameDifficultyEnum
+        {
+            Easy,
+            Medium,
+            Hard
+        }
+
+        public const GameDifficultyEnum GAME_DIFFICULTY_DEFAULT = GameDifficultyEnum.Easy;
+
+        private GameDifficultyEnum _gameDifficulty;
+
+        public GameDifficultyEnum gameDifficulty
+        {
+            get
+            {
+                return _gameDifficulty;
+            }
+
+            set
+            {
+                if (value != 0)
+                {
+                    _gameDifficulty = value;
+                }
+                else
+                {
+                    _gameDifficulty = GAME_DIFFICULTY_DEFAULT;
+                }
+            }
+        }
+
+
+        #endregion
+
+        #region User control method settings
+
+        public enum UserControlMethodEnum
+        {
+            Head,
+            Hand
+        }
+
+        public const UserControlMethodEnum USER_CONTROL_METHOD_DEFAULT = UserControlMethodEnum.Head;
+
+        private UserControlMethodEnum _userControlMethod;
+
+        public UserControlMethodEnum userControlMethod
+        {
+            get
+            {
+                return _userControlMethod;
+            }
+
+            set
+            {
+                if (value != 0)
+                {
+                    _userControlMethod = value;
+                }
+                else
+                {
+                    _userControlMethod = USER_CONTROL_METHOD_DEFAULT;
+                }
+            }
+        }
+
+        #endregion
+
+        #region string userFruitImage
+
+        public const string USER_FRUIT_1_FILENAME = @"fruit_user1.png";
+        public const string USER_FRUIT_2_FILENAME = @"fruit_user2.png";
+        public const string USER_FRUIT_3_FILENAME = @"fruit_user3.png";
+
+        private string _userFruitImage;
+
+        public string userFruitImage
+        {
+            get
+            {
+                return _userFruitImage;
+            }
+
+            set
+            {
+                if (value == "")
+                {
+                    _userFruitImage = USER_FRUIT_1_FILENAME;
+                }
+                else
+                {
+                    _userFruitImage = value;
+                }
+            }
+        }
+
+        #endregion
+
         #region int maxNumOfFriendlyObjectsAllowed
 
         public const int MAX_NUM_OF_FRIENDLY_OBJS_ALLOWED_DEFAULT = 5;
@@ -347,14 +501,17 @@ namespace ProjectHCI.ReverseFruitNinja
         private Configuration()
         {
             //if assigning 0 default value is loaded instead
-            this.maxNumOfChopsAllowed                       = 0;
-            this.maxNumOfFriendlyObjectsAllowed             = 0;
-            this.minChopSpawnCooldownTimeMillis             = 0;
-            this.maxChopSpawnCooldownTimeMillis             = 0;
-            this.minFriendlyObjectSpawnCooldownTimeMillis   = 0;
-            this.maxFriendlyObjectSpawnCoooldownTimeMillis  = 0;
-            this.fruitCollectionPoints                      = 0;
-            this.fruitDeathPoints                           = 0;
+            this.maxNumOfChopsAllowed                       = MAX_NUM_OF_CHOPS_ALLOWED_DEFAULT;
+            this.maxNumOfFriendlyObjectsAllowed             = MAX_NUM_OF_FRIENDLY_OBJS_ALLOWED_DEFAULT;
+            this.minChopSpawnCooldownTimeMillis             = MIN_CHOPS_COOLDOWN_DEFAULT;
+            this.maxChopSpawnCooldownTimeMillis             = MAX_CHOPS_COOLDOWN_DEFAULT;
+            this.minFriendlyObjectSpawnCooldownTimeMillis   = MIN_FRIENDLY_OBJS_COOLDOWN_DEFAULT;
+            this.maxFriendlyObjectSpawnCoooldownTimeMillis  = MAX_FRIENDLY_OBJS_COOLDOWN_DEFAULT;
+            this.fruitCollectionPoints                      = FRUIT_COLLECTION_POINTS_DEFAULT;
+            this.fruitDeathPoints                           = FRUIT_DEATH_POINTS_DEFAULT;
+            this.gameDifficulty                             = GAME_DIFFICULTY_DEFAULT;
+            this.userControlMethod                          = USER_CONTROL_METHOD_DEFAULT;
+            this.userFruitImage                             = USER_FRUIT_1_FILENAME;
         }
 
         ~Configuration()

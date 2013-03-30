@@ -347,8 +347,8 @@ namespace ProjectHCI.ReverseFruitNinja
             Geometry boundigBoxGeometry = new EllipseGeometry(new Rect(new Point(0, 0), new Point(image.Width, image.Height)));
             Point gameObjectImageUpperLeftCornerPoint = new Point(targetBoundingBoxCenterPoint.X - (image.Width * 0.5),
                                                                   targetBoundingBoxCenterPoint.Y - (image.Height * 0.5));
-            //TODO add parameters
-            int timeToLive = random.Next(4000, 6000);
+
+            int timeToLive = random.Next(currentConfiguration.minChopLifetimeMillis, currentConfiguration.maxChopLifetimeMillis);
             return new NotUserFriendlyGameObject(gameObjectImageUpperLeftCornerPoint.X,
                                                  gameObjectImageUpperLeftCornerPoint.Y,
                                                  boundigBoxGeometry,
@@ -366,7 +366,7 @@ namespace ProjectHCI.ReverseFruitNinja
         {
 
             Image image = new Image();
-            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"shark.png")));
+            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(currentConfiguration.userFruitImage)));
             image.Height = 200;
             image.Width = 200;
 

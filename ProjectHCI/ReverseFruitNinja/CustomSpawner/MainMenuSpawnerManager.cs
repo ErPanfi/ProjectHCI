@@ -687,21 +687,19 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
 
-
-
         public void easyLevelButtonActivationDelegate()
         {
-            //TODO
+            Configuration.getCurrentConfiguration().gameDifficulty = Configuration.GameDifficultyEnum.Easy;
         }
 
         public void mediumLevelButtonActivationDelegate()
         {
-            //TODO
+            Configuration.getCurrentConfiguration().gameDifficulty = Configuration.GameDifficultyEnum.Medium;
         }
 
         public void hardLevelButtonActivationDelegate()
         {
-            //TODO
+            Configuration.getCurrentConfiguration().gameDifficulty = Configuration.GameDifficultyEnum.Hard;
         }
 
 
@@ -710,29 +708,29 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public void headControlButtonActivationDelegate()
         {
-            //TODO
+            Configuration.getCurrentConfiguration().userControlMethod = Configuration.UserControlMethodEnum.Head;
         }
 
         public void handControlButtonActivationDelegate()
         {
-            //TODO
+            Configuration.getCurrentConfiguration().userControlMethod = Configuration.UserControlMethodEnum.Hand;
         }
 
 
 
         public void fruit1ButtonActivationDelegate()
         {
-            //TODO
+            Configuration.getCurrentConfiguration().userFruitImage = Configuration.USER_FRUIT_1_FILENAME;
         }
 
         public void fruit2ButtonActivationDelegate()
         {
-            //TODO
+            Configuration.getCurrentConfiguration().userFruitImage = Configuration.USER_FRUIT_2_FILENAME;
         }
 
         public void fruit3ButtonActivationDelegate()
         {
-            //TODO
+            Configuration.getCurrentConfiguration().userFruitImage = Configuration.USER_FRUIT_2_FILENAME;
         }
 
 
