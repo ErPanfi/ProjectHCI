@@ -57,7 +57,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
             this.kinectSensorHelper.initializeKinect();
-            this.calibrateCamera();
+            //this.calibrateCamera();
             this.timeToLiveMillis = 0;
 
         }
@@ -127,13 +127,8 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 if (headJoint.TrackingState == JointTrackingState.Tracked)
                 {
-
-                    double xHeadJointPosition = Math.Abs(headJoint.Position.X) > 0.5 ? 0.5 * Math.Sign(headJoint.Position.X) : headJoint.Position.X;
-                    double yHeadJointPosition = Math.Abs(headJoint.Position.Y) > 0.5 ? 0.5 * Math.Sign(headJoint.Position.Y) : headJoint.Position.Y;
-
-
-                    double xScreenPosition = this.mapValueToNewRange(xHeadJointPosition, -0.5, 0.5, 0, sceneManager.getCanvasWidth());
-                    double yScreenPosition = this.mapValueToNewRange(yHeadJointPosition, 0.5, -0.5, 0, sceneManager.getCanvasHeight());
+                    double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0, 1.0, 0, sceneManager.getCanvasWidth());
+                    double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y, 1.0, -1.0, 0, sceneManager.getCanvasHeight());
 
 
                     sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition(), true);
@@ -197,10 +192,10 @@ namespace ProjectHCI.ReverseFruitNinja
         }
 
         protected double mapValueToNewRange(double value,
-                                          double oldLowerLimit,
-                                          double oldHigherLimit,
-                                          double newLowerLimit,
-                                          double newHigherLimit)
+                                            double oldLowerLimit,
+                                            double oldHigherLimit,
+                                            double newLowerLimit,
+                                            double newHigherLimit)
         {
 
             double oldRange = oldHigherLimit - oldLowerLimit;
