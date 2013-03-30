@@ -337,7 +337,7 @@ namespace ProjectHCI.ReverseFruitNinja
             #endregion
 
             Image image = new Image();
-            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"slash_horiz.png")));
+            image.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"cut.png")));
             image.Width = random.Next(300, 800);
             image.Height = 25;
             image.Stretch = Stretch.Fill;
