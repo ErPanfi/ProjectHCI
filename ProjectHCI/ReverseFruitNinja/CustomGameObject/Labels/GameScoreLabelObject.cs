@@ -41,7 +41,7 @@ namespace ProjectHCI.ReverseFruitNinja
                                             System.Globalization.CultureInfo.CurrentCulture,
                                             System.Windows.FlowDirection.LeftToRight,
                                             typeFace,          // the custom embedded font
-                                            60,                // font size in em
+                                            70,                // font size in em
                                             Brushes.Black);    //unused param, we create a geometry from this FormattedText
         }
 

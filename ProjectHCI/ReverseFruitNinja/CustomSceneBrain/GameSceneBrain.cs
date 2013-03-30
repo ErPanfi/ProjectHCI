@@ -34,7 +34,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #region protected int gameStartCountdownMillis {public get; set;}
 
-        public const int GAME_START_COUNTDOWN_MILLIS = 20000;
+        public const int GAME_START_COUNTDOWN_MILLIS = 12000;
 
         protected int gameStartCountdownMillis;
 
@@ -177,7 +177,10 @@ namespace ProjectHCI.ReverseFruitNinja
                 //remove all object from scene, except the cuts which killed the user
                 foreach (KeyValuePair<String, List<IGameObject>> gameObjectList0 in sceneManager.getGameObjectListMapByTag())
                 {
-                    objsToRemove = (List<IGameObject>)objsToRemove.Concat(gameObjectList0.Value);
+                    foreach (IGameObject gameObject00 in gameObjectList0.Value)
+                    {
+                        objsToRemove.Add(gameObject00);
+                    }
                 }
             }
 
