@@ -76,11 +76,11 @@ namespace ProjectHCI.ReverseFruitNinja
             {
                 if (value != 0)
                 {
-                    _minChopLifetimeMillis = MIN_CHOP_LIFETIME_MILLIS_DEFAULT;
+                    _minChopLifetimeMillis = value;
                 }
                 else
                 {
-                    _minChopLifetimeMillis = value;
+                    _minChopLifetimeMillis = MIN_CHOP_LIFETIME_MILLIS_DEFAULT;
                 }
             }
         }
