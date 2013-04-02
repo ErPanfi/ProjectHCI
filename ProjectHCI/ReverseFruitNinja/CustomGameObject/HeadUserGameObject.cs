@@ -214,11 +214,11 @@ namespace ProjectHCI.ReverseFruitNinja
 
             int elevationAngle0 = 0;
             float headJointPositionY0;
-            double screenPositionY0 = base._yPosition; //y iniziale nel mezzo del canvas;
+            double screenPositionY0 = 0.0;
 
             int elevationAngle1 = 0;
             float headJointPositionY1;
-            double screenPositionY1 = 0;
+            double screenPositionY1 = 0.0;
 
 
             KinectSensor sensor = kinectSensorHelper.getKinectSensor();
@@ -238,6 +238,7 @@ namespace ProjectHCI.ReverseFruitNinja
                 Joint headJoint = skeleton.Joints[JointType.Head];
                 elevationAngle0 = sensor.ElevationAngle;
                 headJointPositionY0 = headJoint.Position.Y;
+                screenPositionY0 = (headJointPositionY0 + 1) * 0.5 * canvasHeight;
             }
 
             /*sposto il kinect*/
