@@ -24,6 +24,7 @@ namespace ProjectHCI.ReverseFruitNinja
         private Random random;
 
         private const double VERTICAL_LABEL_SPACE = 10;
+        private const double HORIZ_RAGE_IMG_SPACE = 10;
 
         private int lastFriendlyObjSpawned, friendlyObjCooldown;
         private int lastUnfriendlyObjSpawned, unfriendlyObjCooldown;
@@ -111,18 +112,27 @@ namespace ProjectHCI.ReverseFruitNinja
             Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
             GameSceneBrain gameSceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
 
-            gameObject = new GameLengthLabelObject(10, VERTICAL_LABEL_SPACE, gameSceneBrain);
+            gameObject = new GameLengthLabelObject(HORIZ_RAGE_IMG_SPACE, VERTICAL_LABEL_SPACE, gameSceneBrain);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
-            gameObject = new GameScoreLabelObject(10, (2 * VERTICAL_LABEL_SPACE) + gameObject.getBoundingBoxGeometry().Bounds.Height, gameSceneBrain);
+            gameObject = new GameScoreLabelObject(HORIZ_RAGE_IMG_SPACE, (2 * VERTICAL_LABEL_SPACE) + gameObject.getBoundingBoxGeometry().Bounds.Height, gameSceneBrain);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
             gameObject = new GameStartCountdownLabelObject(GameLoop.getSceneManager().getCanvasWidth() / 2 - 30, GameLoop.getSceneManager().getCanvasHeight() / 2 - 30, gameSceneBrain);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
             ////debug cooldown label objs
-            //gameObject = new DEBUG_CooldownLabelObject(10, (3 * VERTICAL_LABEL_SPACE) + (2* gameObject.getBoundingBoxGeometry().Bounds.Height));
-            //gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+            gameObject = new DEBUG_LabelObject(10, (3 * VERTICAL_LABEL_SPACE) + (2 * gameObject.getBoundingBoxGeometry().Bounds.Height));
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+
+            //rage icons spawn
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            gameObject = new RageItemGUIGameObject(gameSceneBrain, 1, sceneManager.getCanvasWidth() - (4 * HORIZ_RAGE_IMG_SPACE + 3 * RageItemGUIGameObject.IMAGE_WIDTH), VERTICAL_LABEL_SPACE);
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+            gameObject = new RageItemGUIGameObject(gameSceneBrain, 2, sceneManager.getCanvasWidth() - (3 * HORIZ_RAGE_IMG_SPACE + 2 * RageItemGUIGameObject.IMAGE_WIDTH), VERTICAL_LABEL_SPACE);
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+            gameObject = new RageItemGUIGameObject(gameSceneBrain, 3, sceneManager.getCanvasWidth() - (2 * HORIZ_RAGE_IMG_SPACE + 1 * RageItemGUIGameObject.IMAGE_WIDTH), VERTICAL_LABEL_SPACE);
+            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
             return gameObjectParentGameObjectPairList;
         }

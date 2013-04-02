@@ -10,5 +10,7 @@ namespace ProjectHCI.ReverseFruitNinja
         int getGameScore();
         
         int getGameLengthMillis();
+
+        int getRageLevel();
     }
 }

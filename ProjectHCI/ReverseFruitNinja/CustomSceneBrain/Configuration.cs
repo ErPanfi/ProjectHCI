@@ -31,7 +31,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #region int maxNumOfChopsAllowed
 		 
-        public const int MAX_NUM_OF_CHOPS_ALLOWED_DEFAULT = 5;
+        public const int MAX_NUM_OF_CHOPS_ALLOWED_DEFAULT = 9;
 
         private int _maxNumOfChopsAllowed; 
 
@@ -447,6 +447,60 @@ namespace ProjectHCI.ReverseFruitNinja
         }
         #endregion
 
+        #region int gameStartCountdownMillis
+
+        public const int GAME_START_COUNTDOWN_MILLIS_DEFAULT = 5000;
+
+        private int _gameStartCountdownMillis;
+
+        public int gameStartCountdownMillis
+        {
+            get
+            {
+                return _gameStartCountdownMillis;
+            }
+
+            set
+            {
+                if (value != 0)
+                {
+                    _gameStartCountdownMillis = value;
+                }
+                else
+                {
+                    _gameStartCountdownMillis = GAME_START_COUNTDOWN_MILLIS_DEFAULT;
+                }
+            }
+        }
+        #endregion
+
+        #region int rageLevelIncrement
+
+        public const int RAGE_LEVEL_INCREMENT_STEP = 15;
+
+        private int _rageLevelIncrement;
+
+        public int rageLevelIncrement
+        {
+            get
+            {
+                return _rageLevelIncrement;
+            }
+
+            set
+            {
+                if (value != 0)
+                {
+                    _rageLevelIncrement = value;
+                }
+                else
+                {
+                    _rageLevelIncrement = RAGE_LEVEL_INCREMENT_STEP;
+                }
+            }
+        }
+        #endregion
+
         #endregion
 
         #region setters & getters commented code
@@ -512,6 +566,7 @@ namespace ProjectHCI.ReverseFruitNinja
             this.gameDifficulty                             = GAME_DIFFICULTY_DEFAULT;
             this.userControlMethod                          = USER_CONTROL_METHOD_DEFAULT;
             this.userFruitImage                             = USER_FRUIT_1_FILENAME;
+            this.rageLevelIncrement                         = RAGE_LEVEL_INCREMENT_STEP; 
         }
 
         ~Configuration()

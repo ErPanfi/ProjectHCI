@@ -7,9 +7,9 @@ using System.Windows.Media;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    public class DEBUG_CooldownLabelObject : FormattedTextGameObject
+    public class DEBUG_LabelObject : FormattedTextGameObject
     {
-        public DEBUG_CooldownLabelObject(double xPosition,
+        public DEBUG_LabelObject(double xPosition,
                                        double yPosition)
             : base(xPosition, yPosition, "Cooldown", -1)
         {
@@ -29,10 +29,10 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             base.update(deltaTimeMillis);
             //also update cooldown text
-            System.Diagnostics.Debug.Assert(typeof(GameSpawnerManager).IsAssignableFrom(GameLoop.getSpawnerManager().GetType()), "Expected a GameSpawnerManager object");
-            GameSpawnerManager spawnerManager = (GameSpawnerManager)GameLoop.getSpawnerManager();
+            System.Diagnostics.Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
+            GameSceneBrain sceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
 
-            this.setText("Cooldown : [" + spawnerManager.minChopSpawnCooldownMillis + "," + spawnerManager.maxChopSpawnCooldownMillis + "]");
+            this.setText("Rage level  = " + sceneBrain.getRageLevel() + " (" + sceneBrain.getRagePoints() + ")");
         }
     }
 }

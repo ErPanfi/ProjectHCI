@@ -34,8 +34,6 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #region protected int gameStartCountdownMillis {public get; set;}
 
-        public const int GAME_START_COUNTDOWN_MILLIS = 12000;
-
         protected int gameStartCountdownMillis;
 
         public int getGameStartCountdownMillis()
@@ -44,10 +42,36 @@ namespace ProjectHCI.ReverseFruitNinja
         }
         #endregion
 
+        #region protected int rageLevel {public get; set;}
+
+        protected int ragePoints;
+
+        public int getRagePoints()
+        {
+            return ragePoints;
+        }
+
+        public void incRage()
+        {
+            this.ragePoints++;
+        }
+
+        public void decRage()
+        {
+            this.ragePoints--;
+        }
+
+        public int getRageLevel()
+        {
+            return this.ragePoints / currentConfiguration.rageLevelIncrement;
+        }
+
+        #endregion
+
         public GameSceneBrain()
         {
             this.currentConfiguration = Configuration.getCurrentConfiguration();
-            this.gameStartCountdownMillis = GAME_START_COUNTDOWN_MILLIS;
+            this.gameStartCountdownMillis = currentConfiguration.gameStartCountdownMillis;
         }
 
         /// <summary>
@@ -56,8 +80,18 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns> The maximum number of chops that can exist simultaneously into the scene </returns>
         public int getMaxNumberOfChopAllowed()
         {
-            //return this.maxNumberOfChopAllowed;
-            return currentConfiguration.maxNumOfChopsAllowed;
+            switch (this.getRageLevel())
+            {
+                case 0:
+                case 1:
+                    return (int)(currentConfiguration.maxNumOfChopsAllowed * 0.4);
+                case 2:
+                    return (int)(currentConfiguration.maxNumOfChopsAllowed * 0.6);
+                case 3:
+                    return (int)(currentConfiguration.maxNumOfChopsAllowed * 0.8);
+                default :
+                    return currentConfiguration.maxNumOfChopsAllowed;
+            }
         }
 
 
@@ -99,7 +133,7 @@ namespace ProjectHCI.ReverseFruitNinja
                         switch (collidedObjs0.Value.getGameObjectTag())
 	                        {
                                 case Tags.FRUIT_TAG:
-                                    this.bonusCollected((FruitGameObject)collidedObjs0.Value);
+                                    this.fruitCollected((FruitGameObject)collidedObjs0.Value);
                                     break;
 
                                 case Tags.CUT_TAG:
@@ -117,11 +151,11 @@ namespace ProjectHCI.ReverseFruitNinja
                         switch (collidedObjs0.Value.getGameObjectTag())
 	                    {
                             case Tags.USER_TAG:
-                                this.bonusCollected((FruitGameObject)collidedObjs0.Key);
+                                this.fruitCollected((FruitGameObject)collidedObjs0.Key);
                                 break;
 
                             case Tags.CUT_TAG:
-                                this.bonusDead((FruitGameObject)collidedObjs0.Key);
+                                this.fruitDead((FruitGameObject)collidedObjs0.Key);
                                 break;
 	                    }
                         break;
@@ -139,7 +173,7 @@ namespace ProjectHCI.ReverseFruitNinja
                                 break;
 
                             case Tags.FRUIT_TAG :
-                                this.bonusDead((FruitGameObject)collidedObjs0.Value);
+                                this.fruitDead((FruitGameObject)collidedObjs0.Value);
                                 break;
 	                    }
                         break;
@@ -157,13 +191,14 @@ namespace ProjectHCI.ReverseFruitNinja
             base.think(collidedGameObjectPairList);
         }
 
-        protected void bonusCollected(FruitGameObject collectedBonusObject)
+        protected void fruitCollected(FruitGameObject collectedBonusObject)
         {
             this.currentScore += collectedBonusObject.getFruitCollectionPoints();
         }
 
-        protected void bonusDead(FruitGameObject deadBonusObject)
+        protected void fruitDead(FruitGameObject deadBonusObject)
         {
+            this.decRage();
             this.currentScore += deadBonusObject.getFruitDeathPoints();
         }
 
@@ -172,6 +207,7 @@ namespace ProjectHCI.ReverseFruitNinja
             ISceneManager sceneManager = GameLoop.getSceneManager();
             List<IGameObject> objsToRemove = new List<IGameObject>();
 
+            this.decRage();
             if (sceneManager.getGameObjectListMapByTag()[Tags.USER_TAG].Count == 1)
             {
                 //remove all object from scene, except the cuts which killed the user

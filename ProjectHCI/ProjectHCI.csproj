@@ -63,6 +63,7 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\BoundingBoxViewerGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
     <Compile Include="KinectEngine\GameObject\FormattedTextGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Images\RageItemGUIGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameStartCountdownLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\DEBUG_CooldownLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameFloatingLabelObject.cs" />
@@ -81,7 +82,6 @@
     <Compile Include="KinectEngine\SceneManager\SceneManager.cs" />
     <Compile Include="KinectEngine\SceneManager\SceneNode.cs" />
     <Compile Include="KinectEngine\Sensor\KinectSensorHelper.cs" />
-    <Compile Include="ReverseFruitNinja\CustomSceneBrain\GameDebriefingSceneBrain.cs" />
     <Compile Include="ReverseFruitNinja\CustomSceneBrain\GameSceneBrain.cs" />
     <Compile Include="ReverseFruitNinja\CustomSceneBrain\IGameStateTracker.cs" />
     <Compile Include="ReverseFruitNinja\CustomSpawner\GameDebriefingSpawnerManager.cs" />
@@ -91,7 +91,7 @@
     <Compile Include="KinectEngine\TimerManager\Time.cs" />
     <Compile Include="KinectEngine\TimerManager\TimerManager.cs" />
     <Compile Include="KinectEngine\GameObject\GameObjectEventArgs.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\Hourglass\HourglassGUIGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Images\HourglassGUIGameObject.cs" />
     <Compile Include="Utility\BitmapUtility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -218,6 +218,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\cut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Kunai.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Kunai_Trasp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

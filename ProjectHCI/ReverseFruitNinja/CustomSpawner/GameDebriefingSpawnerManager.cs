@@ -45,6 +45,30 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #endregion
 
+        private IGameObject createBackButton()
+        {
+
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+
+
+            Image buttonImage = new Image();
+            buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"back.png")));
+            buttonImage.Height = 100;
+            buttonImage.Width = 250;
+            buttonImage.Stretch = Stretch.Fill;
+            buttonImage.StretchDirection = StretchDirection.Both;
+
+            Geometry boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(250, 100)));
+
+            double xPos = sceneManager.getCanvasWidth() - buttonImage.Width;
+            double yPos = sceneManager.getCanvasHeight() - buttonImage.Height;
+
+            ButtonGameObject buttonGameObject = new ButtonGameObject(xPos, yPos, boundingBoxGeometry, buttonImage, true, new ButtonGameObject.ActivationDelegate(this.backButtonActivationDelegate));
+
+            return buttonGameObject;
+
+        }
+
         protected override List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjectsOnStart()
         {
             List<KeyValuePair<IGameObject, IGameObject>> ret = base.spawnGameObjectsOnStart();
@@ -93,22 +117,24 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
             //back to main button
-            Image buttonImage = new Image();
-            buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"back.png")));
-            buttonImage.Height = 100;
-            buttonImage.Width = 250;
-            buttonImage.Stretch = Stretch.Fill;
-            buttonImage.StretchDirection = StretchDirection.Both;
+            //Image buttonImage = new Image();
+            //buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"back.png")));
+            //buttonImage.Height = 100;
+            //buttonImage.Width = 250;
+            //buttonImage.Stretch = Stretch.Fill;
+            //buttonImage.StretchDirection = StretchDirection.Both;
 
-            gameObject = new ButtonGameObject(15,
-                                                5 * VERTICAL_LABEL_SPACE + 2 * gameObject.getBoundingBoxGeometry().Bounds.Height,
-                                                new RectangleGeometry(new System.Windows.Rect(0, 0, buttonImage.Width, buttonImage.Height)),
-                                                buttonImage,
-                                                true,
-                                                new ButtonGameObject.ActivationDelegate(this.backButtonActivationDelegate)
-                                             );
+            //gameObject = new ButtonGameObject(15,
+            //                                    5 * VERTICAL_LABEL_SPACE + 2 * gameObject.getBoundingBoxGeometry().Bounds.Height,
+            //                                    new RectangleGeometry(new System.Windows.Rect(0, 0, buttonImage.Width, buttonImage.Height)),
+            //                                    buttonImage,
+            //                                    true,
+            //                                    new ButtonGameObject.ActivationDelegate(this.backButtonActivationDelegate)
+            //                                 );
 
-            ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
+            gameObject = this.createBackButton();
+
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 #if DEBUG
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), gameObject));
 #endif
@@ -145,6 +171,12 @@ namespace ProjectHCI.ReverseFruitNinja
 
             //back to main menu
             GameLoop.getGameLoopSingleton().setSpawnerManager(new MainMenuSpawnerManager());
+        }
+
+
+        public int getRageLevel()
+        {
+            return 0;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace ProjectHCI.ReverseFruitNinja
         #region ctors and dtors
 
         public GameStartCountdownLabelObject(double xPosition, double yPosition, GameSceneBrain sceneBrain)
-            : base(xPosition, yPosition, "...", GameSceneBrain.GAME_START_COUNTDOWN_MILLIS)
+            : base(xPosition, yPosition, "...", Configuration.getCurrentConfiguration().gameStartCountdownMillis)
         {
             this.gameSceneBrain = sceneBrain;
         }

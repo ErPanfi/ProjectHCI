@@ -80,7 +80,18 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="deltaTimeMillis"></param>
         public override void update(int deltaTimeMillis)
         {
-            this.currentTimeToLiveMillis -= deltaTimeMillis;
+            //if object is already dead don't decrease its time to live
+            if (!this.isDead())
+            {
+                this.currentTimeToLiveMillis -= deltaTimeMillis;
+
+                //if it's just dead increase rage points
+                if (this.isDead())
+                {
+                    Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected GameSceneBrain object");
+                    ((GameSceneBrain)GameLoop.getSceneBrain()).incRage();
+                }
+            }
         }
 
         /// <summary>
@@ -212,11 +223,6 @@ namespace ProjectHCI.ReverseFruitNinja
                 return originalImageSource;
             }
         }
-
-
-
-
-
 
 
         protected double mapValueToNewRange(double value,
