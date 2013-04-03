@@ -647,8 +647,9 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
             //set the game spawner on the game loop object
-            GameLoop.getGameLoopSingleton().setSceneBrain(new GameSceneBrain());
-            GameLoop.getGameLoopSingleton().setSpawnerManager(new GameSpawnerManager());
+            GameSceneBrain gameSceneBrain = new GameSceneBrain();
+            GameLoop.getGameLoopSingleton().setSceneBrain(gameSceneBrain);
+            GameLoop.getGameLoopSingleton().setSpawnerManager(new GameSpawnerManager(gameSceneBrain));
 
             //let the madness begin!!! .....WTF?!
         }

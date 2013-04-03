@@ -21,7 +21,7 @@ namespace ProjectHCI.ReverseFruitNinja
         #region ctors and dtors
 
         public GameStartCountdownLabelObject(double xPosition, double yPosition, GameSceneBrain sceneBrain)
-            : base(xPosition, yPosition, "...", Configuration.getCurrentConfiguration().gameStartCountdownMillis)
+            : base(xPosition, yPosition, "" + (Configuration.getCurrentConfiguration().gameStartCountdownMillis / 1000), Configuration.getCurrentConfiguration().gameStartCountdownMillis)
         {
             this.gameSceneBrain = sceneBrain;
         }
@@ -51,7 +51,7 @@ namespace ProjectHCI.ReverseFruitNinja
             this.timeToLive = this.gameSceneBrain.getGameStartCountdownMillis();
             currSec = (int) Math.Ceiling(this.timeToLive / 1000.0);
             string labelTailor;
-            if (currSec > 3)
+            if (currSec > 5)
             {
                 labelTailor = "...";
             }

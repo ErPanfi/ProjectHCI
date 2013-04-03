@@ -10,6 +10,8 @@ using Microsoft.Kinect;
 using System.Windows;
 using ProjectHCI.KinectEngine;
 using System.Threading;
+using ProjectHCI.Utility;
+
 
 namespace ProjectHCI.ReverseFruitNinja
 {
@@ -19,10 +21,18 @@ namespace ProjectHCI.ReverseFruitNinja
         public const int USER_DEAD_STOP_MILLIS = 3000;
 
         protected KinectSensorHelper kinectSensorHelper;
-        private int Z_INDEX = 2;
+        protected int Z_INDEX = 2;
 
+        #region tracking started detection code
+        protected Image notAlreadyTrackedImage;
+        protected Image cursorImage;
+        protected bool firstTimeTracked;
 
-        //protected bool isCut;
+        public bool hasBeenTracked()
+        {
+            return this.firstTimeTracked;
+        }
+        #endregion
 
         #region protected int timeToLiveMillis {public get; public set;}
 
@@ -46,14 +56,23 @@ namespace ProjectHCI.ReverseFruitNinja
                               Image image,
                               SkeletonSmoothingFilter skeletonSmoothingFilter)
         {
-            
+            #region tracking started detection code
+            this.firstTimeTracked = false;
+            this.notAlreadyTrackedImage = new Image();
+            this.notAlreadyTrackedImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"wave.png")));
+            this.notAlreadyTrackedImage.Height = 129;
+            this.notAlreadyTrackedImage.Width = 600;
+            this.cursorImage = image;
+            this._image = notAlreadyTrackedImage;
+            #endregion
+
             base._xPosition = xPosition;
             base._yPosition = yPosition;
             base._boundingBoxGeometry = boundingBoxGeometry;
             base._extraData = null;
             base._uid = Guid.NewGuid().ToString();
             base._gameObjectTag = Tags.USER_TAG;
-            base._image = image;
+            //base._image = image;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
             this.kinectSensorHelper.initializeKinect();
@@ -127,6 +146,9 @@ namespace ProjectHCI.ReverseFruitNinja
 
                 if (headJoint.TrackingState == JointTrackingState.Tracked)
                 {
+                    this.firstTimeTracked = true;
+                    this._image = cursorImage;
+
                     double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0, 1.0, 0, sceneManager.getCanvasWidth());
                     double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y, 1.0, -1.0, 0, sceneManager.getCanvasHeight());
 

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Kinect;
 using ProjectHCI.KinectEngine;
-using ProjectHCI.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,13 +16,7 @@ namespace ProjectHCI.ReverseFruitNinja
     {
 
         private const double PIXEL_PER_CENTIMETER = 5;
-        private bool firstTimeTracked;
-        private Image notAlreadyTrackedImage;
-        private Image cursorImage;
 
-        //private IGameObject hourglassChildGameObject;
-
-        
         public HandUserGameObject(double xPosition,
                                   double yPosition,
                                   Geometry boundingBoxGeometry,
@@ -31,26 +24,12 @@ namespace ProjectHCI.ReverseFruitNinja
                                   SkeletonSmoothingFilter skeletonSmoothingFilter)
             : base (xPosition, yPosition, boundingBoxGeometry, image, skeletonSmoothingFilter)
         {
-            this.firstTimeTracked = false;
-
-            this.notAlreadyTrackedImage = new Image();
-            this.notAlreadyTrackedImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"wave.png")));
-            this.notAlreadyTrackedImage.Height = 129;
-            this.notAlreadyTrackedImage.Width = 600;
-
-            this.cursorImage = image;
-
-            this._image = notAlreadyTrackedImage;
-
-            //this.hourglassChildGameObject = null;
         }
 
         
 
         public override void onRendererUpdateDelegate()
         {
-
-
             ISceneManager sceneManager = GameLoop.getSceneManager();
 
             
@@ -89,28 +68,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
-            //ISpawnerManager spawnerManager = GameLoop.getSpawnerManager();
-
-
-            //// hourglass creation
-
-            //Image image = new Image();
-            //image.Source = new BitmapImage(new Uri(ProjectHCI.Utility.BitmapUtility.getImgResourcePath(@"clock.png")));
-            //image.Height = 100;
-            //image.Width = 100;
-
-            //Geometry boundingBoxGeometry = new EllipseGeometry(new Rect(new Point(0, 0), new Point(100, 100)));
-            //IGameObject hourglassGameObject = new UserFriendlyGameObject(150, 150, boundingBoxGeometry, image, 4000);
-
-
-            //spawnerManager.specialRequestToSpawn(new GameObjectSpawnRequest(hourglassGameObject, this));
-            //this.hourglassChildGameObject = hourglassGameObject;
         }
 
         public override void onCollisionExitDelegate(IGameObject otherGameObject)
         {
-            //ISpawnerManager spawnerManager = GameLoop.getSpawnerManager();
-            //spawnerManager.specialRequestToKillGameObject(this.hourglassChildGameObject);
         }
 
     }

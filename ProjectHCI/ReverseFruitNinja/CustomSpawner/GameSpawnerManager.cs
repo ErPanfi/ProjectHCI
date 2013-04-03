@@ -30,6 +30,8 @@ namespace ProjectHCI.ReverseFruitNinja
         private int lastUnfriendlyObjSpawned, unfriendlyObjCooldown;
         private Configuration currentConfiguration;
 
+        private GameSceneBrain gameSceneBrain;
+
         #region accelerating chop spawning rate code
 
         private const double MIN_CHOP_SPAWN_OFFSET_INC_PER_MILLIS = 0.3;
@@ -64,7 +66,10 @@ namespace ProjectHCI.ReverseFruitNinja
             if(this.maxChopSpawnCooldownMillis == 0)
                 return 0;
 
-            return random.Next((int)Math.Round(this.minChopSpawnCooldownMillis), (int)Math.Round(this.maxChopSpawnCooldownMillis));
+            int min = (int)Math.Round(this.minChopSpawnCooldownMillis);
+            int max = (int)Math.Round(this.maxChopSpawnCooldownMillis);
+
+            return random.Next(min, max);
         }
 
         #endregion
@@ -73,21 +78,31 @@ namespace ProjectHCI.ReverseFruitNinja
         /// Default constructor
         /// </summary>
         /// <param name="sceneBrain">The active scene brain must be passed,in order to allow the spawner to reference it</param>
-        public GameSpawnerManager() : base()
+        public GameSpawnerManager(GameSceneBrain gameSceneBrain) : base()
         {
             this.random = new Random();
 
             currentConfiguration = Configuration.getCurrentConfiguration();
 
-            this.minChopSpawnCooldownMillis = currentConfiguration.minChopSpawnCooldownTimeMillis;
-            this.maxChopSpawnCooldownMillis = currentConfiguration.maxChopSpawnCooldownTimeMillis;
+            this.gameSceneBrain = gameSceneBrain;
+            this.minChopSpawnCooldownMillis = this.gameSceneBrain.getMinCutCooldown();
+            this.maxChopSpawnCooldownMillis = this.gameSceneBrain.getMaxCutCooldown();
             this.unfriendlyObjCooldown = this.generateNewChopCooldown();
             this.lastUnfriendlyObjSpawned = unfriendlyObjCooldown;
             this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
             this.lastFriendlyObjSpawned = 0;
         }
 
-
+        #region commented code
+        //private void obtainGameSceneBrain()
+        //{
+        //    if (this.gameSceneBrain == null)
+        //    {
+        //        Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
+        //        this.gameSceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
+        //    }
+        //}        
+        #endregion
 
         /// <summary>
         /// 
@@ -100,6 +115,8 @@ namespace ProjectHCI.ReverseFruitNinja
 
             List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
 
+
+
             IGameObject gameObject = this.spawnUserGameObject();
 
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
@@ -109,19 +126,20 @@ namespace ProjectHCI.ReverseFruitNinja
 #endif
 
             //label spawn
-            Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
-            GameSceneBrain gameSceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
-
+            //Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
+            //GameSceneBrain sceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
+            
             gameObject = new GameLengthLabelObject(HORIZ_RAGE_IMG_SPACE, VERTICAL_LABEL_SPACE, gameSceneBrain);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
             gameObject = new GameScoreLabelObject(HORIZ_RAGE_IMG_SPACE, (2 * VERTICAL_LABEL_SPACE) + gameObject.getBoundingBoxGeometry().Bounds.Height, gameSceneBrain);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
-            gameObject = new GameStartCountdownLabelObject(GameLoop.getSceneManager().getCanvasWidth() / 2 - 30, GameLoop.getSceneManager().getCanvasHeight() / 2 - 30, gameSceneBrain);
-            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+            //this label will be spawned with special request
+            //gameObject = new GameStartCountdownLabelObject(GameLoop.getSceneManager().getCanvasWidth() / 2 - 30, GameLoop.getSceneManager().getCanvasHeight() / 2 - 30, gameSceneBrain);
+            //gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
-            ////debug cooldown label objs
+            //debug cooldown label objs
             gameObject = new DEBUG_LabelObject(10, (3 * VERTICAL_LABEL_SPACE) + (2 * gameObject.getBoundingBoxGeometry().Bounds.Height));
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
@@ -146,11 +164,11 @@ namespace ProjectHCI.ReverseFruitNinja
         protected override List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjectsPerFrame()
         {
             //spawn objs only if game start countdown is expired
-            Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
-            GameSceneBrain sceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
+            //Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
+            //GameSceneBrain sceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
             List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
 
-            if (sceneBrain.getGameStartCountdownMillis() <= 0)
+            if (gameSceneBrain.getGameStartCountdownMillis() <= 0)
             {
 
                 int deltaTimeMillis = Time.getDeltaTimeMillis();
@@ -188,7 +206,7 @@ namespace ProjectHCI.ReverseFruitNinja
                 }
 
                 //spawn a new unfriendly obj
-                if (this.shouldSpawnNewCutGameObject(unfriendlyObjectList.Count, sceneBrain.getMaxNumberOfChopAllowed(), this.unfriendlyObjCooldown, this.lastUnfriendlyObjSpawned))
+                if (this.shouldSpawnNewCutGameObject(unfriendlyObjectList.Count, gameSceneBrain.getMaxNumberOfChopAllowed(), this.unfriendlyObjCooldown, this.lastUnfriendlyObjSpawned))
                 {
                     IGameObject gameObject = this.spawnNewCutGameObject(userGameObjectList, friendlyObjectList);
 
@@ -207,7 +225,7 @@ namespace ProjectHCI.ReverseFruitNinja
                 }
 
                 //spawn new friendly obj, with potentially different probability distribution
-                if (this.shouldSpawnNewFruitGameObject(friendlyObjectList.Count, sceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed(), this.friendlyObjCooldown, this.lastFriendlyObjSpawned))
+                if (this.shouldSpawnNewFruitGameObject(friendlyObjectList.Count, gameSceneBrain.getMaxNumberOfUserFriendlyGameObjectAllowed(), this.friendlyObjCooldown, this.lastFriendlyObjSpawned))
                 {
                     IGameObject gameObject = this.spawnNewFruitGameObject(friendlyObjectList);
 
@@ -264,7 +282,11 @@ namespace ProjectHCI.ReverseFruitNinja
             return (
                         (presentGameObjectsNum < maxGameObjectsNum)                                     //if there's already the maximum obj num short-circuit next condition
                     &&  (random.Next(maxGameObjectsNum) < (maxGameObjectsNum - presentGameObjectsNum))  //probability decreasing with increasing obj num, note that this lead to certain object spawning if presentObjectsNum == 0
-                    && (objectSpawnCooldown == 0 || random.Next(objectSpawnCooldown) < elapsedCooldown) //probability increasing as cooldown is reached
+                    &&  (
+                            objectSpawnCooldown == 0
+                         //|| this.gameSceneBrain.getRageLevel() == GameSceneBrain.MAX_RAGE_LEVEL
+                         || random.Next(objectSpawnCooldown) < elapsedCooldown
+                        ) //probability increasing as cooldown is reached
                    );
             
             //explicit passages for debug
@@ -358,7 +380,9 @@ namespace ProjectHCI.ReverseFruitNinja
             Point gameObjectImageUpperLeftCornerPoint = new Point(targetBoundingBoxCenterPoint.X - (image.Width * 0.5),
                                                                   targetBoundingBoxCenterPoint.Y - (image.Height * 0.5));
 
-            int timeToLive = random.Next(currentConfiguration.minChopLifetimeMillis, currentConfiguration.maxChopLifetimeMillis);
+            //int timeToLive = random.Next(currentConfiguration.minChopLifetimeMillis, currentConfiguration.maxChopLifetimeMillis);
+            //lifetime is now influenced by ragelevel
+            int timeToLive = random.Next(gameSceneBrain.getMinCutLifetime(), gameSceneBrain.getMaxCutLifetime());
             return new CutGameObject(gameObjectImageUpperLeftCornerPoint.X,
                                                  gameObjectImageUpperLeftCornerPoint.Y,
                                                  boundigBoxGeometry,
@@ -385,11 +409,12 @@ namespace ProjectHCI.ReverseFruitNinja
             double halfCanvasWidth = GameLoop.getSceneManager().getCanvasWidth() * 0.5;
             double halfCanvasHeight = GameLoop.getSceneManager().getCanvasHeight() * 0.5;
 
-            HeadUserGameObject ret = new HeadUserGameObject(halfCanvasWidth - image.Width * 0.5,
-                                      halfCanvasHeight - image.Height * 0.5,
-                                      boundingBoxGeometry,
-                                      image,
-                                      SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
+            HeadUserGameObject ret = new HeadUserGameObject(
+                                            0, //halfCanvasWidth - image.Width * 0.5,
+                                            0, //halfCanvasHeight - image.Height * 0.5,
+                                            boundingBoxGeometry,
+                                            image,
+                                            SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
 
             //ret.calibrateCamera();
 

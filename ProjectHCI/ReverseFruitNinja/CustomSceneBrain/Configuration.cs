@@ -31,7 +31,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #region int maxNumOfChopsAllowed
 		 
-        public const int MAX_NUM_OF_CHOPS_ALLOWED_DEFAULT = 9;
+        public const int MAX_NUM_OF_CHOPS_ALLOWED_DEFAULT = 15;
 
         private int _maxNumOfChopsAllowed; 
 
@@ -61,7 +61,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #region int minChopLifetimeMillis
 
-        public const int MIN_CHOP_LIFETIME_MILLIS_DEFAULT = 2000;
+        public const int MIN_CHOP_LIFETIME_MILLIS_DEFAULT = 3500;
 
         private int _minChopLifetimeMillis;
 
@@ -88,7 +88,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #region int maxChopLifetimeMillis
 
-        public const int MAX_CHOP_LIFETIME_MILLIS_DEFAULT = 6000;
+        public const int MAX_CHOP_LIFETIME_MILLIS_DEFAULT = 10000;
 
         private int _maxChopLifetimeMillis;
 
@@ -244,7 +244,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #region int minChopSpawnCooldownTimeMillis
 		 
-        public const int MIN_CHOPS_COOLDOWN_DEFAULT = 2000;
+        public const int MIN_CHOPS_COOLDOWN_DEFAULT = 4000;
         private int _minChopSpawnCooldownTimeMillis;
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace ProjectHCI.ReverseFruitNinja
 	    #endregion
 
         #region int maxChopSpawnCooldownTimeMillis
-        public const int MAX_CHOPS_COOLDOWN_DEFAULT = 5000;
+        public const int MAX_CHOPS_COOLDOWN_DEFAULT = 8000;
         private int _maxChopSpawnCooldownTimeMillis;
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #region int fruitDeathPoints
 
-        public const int FRUIT_DEATH_POINTS_DEFAULT = -3;
+        public const int FRUIT_DEATH_POINTS_DEFAULT = -2;
         private int _fruitDeathPoints;
 
         /// <summary>
@@ -476,7 +476,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #region int rageLevelIncrement
 
-        public const int RAGE_LEVEL_INCREMENT_STEP = 15;
+        public const int RAGE_LEVEL_INCREMENT_STEP = 10;
 
         private int _rageLevelIncrement;
 
@@ -556,6 +556,11 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             //if assigning 0 default value is loaded instead
             this.maxNumOfChopsAllowed                       = MAX_NUM_OF_CHOPS_ALLOWED_DEFAULT;
+            this.minChopLifetimeMillis                      = MIN_CHOP_LIFETIME_MILLIS_DEFAULT;
+            this.maxChopLifetimeMillis                      = MAX_CHOP_LIFETIME_MILLIS_DEFAULT;
+            this.gameDifficulty                             = GAME_DIFFICULTY_DEFAULT;
+            this.userControlMethod                          = USER_CONTROL_METHOD_DEFAULT;
+            this.userFruitImage                             = USER_FRUIT_1_FILENAME;
             this.maxNumOfFriendlyObjectsAllowed             = MAX_NUM_OF_FRIENDLY_OBJS_ALLOWED_DEFAULT;
             this.minChopSpawnCooldownTimeMillis             = MIN_CHOPS_COOLDOWN_DEFAULT;
             this.maxChopSpawnCooldownTimeMillis             = MAX_CHOPS_COOLDOWN_DEFAULT;
@@ -563,9 +568,8 @@ namespace ProjectHCI.ReverseFruitNinja
             this.maxFriendlyObjectSpawnCoooldownTimeMillis  = MAX_FRIENDLY_OBJS_COOLDOWN_DEFAULT;
             this.fruitCollectionPoints                      = FRUIT_COLLECTION_POINTS_DEFAULT;
             this.fruitDeathPoints                           = FRUIT_DEATH_POINTS_DEFAULT;
-            this.gameDifficulty                             = GAME_DIFFICULTY_DEFAULT;
-            this.userControlMethod                          = USER_CONTROL_METHOD_DEFAULT;
-            this.userFruitImage                             = USER_FRUIT_1_FILENAME;
+            this.tryToCutPlayerProbability                  = TRY_TO_CUT_PLAYER_PROBABILITY_DEFAULT;
+            this.gameStartCountdownMillis                   = GAME_START_COUNTDOWN_MILLIS_DEFAULT;
             this.rageLevelIncrement                         = RAGE_LEVEL_INCREMENT_STEP; 
         }
 

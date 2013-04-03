@@ -10,7 +10,7 @@ namespace ProjectHCI.KinectEngine
     public class SpawnerManager : ISpawnerManager
     {
 
-        private bool _firstTime;
+        protected bool _firstTime;
         private ISceneManager _sceneManager;
         private ConcurrentQueue<GameObjectSpawnRequest> _spawnRequestConcurrentQueue;
         private ConcurrentQueue<IGameObject> _removeGameObjectRequestConcurrentQueue;
