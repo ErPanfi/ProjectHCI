@@ -143,7 +143,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
             //game score label
-            double multiplier = POINTS_PER_BONUS * controlMultiplier;
+            double multiplier = POINTS_PER_BONUS * controlMultiplier * diffMultiplier;
             double currentScore = this.bonusPoints * multiplier;
 
             finalScore += currentScore;
