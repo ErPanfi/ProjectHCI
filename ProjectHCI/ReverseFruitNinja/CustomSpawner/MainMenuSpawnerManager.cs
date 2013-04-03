@@ -111,21 +111,6 @@ namespace ProjectHCI.ReverseFruitNinja
             List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
 
 
-            #region test code
-            //{ // test
-
-            //    FormattedTextGameObject fgo = new FormattedTextGameObject(300, 300, "Font di merda", -1);
-            //    gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(fgo, null));
-
-
-            //    //foreach (FontFamily fontFamily in Fonts.GetFontFamilies(new Uri("pack://application:,,,/"), "./Resources/"))
-            //    //{
-            //    //    System.Diagnostics.Debug.WriteLine("font: " + fontFamily);
-            //    //}
-
-            //}
-            #endregion
-
 
             { //userObject
 
@@ -772,7 +757,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public void fruit3ButtonActivationDelegate()
         {
-            this.configuration.userFruitImage = Configuration.USER_FRUIT_2_FILENAME;
+            this.configuration.userFruitImage = Configuration.USER_FRUIT_3_FILENAME;
             this.reloadState();
         }
 
