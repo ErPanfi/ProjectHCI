@@ -63,6 +63,7 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\BoundingBoxViewerGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
     <Compile Include="KinectEngine\GameObject\FormattedTextGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\GameLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Images\RageItemGUIGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameStartCountdownLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\DEBUG_CooldownLabelObject.cs" />

@@ -11,36 +11,39 @@ using System.Windows;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    public class GameDebriefingSpawnerManager : SpawnerManager, IGameStateTracker
+    public class GameDebriefingSpawnerManager : SpawnerManager
     {
         public const int VERTICAL_LABEL_SPACE = 10;
 
-        private int gameScore;
+        public const double POINTS_PER_MILLIS = (1 / 2000.0);
+        public const double POINTS_PER_RAGE = (1 / 5.0);
+        public const double POINTS_PER_BONUS = 1;
+        public const double HEAD_BONUS = 3;
+        public const double HAND_BONUS = 1;
+        public const double EASY_BONUS = 1;
+        public const double MEDIUM_BONUS = 1.5;
+        public const double HARD_BONUS = 2;
+
+        private int bonusPoints;
         private int gameLength;
-
-        #region IGameStateTracker members
-        public int getGameScore()
-        {
-            return this.gameScore;
-        }
-
-        public int getGameLengthMillis()
-        {
-            return this.gameLength;
-        }
-        #endregion
+        private int ragePoints;
+        private Configuration.GameDifficultyEnum gameDifficulty;
+        private Configuration.UserControlMethodEnum userControlMethod;
 
         #region ctors and dtors
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="gameTracker">The tracker of the just finished game, which contains most recent tracked values</param>
-        public GameDebriefingSpawnerManager(IGameStateTracker gameTracker)
+        /// <param name="gameSceneBrain">The tracker of the just finished game, which contains most recent tracked values</param>
+        public GameDebriefingSpawnerManager(GameSceneBrain gameSceneBrain)
             : base()
         {
-            this.gameLength = gameTracker.getGameLengthMillis();
-            this.gameScore = gameTracker.getGameScore();
+            this.gameLength = gameSceneBrain.getGameLengthMillis();
+            this.bonusPoints = gameSceneBrain.getGameScore();
+            this.ragePoints = gameSceneBrain.getRagePoints();
+            this.gameDifficulty = Configuration.getCurrentConfiguration().gameDifficulty;
+            this.userControlMethod = Configuration.getCurrentConfiguration().userControlMethod;
         }
 
         #endregion
@@ -67,6 +70,18 @@ namespace ProjectHCI.ReverseFruitNinja
 
             return buttonGameObject;
 
+        }
+
+        private string millis2time(int millis)
+        {
+            //also update game length text
+            int hh = millis / 3600000;
+            millis %= 3600000;
+            int mm = millis / 60000;
+            millis %= 60000;
+            int ss = millis / 1000;
+
+            return (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss;
         }
 
         protected override List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjectsOnStart()
@@ -99,38 +114,92 @@ namespace ProjectHCI.ReverseFruitNinja
                                                                                                          320);
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(centeredScreenAreaGameObject, null));
 
+            //init accumulators
+            double currentHeight = 0;
+            double finalScore = 0;
+
+            double diffMultiplier = 1;
+            switch (this.gameDifficulty)
+            {
+                case Configuration.GameDifficultyEnum.Medium:
+                    diffMultiplier = 1.5;
+                    break;
+                case Configuration.GameDifficultyEnum.Hard:
+                    diffMultiplier = 2;
+                    break;
+            }
+
+            double controlMultiplier = 1;
+            if (this.userControlMethod == Configuration.UserControlMethodEnum.Head)
+            {
+                controlMultiplier = 3;
+            }
+
+
+
             //game score label
-            IGameObject gameObject = new GameScoreLabelObject(0, 0, "Game score : ", this);
+            double multiplier = POINTS_PER_BONUS * controlMultiplier;
+            double currentScore = this.bonusPoints * multiplier;
+
+            finalScore += currentScore;
+            IGameObject gameObject = new GameLabelObject(0, currentHeight, "Saved fruits score : " + currentScore + " (" + this.bonusPoints + " x " + multiplier + ")", -1);
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
 #if DEBUG
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), userGameObject));
 #endif
-
+            currentHeight += VERTICAL_LABEL_SPACE + gameObject.getBoundingBoxGeometry().Bounds.Height;
 
             //game length label
-            gameObject = new GameLengthLabelObject(0, VERTICAL_LABEL_SPACE + gameObject.getBoundingBoxGeometry().Bounds.Height, "Game length : ", this);
-            gameObject.update(0);
+            multiplier = diffMultiplier * POINTS_PER_MILLIS;
+
+            currentScore = this.gameLength * multiplier;
+            finalScore += currentScore;
+            gameObject = new GameLabelObject(0, currentHeight, "Survival bonus       : " + Math.Round(currentScore, 1) + " (" + this.millis2time(this.gameLength) + ")", -1);
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
 #if DEBUG
             ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), userGameObject));
 #endif
+            currentHeight += VERTICAL_LABEL_SPACE + gameObject.getBoundingBoxGeometry().Bounds.Height;
 
+            //rage score label
+            multiplier = POINTS_PER_RAGE * diffMultiplier;
+            currentScore = this.ragePoints * multiplier;
+            finalScore += currentScore;
+            gameObject = new GameLabelObject(0, currentHeight, "Enemy rage bonus  : " + currentScore + " (" + this.ragePoints + " x " + multiplier + ")", -1);
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
+#if DEBUG
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), userGameObject));
+#endif
+            currentHeight += VERTICAL_LABEL_SPACE + gameObject.getBoundingBoxGeometry().Bounds.Height;
 
-            //back to main button
-            //Image buttonImage = new Image();
-            //buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"back.png")));
-            //buttonImage.Height = 100;
-            //buttonImage.Width = 250;
-            //buttonImage.Stretch = Stretch.Fill;
-            //buttonImage.StretchDirection = StretchDirection.Both;
+            gameObject = this.createBackButton();
 
-            //gameObject = new ButtonGameObject(15,
-            //                                    5 * VERTICAL_LABEL_SPACE + 2 * gameObject.getBoundingBoxGeometry().Bounds.Height,
-            //                                    new RectangleGeometry(new System.Windows.Rect(0, 0, buttonImage.Width, buttonImage.Height)),
-            //                                    buttonImage,
-            //                                    true,
-            //                                    new ButtonGameObject.ActivationDelegate(this.backButtonActivationDelegate)
-            //                                 );
+            //difficulty bonus label
+            finalScore *= diffMultiplier;
+            gameObject = new GameLabelObject(0, currentHeight, "Difficulty bonus     " + (diffMultiplier > 1 ? "x " + diffMultiplier : "NO BONUS"), -1);
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
+#if DEBUG
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), userGameObject));
+#endif
+            currentHeight += VERTICAL_LABEL_SPACE + gameObject.getBoundingBoxGeometry().Bounds.Height;
+
+            //control bonus label
+            finalScore *= controlMultiplier;
+            gameObject = new GameLabelObject(0, currentHeight, "Control bonus        " + (controlMultiplier > 1 ? "x " + controlMultiplier : "NO BONUS"), -1);
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
+#if DEBUG
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), userGameObject));
+#endif
+            currentHeight += VERTICAL_LABEL_SPACE + gameObject.getBoundingBoxGeometry().Bounds.Height;
+
+            //final score label
+            gameObject = new GameLabelObject(0, currentHeight, "FINAL SCORE             : " + Math.Round(finalScore), -1); 
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, centeredScreenAreaGameObject));
+#if DEBUG
+            ret.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), userGameObject));
+#endif
+            currentHeight += VERTICAL_LABEL_SPACE + gameObject.getBoundingBoxGeometry().Bounds.Height;
+
 
             gameObject = this.createBackButton();
 

@@ -379,6 +379,10 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             this.decRage();
             this.currentScore += deadBonusObject.getFruitDeathPoints();
+            if (this.currentScore < 0)
+            {
+                this.currentScore = 0;
+            }
         }
 
         protected void userDeadTrigger(List<IGameObject> collidedCuts)

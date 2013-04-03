@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    public class GameStartCountdownLabelObject : FormattedTextGameObject
+    public class GameStartCountdownLabelObject : GameLabelObject
     {
 
         private GameSceneBrain gameSceneBrain;
@@ -27,6 +27,7 @@ namespace ProjectHCI.ReverseFruitNinja
         }
 
         #endregion
+
         protected override FormattedText formatText(string stringText)
         {
             Typeface typeFace = new Typeface(new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#Made in China"),

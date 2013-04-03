@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
-    public class GameFloatingLabelObject : FormattedTextGameObject
+    public class GameFloatingLabelObject : GameLabelObject
     {
         protected const int FLOATING_TIME_MILLIS = 2000;
         protected const double VERTICAL_TRANSACTION_OFFSET_PER_MILLIS = 30 / FLOATING_TIME_MILLIS;
@@ -25,19 +25,23 @@ namespace ProjectHCI.ReverseFruitNinja
         {
         }
 
-        protected override FormattedText formatText(string stringText)
-        {
-            Typeface typeFace = new Typeface(new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#Made in China"),
-                                             FontStyles.Normal,
-                                             FontWeights.Medium,
-                                             FontStretches.Normal);
-            return new FormattedText(stringText,
-                                            System.Globalization.CultureInfo.CurrentCulture,
-                                            System.Windows.FlowDirection.LeftToRight,
-                                            typeFace,          // the custom embedded font
-                                            50,                // font size in em
-                                            Brushes.Black);    //unused param, we create a geometry from this FormattedText
-        }
+        #region refactored method
+
+        //protected override FormattedText formatText(string stringText)
+        //{
+        //    Typeface typeFace = new Typeface(new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#Made in China"),
+        //                                     FontStyles.Normal,
+        //                                     FontWeights.Medium,
+        //                                     FontStretches.Normal);
+        //    return new FormattedText(stringText,
+        //                                    System.Globalization.CultureInfo.CurrentCulture,
+        //                                    System.Windows.FlowDirection.LeftToRight,
+        //                                    typeFace,          // the custom embedded font
+        //                                    50,                // font size in em
+        //                                    Brushes.Black);    //unused param, we create a geometry from this FormattedText
+        //}
+
+        #endregion
 
         public override void update(int deltaTimeMillis)
         {
