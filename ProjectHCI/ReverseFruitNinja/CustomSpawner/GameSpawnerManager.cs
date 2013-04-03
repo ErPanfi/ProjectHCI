@@ -409,16 +409,26 @@ namespace ProjectHCI.ReverseFruitNinja
             double halfCanvasWidth = GameLoop.getSceneManager().getCanvasWidth() * 0.5;
             double halfCanvasHeight = GameLoop.getSceneManager().getCanvasHeight() * 0.5;
 
-            HeadUserGameObject ret = new HeadUserGameObject(
-                                            0, //halfCanvasWidth - image.Width * 0.5,
-                                            0, //halfCanvasHeight - image.Height * 0.5,
-                                            boundingBoxGeometry,
-                                            image,
-                                            SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
 
-            //ret.calibrateCamera();
 
-            return ret;
+            IGameObject userGameObject = null;
+
+            switch (this.currentConfiguration.userControlMethod)
+            {
+                case Configuration.UserControlMethodEnum.Head:
+                    userGameObject = new HeadUserGameObject(0, 0, boundingBoxGeometry, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
+                    break;
+
+                case Configuration.UserControlMethodEnum.Hand:
+                    userGameObject = new HandUserGameObject(0,0, boundingBoxGeometry, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
+                    break;
+
+                default:
+                    throw new Exception("unexpected UserControlMethodEnum");
+            }
+
+
+            return userGameObject;
         }
 
 
