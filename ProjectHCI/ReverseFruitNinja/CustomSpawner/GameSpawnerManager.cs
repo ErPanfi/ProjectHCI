@@ -32,6 +32,8 @@ namespace ProjectHCI.ReverseFruitNinja
 
         private GameSceneBrain gameSceneBrain;
 
+        private bool gameFirstStart;
+
         #region accelerating chop spawning rate code
 
         private const double MIN_CHOP_SPAWN_OFFSET_INC_PER_MILLIS = 0.3;
@@ -91,6 +93,7 @@ namespace ProjectHCI.ReverseFruitNinja
             this.lastUnfriendlyObjSpawned = unfriendlyObjCooldown;
             this.friendlyObjCooldown = random.Next(currentConfiguration.minFriendlyObjectSpawnCooldownTimeMillis, currentConfiguration.maxFriendlyObjectSpawnCoooldownTimeMillis);
             this.lastFriendlyObjSpawned = 0;
+            this.gameFirstStart = true;
         }
 
         #region commented code
@@ -128,20 +131,16 @@ namespace ProjectHCI.ReverseFruitNinja
             //label spawn
             //Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
             //GameSceneBrain sceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
-            
-            gameObject = new GameLengthLabelObject(HORIZ_RAGE_IMG_SPACE, VERTICAL_LABEL_SPACE, gameSceneBrain);
-            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
-
-            gameObject = new GameScoreLabelObject(HORIZ_RAGE_IMG_SPACE, (2 * VERTICAL_LABEL_SPACE) + gameObject.getBoundingBoxGeometry().Bounds.Height, gameSceneBrain);
-            gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
             //this label will be spawned with special request
             //gameObject = new GameStartCountdownLabelObject(GameLoop.getSceneManager().getCanvasWidth() / 2 - 30, GameLoop.getSceneManager().getCanvasHeight() / 2 - 30, gameSceneBrain);
             //gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
+#if DEBUG
             //debug cooldown label objs
             gameObject = new DEBUG_LabelObject(10, (3 * VERTICAL_LABEL_SPACE) + (2 * gameObject.getBoundingBoxGeometry().Bounds.Height));
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
+#endif
 
             //rage icons spawn
             ISceneManager sceneManager = GameLoop.getSceneManager();
@@ -170,6 +169,22 @@ namespace ProjectHCI.ReverseFruitNinja
 
             if (gameSceneBrain.getGameStartCountdownMillis() <= 0)
             {
+
+                if (this.gameFirstStart)
+                {
+                    IGameObject lengthLabelGameObject = new GameLengthLabelObject(HORIZ_RAGE_IMG_SPACE, VERTICAL_LABEL_SPACE, gameSceneBrain);
+                    gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(lengthLabelGameObject, null));
+
+                    IGameObject scoreLabelGameObject = new GameScoreLabelObject(HORIZ_RAGE_IMG_SPACE, (2 * VERTICAL_LABEL_SPACE) + lengthLabelGameObject.getBoundingBoxGeometry().Bounds.Height, gameSceneBrain);
+                    gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(scoreLabelGameObject, null));
+
+                    this.gameFirstStart = false;
+                }
+                
+
+
+
+
 
                 int deltaTimeMillis = Time.getDeltaTimeMillis();
 
@@ -240,7 +255,11 @@ namespace ProjectHCI.ReverseFruitNinja
                 {
                     this.lastFriendlyObjSpawned += deltaTimeMillis;
                 }
+            
             }
+
+
+
             return gameObjectParentGameObjectPairList;
         }
 
