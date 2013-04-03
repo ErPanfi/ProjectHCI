@@ -134,9 +134,14 @@ namespace ProjectHCI.ReverseFruitNinja
                 image.Height = 150;
                 image.Width = 150;
 
+                Image notAlreadyTracketImage = new Image();
+                notAlreadyTracketImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"wave.png")));
+                notAlreadyTracketImage.Height = 129;
+                notAlreadyTracketImage.Width = 600;
+
                 Geometry boundingBoxGeometry = new EllipseGeometry(new Point(75, 75), 10, 10);
 
-                HandUserGameObject userGameObject = new HandUserGameObject(0, 0, boundingBoxGeometry, image, SkeletonSmoothingFilter.HIGH_SMOOTHING_LEVEL);
+                HandUserGameObject userGameObject = new HandUserGameObject(0, 0, boundingBoxGeometry, notAlreadyTracketImage, image, SkeletonSmoothingFilter.HIGH_SMOOTHING_LEVEL);
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, null));
 #if DEBUG
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(userGameObject), userGameObject));

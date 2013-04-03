@@ -416,11 +416,26 @@ namespace ProjectHCI.ReverseFruitNinja
             switch (this.currentConfiguration.userControlMethod)
             {
                 case Configuration.UserControlMethodEnum.Head:
-                    userGameObject = new HeadUserGameObject(0, 0, boundingBoxGeometry, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
+                    {
+                        Image notAlreadyTracketImage = new Image();
+                        notAlreadyTracketImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"move.png")));
+                        notAlreadyTracketImage.Height = 129;
+                        notAlreadyTracketImage.Width = 600;
+
+                        userGameObject = new HeadUserGameObject(0, 0, boundingBoxGeometry, notAlreadyTracketImage, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
+                    }
                     break;
 
+
                 case Configuration.UserControlMethodEnum.Hand:
-                    userGameObject = new HandUserGameObject(0,0, boundingBoxGeometry, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
+                    {
+                        Image notAlreadyTracketImage = new Image();
+                        notAlreadyTracketImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"wave.png")));
+                        notAlreadyTracketImage.Height = 129;
+                        notAlreadyTracketImage.Width = 600;
+
+                        userGameObject = new HandUserGameObject(0, 0, boundingBoxGeometry, notAlreadyTracketImage, image, SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
+                    }
                     break;
 
                 default:
