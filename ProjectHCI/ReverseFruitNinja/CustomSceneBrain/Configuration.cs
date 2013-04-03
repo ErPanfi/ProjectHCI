@@ -503,49 +503,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #endregion
 
-        #region setters & getters commented code
-        /*
-            public int getMaxNumOfChopsAllowed()
-            {
-                return maxNumOfChopsAllowed;
-            }
-
-            public void setMaxNumOfChopsAllowed(int newValue)
-            {
-                maxNumOfChopsAllowed = newValue;
-            }
-
-            public int getMaxNumOfFriendlyObjectsAllowed()
-            {
-                return maxNumOfFriendlyObjectsAllowed;
-            }
-
-            public void setMaxNumOfFriendlyObjectsAllowed(int newValue)
-            {
-                maxNumOfFriendlyObjectsAllowed = newValue;
-            }
-
-            public int getChopSpawnCooldownTimeMillis()
-            {
-                return chopSpawnCooldownTimeMillis;
-            }
-
-            public void setChopSpawnCooldownTimeMillis(int newValue)
-            {
-                chopSpawnCooldownTimeMillis = newValue;
-            }
-
-            public int getFriendlyObjectSpawnCooldownTimeMillis()
-            {
-                return friendlyObjectSpawnCooldownTimeMillis;
-            }
-
-            public void setFriendlyObjectSpawnCooldownTimeMillis(int newValue)
-            {
-                friendlyObjectSpawnCooldownTimeMillis = newValue;
-            }
-            */
-            #endregion
+        
 
         #region ctors and dtors
 
@@ -566,7 +524,8 @@ namespace ProjectHCI.ReverseFruitNinja
             this.gameDifficulty                             = GAME_DIFFICULTY_DEFAULT;
             this.userControlMethod                          = USER_CONTROL_METHOD_DEFAULT;
             this.userFruitImage                             = USER_FRUIT_1_FILENAME;
-            this.rageLevelIncrement                         = RAGE_LEVEL_INCREMENT_STEP; 
+            this.rageLevelIncrement                         = RAGE_LEVEL_INCREMENT_STEP;
+            this.gameStartCountdownMillis                   = GAME_START_COUNTDOWN_MILLIS_DEFAULT;
         }
 
         ~Configuration()
