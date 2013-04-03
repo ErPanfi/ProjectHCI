@@ -71,6 +71,10 @@ namespace ProjectHCI.ReverseFruitNinja
             {
                 return 0;
             }
+            else if (ret > MAX_RAGE_LEVEL)
+            {
+                return MAX_RAGE_LEVEL;
+            }
             else
             {
                 return ret;
