@@ -503,49 +503,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         #endregion
 
-        #region setters & getters commented code
-        /*
-            public int getMaxNumOfChopsAllowed()
-            {
-                return maxNumOfChopsAllowed;
-            }
-
-            public void setMaxNumOfChopsAllowed(int newValue)
-            {
-                maxNumOfChopsAllowed = newValue;
-            }
-
-            public int getMaxNumOfFriendlyObjectsAllowed()
-            {
-                return maxNumOfFriendlyObjectsAllowed;
-            }
-
-            public void setMaxNumOfFriendlyObjectsAllowed(int newValue)
-            {
-                maxNumOfFriendlyObjectsAllowed = newValue;
-            }
-
-            public int getChopSpawnCooldownTimeMillis()
-            {
-                return chopSpawnCooldownTimeMillis;
-            }
-
-            public void setChopSpawnCooldownTimeMillis(int newValue)
-            {
-                chopSpawnCooldownTimeMillis = newValue;
-            }
-
-            public int getFriendlyObjectSpawnCooldownTimeMillis()
-            {
-                return friendlyObjectSpawnCooldownTimeMillis;
-            }
-
-            public void setFriendlyObjectSpawnCooldownTimeMillis(int newValue)
-            {
-                friendlyObjectSpawnCooldownTimeMillis = newValue;
-            }
-            */
-            #endregion
+        
 
         #region ctors and dtors
 
@@ -570,7 +528,8 @@ namespace ProjectHCI.ReverseFruitNinja
             this.fruitDeathPoints                           = FRUIT_DEATH_POINTS_DEFAULT;
             this.tryToCutPlayerProbability                  = TRY_TO_CUT_PLAYER_PROBABILITY_DEFAULT;
             this.gameStartCountdownMillis                   = GAME_START_COUNTDOWN_MILLIS_DEFAULT;
-            this.rageLevelIncrement                         = RAGE_LEVEL_INCREMENT_STEP; 
+            this.rageLevelIncrement                         = RAGE_LEVEL_INCREMENT_STEP;
+            this.gameStartCountdownMillis                   = GAME_START_COUNTDOWN_MILLIS_DEFAULT;
         }
 
         ~Configuration()
