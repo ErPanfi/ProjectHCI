@@ -20,9 +20,10 @@ namespace ProjectHCI.ReverseFruitNinja
         public HandUserGameObject(double xPosition,
                                   double yPosition,
                                   Geometry boundingBoxGeometry,
+                                  Image notAlreadyTrackedImage,
                                   Image image,
                                   SkeletonSmoothingFilter skeletonSmoothingFilter)
-            : base (xPosition, yPosition, boundingBoxGeometry, image, skeletonSmoothingFilter)
+            : base (xPosition, yPosition, boundingBoxGeometry, notAlreadyTrackedImage, image, skeletonSmoothingFilter)
         {
         }
 
@@ -61,10 +62,7 @@ namespace ProjectHCI.ReverseFruitNinja
             sceneManager.canvasUpdateImage(this);
         }
 
-        public override bool isCollidable()
-        {
-            return this.firstTimeTracked;
-        }
+        
 
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {

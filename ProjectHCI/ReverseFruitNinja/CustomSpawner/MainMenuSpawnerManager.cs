@@ -111,21 +111,6 @@ namespace ProjectHCI.ReverseFruitNinja
             List<KeyValuePair<IGameObject, IGameObject>> gameObjectParentGameObjectPairList = new List<KeyValuePair<IGameObject, IGameObject>>();
 
 
-            #region test code
-            //{ // test
-
-            //    FormattedTextGameObject fgo = new FormattedTextGameObject(300, 300, "Font di merda", -1);
-            //    gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(fgo, null));
-
-
-            //    //foreach (FontFamily fontFamily in Fonts.GetFontFamilies(new Uri("pack://application:,,,/"), "./Resources/"))
-            //    //{
-            //    //    System.Diagnostics.Debug.WriteLine("font: " + fontFamily);
-            //    //}
-
-            //}
-            #endregion
-
 
             { //userObject
 
@@ -134,9 +119,14 @@ namespace ProjectHCI.ReverseFruitNinja
                 image.Height = 150;
                 image.Width = 150;
 
+                Image notAlreadyTracketImage = new Image();
+                notAlreadyTracketImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"wave.png")));
+                notAlreadyTracketImage.Height = 129;
+                notAlreadyTracketImage.Width = 600;
+
                 Geometry boundingBoxGeometry = new EllipseGeometry(new Point(75, 75), 10, 10);
 
-                HandUserGameObject userGameObject = new HandUserGameObject(0, 0, boundingBoxGeometry, image, SkeletonSmoothingFilter.HIGH_SMOOTHING_LEVEL);
+                HandUserGameObject userGameObject = new HandUserGameObject(0, 0, boundingBoxGeometry, notAlreadyTracketImage, image, SkeletonSmoothingFilter.HIGH_SMOOTHING_LEVEL);
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(userGameObject, null));
 #if DEBUG
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(userGameObject), userGameObject));
@@ -767,7 +757,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public void fruit3ButtonActivationDelegate()
         {
-            this.configuration.userFruitImage = Configuration.USER_FRUIT_2_FILENAME;
+            this.configuration.userFruitImage = Configuration.USER_FRUIT_3_FILENAME;
             this.reloadState();
         }
 

@@ -23,48 +23,29 @@ namespace ProjectHCI.ReverseFruitNinja
         protected KinectSensorHelper kinectSensorHelper;
         protected int Z_INDEX = 2;
 
-        #region tracking started detection code
         protected Image notAlreadyTrackedImage;
         protected Image cursorImage;
         protected bool firstTimeTracked;
+
 
         public bool hasBeenTracked()
         {
             return this.firstTimeTracked;
         }
-        #endregion
 
-        #region protected int timeToLiveMillis {public get; public set;}
-
-        protected int timeToLiveMillis;
-
-        public int getTimeToLiveMillis()
-        {
-            return this.timeToLiveMillis;
-        }
-
-        public void setTimeToLiveMillis(int timeToLiveMillis)
-        {
-            this.timeToLiveMillis = timeToLiveMillis;
-        }
-
-        #endregion
+        
 
         public HeadUserGameObject(double xPosition,
                               double yPosition,
                               Geometry boundingBoxGeometry,
+                              Image notAlreadyTrackedImage,
                               Image image,
                               SkeletonSmoothingFilter skeletonSmoothingFilter)
         {
-            #region tracking started detection code
             this.firstTimeTracked = false;
-            this.notAlreadyTrackedImage = new Image();
-            this.notAlreadyTrackedImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"wave.png")));
-            this.notAlreadyTrackedImage.Height = 129;
-            this.notAlreadyTrackedImage.Width = 600;
+            this.notAlreadyTrackedImage = notAlreadyTrackedImage;
             this.cursorImage = image;
             this._image = notAlreadyTrackedImage;
-            #endregion
 
             base._xPosition = xPosition;
             base._yPosition = yPosition;
@@ -72,12 +53,11 @@ namespace ProjectHCI.ReverseFruitNinja
             base._extraData = null;
             base._uid = Guid.NewGuid().ToString();
             base._gameObjectTag = Tags.USER_TAG;
-            //base._image = image;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
             this.kinectSensorHelper.initializeKinect();
             //this.calibrateCamera();
-            this.timeToLiveMillis = 0;
+
 
         }
 
@@ -88,10 +68,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="deltaTimeMillis"></param>
         public override void update(int deltaTimeMillis)
         {
-//             if (isCut && timeToLiveMillis >= 0)
-//             {
-//                 timeToLiveMillis -= deltaTimeMillis;
-//             }
+            //do nothing
         }
 
 
@@ -101,7 +78,7 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         public override bool isCollidable()
         {
-            return true;
+            return this.firstTimeTracked;
         }
 
         /// <summary>
@@ -110,7 +87,6 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         public override bool isDead()
         {
-            //return (isCut && timeToLiveMillis < 0);
             return false;
         }
 
@@ -226,67 +202,67 @@ namespace ProjectHCI.ReverseFruitNinja
             return (((value - oldLowerLimit) * newRange) / oldRange) + newLowerLimit;
         }
 
-        /// <summary>
-        /// prototype for camera calibration. HEEELP!!
-        /// </summary>
-        public void calibrateCamera()
-        {
-            Skeleton skeleton;
-            int deltaAngle = 3;
+        ///// <summary>
+        ///// prototype for camera calibration. HEEELP!!
+        ///// </summary>
+        //public void calibrateCamera()
+        //{
+        //    Skeleton skeleton;
+        //    int deltaAngle = 3;
 
-            int elevationAngle0 = 0;
-            float headJointPositionY0;
-            double screenPositionY0 = 0.0;
+        //    int elevationAngle0 = 0;
+        //    float headJointPositionY0;
+        //    double screenPositionY0 = 0.0;
 
-            int elevationAngle1 = 0;
-            float headJointPositionY1;
-            double screenPositionY1 = 0.0;
+        //    int elevationAngle1 = 0;
+        //    float headJointPositionY1;
+        //    double screenPositionY1 = 0.0;
 
 
-            KinectSensor sensor = kinectSensorHelper.getKinectSensor();
-            double canvasHeight = GameLoop.getSceneManager().getCanvasHeight();
+        //    KinectSensor sensor = kinectSensorHelper.getKinectSensor();
+        //    double canvasHeight = GameLoop.getSceneManager().getCanvasHeight();
 
-            /*
-             * a partire dalla posizione iniziale in mezzo allo schermo
-             * ottengo l'angolo iniziale del kinect
-             */
-            do
-            {
-                skeleton = this.kinectSensorHelper.getTrackedSkeleton();
-            } while (skeleton == null);
+        //    /*
+        //     * a partire dalla posizione iniziale in mezzo allo schermo
+        //     * ottengo l'angolo iniziale del kinect
+        //     */
+        //    do
+        //    {
+        //        skeleton = this.kinectSensorHelper.getTrackedSkeleton();
+        //    } while (skeleton == null);
 
-            if (skeleton != null)
-            {
-                Joint headJoint = skeleton.Joints[JointType.Head];
-                elevationAngle0 = sensor.ElevationAngle;
-                headJointPositionY0 = headJoint.Position.Y;
-                screenPositionY0 = (headJointPositionY0 + 1) * 0.5 * canvasHeight;
-            }
+        //    if (skeleton != null)
+        //    {
+        //        Joint headJoint = skeleton.Joints[JointType.Head];
+        //        elevationAngle0 = sensor.ElevationAngle;
+        //        headJointPositionY0 = headJoint.Position.Y;
+        //        screenPositionY0 = (headJointPositionY0 + 1) * 0.5 * canvasHeight;
+        //    }
 
-            /*sposto il kinect*/
-            if (elevationAngle0 >= 0)
-            {
-                sensor.ElevationAngle = elevationAngle0 - deltaAngle;
-            }
-            else
-            {
-                sensor.ElevationAngle = elevationAngle0 + deltaAngle;
-            }
-            /*cerco la nuova posizione in base al nuovo angolo*/
-            do
-            {
-                skeleton = this.kinectSensorHelper.getTrackedSkeleton();
-            } while (skeleton == null);
-            if (skeleton != null)
-            {
-                Joint headJoint = skeleton.Joints[JointType.Head];
-                elevationAngle1 = sensor.ElevationAngle;
-                headJointPositionY1 = headJoint.Position.Y;
-                screenPositionY1 = (headJointPositionY1 + 1) * 0.5 * canvasHeight;
-            }
-            Thread.Sleep(1000);
-            sensor.ElevationAngle = elevationAngle0 + (int)((0.3 * canvasHeight - screenPositionY0) * (elevationAngle1 - elevationAngle0) / (screenPositionY1 - screenPositionY0));
-        }
+        //    /*sposto il kinect*/
+        //    if (elevationAngle0 >= 0)
+        //    {
+        //        sensor.ElevationAngle = elevationAngle0 - deltaAngle;
+        //    }
+        //    else
+        //    {
+        //        sensor.ElevationAngle = elevationAngle0 + deltaAngle;
+        //    }
+        //    /*cerco la nuova posizione in base al nuovo angolo*/
+        //    do
+        //    {
+        //        skeleton = this.kinectSensorHelper.getTrackedSkeleton();
+        //    } while (skeleton == null);
+        //    if (skeleton != null)
+        //    {
+        //        Joint headJoint = skeleton.Joints[JointType.Head];
+        //        elevationAngle1 = sensor.ElevationAngle;
+        //        headJointPositionY1 = headJoint.Position.Y;
+        //        screenPositionY1 = (headJointPositionY1 + 1) * 0.5 * canvasHeight;
+        //    }
+        //    Thread.Sleep(1000);
+        //    sensor.ElevationAngle = elevationAngle0 + (int)((0.3 * canvasHeight - screenPositionY0) * (elevationAngle1 - elevationAngle0) / (screenPositionY1 - screenPositionY0));
+        //}
     }
 
 }
