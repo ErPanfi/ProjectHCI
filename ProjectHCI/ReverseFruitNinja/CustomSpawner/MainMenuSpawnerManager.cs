@@ -24,7 +24,7 @@ namespace ProjectHCI.ReverseFruitNinja
         private bool stateChanged;
         private SpawnStateFunction spawnerStateFunction;
         private CenteredScreenAreaGameObject menuAreaGameObject;
-
+        private Configuration configuration;
 
 
         public MainMenuSpawnerManager()
@@ -33,6 +33,7 @@ namespace ProjectHCI.ReverseFruitNinja
             this.stateChanged = true;
             this.spawnerStateFunction = null;
             this.stateStackTrace = new Stack<SpawnStateFunction>();
+            this.configuration = Configuration.getCurrentConfiguration();
         }
 
 
@@ -376,8 +377,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
             { //difficulty easy
 
+                String imageName = this.configuration.gameDifficulty == Configuration.GameDifficultyEnum.Easy ? "easy_selected.png" : "easy.png";
+
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"easy.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(imageName)));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -397,8 +400,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
             { //difficulty medium
 
+                String imageName = this.configuration.gameDifficulty == Configuration.GameDifficultyEnum.Medium ? "normal_selected.png" : "normal.png";
+
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"normal.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(imageName)));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -418,8 +423,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
             { //difficulty hard
 
+                String imageName = this.configuration.gameDifficulty == Configuration.GameDifficultyEnum.Hard ? "hard_selected.png" : "hard.png";
+
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"hard.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(imageName)));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -434,6 +441,8 @@ namespace ProjectHCI.ReverseFruitNinja
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(buttonGameObject), buttonGameObject));
 #endif
             }
+
+
 
 
 
@@ -468,8 +477,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
             { //hand control
 
+                String imageName = this.configuration.userControlMethod == Configuration.UserControlMethodEnum.Hand ? "hand_control_selected.png" : "hand_control.png";
+
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"hand_control.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(imageName)));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -489,8 +500,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
             { //head control
 
+                String imageName = this.configuration.userControlMethod == Configuration.UserControlMethodEnum.Head ? "head_control_selected.png" : "head_control.png";
+
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"head_control.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(imageName)));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -538,8 +551,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
             { //fruit 1
 
+                String imageName = this.configuration.userFruitImage == Configuration.USER_FRUIT_1_FILENAME ? "user_fruit_button1_selected.png" : "user_fruit_button1.png";
+
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"user_fruit_button1.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(imageName)));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -559,8 +574,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
             { //fruit 2
 
+                String imageName = this.configuration.userFruitImage == Configuration.USER_FRUIT_2_FILENAME ? "user_fruit_button2_selected.png" : "user_fruit_button2.png";
+
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"user_fruit_button2.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(imageName)));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -579,8 +596,10 @@ namespace ProjectHCI.ReverseFruitNinja
 
             { //fruit 3
 
+                String imageName = this.configuration.userFruitImage == Configuration.USER_FRUIT_3_FILENAME ? "user_fruit_button3_selected.png" : "user_fruit_button3.png";
+
                 Image buttonImage = new Image();
-                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"user_fruit_button3.png")));
+                buttonImage.Source = new BitmapImage(new Uri(BitmapUtility.getImgResourcePath(imageName)));
                 buttonImage.Height = 350;
                 buttonImage.Width = 420;
                 buttonImage.Stretch = Stretch.Fill;
@@ -627,6 +646,16 @@ namespace ProjectHCI.ReverseFruitNinja
             this.stateStackTrace.Push(this.spawnerStateFunction);
             this.spawnerStateFunction = newSpawnerState;
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void reloadState()
+        {
+            ISceneManager sceneManager = GameLoop.getSceneManager();
+            sceneManager.removeGameObjectsByTag(Tags.BUTTON_TAG);
+            this.stateChanged = true;
         }
 
 
@@ -689,17 +718,20 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public void easyLevelButtonActivationDelegate()
         {
-            Configuration.getCurrentConfiguration().gameDifficulty = Configuration.GameDifficultyEnum.Easy;
+            this.configuration.gameDifficulty = Configuration.GameDifficultyEnum.Easy;
+            this.reloadState();
         }
 
         public void mediumLevelButtonActivationDelegate()
         {
-            Configuration.getCurrentConfiguration().gameDifficulty = Configuration.GameDifficultyEnum.Medium;
+            this.configuration.gameDifficulty = Configuration.GameDifficultyEnum.Medium;
+            this.reloadState();
         }
 
         public void hardLevelButtonActivationDelegate()
         {
-            Configuration.getCurrentConfiguration().gameDifficulty = Configuration.GameDifficultyEnum.Hard;
+            this.configuration.gameDifficulty = Configuration.GameDifficultyEnum.Hard;
+            this.reloadState();
         }
 
 
@@ -708,29 +740,34 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public void headControlButtonActivationDelegate()
         {
-            Configuration.getCurrentConfiguration().userControlMethod = Configuration.UserControlMethodEnum.Head;
+            this.configuration.userControlMethod = Configuration.UserControlMethodEnum.Head;
+            this.reloadState();
         }
 
         public void handControlButtonActivationDelegate()
         {
-            Configuration.getCurrentConfiguration().userControlMethod = Configuration.UserControlMethodEnum.Hand;
+            this.configuration.userControlMethod = Configuration.UserControlMethodEnum.Hand;
+            this.reloadState();
         }
 
 
 
         public void fruit1ButtonActivationDelegate()
         {
-            Configuration.getCurrentConfiguration().userFruitImage = Configuration.USER_FRUIT_1_FILENAME;
+            this.configuration.userFruitImage = Configuration.USER_FRUIT_1_FILENAME;
+            this.reloadState();
         }
 
         public void fruit2ButtonActivationDelegate()
         {
-            Configuration.getCurrentConfiguration().userFruitImage = Configuration.USER_FRUIT_2_FILENAME;
+            this.configuration.userFruitImage = Configuration.USER_FRUIT_2_FILENAME;
+            this.reloadState();
         }
 
         public void fruit3ButtonActivationDelegate()
         {
-            Configuration.getCurrentConfiguration().userFruitImage = Configuration.USER_FRUIT_2_FILENAME;
+            this.configuration.userFruitImage = Configuration.USER_FRUIT_2_FILENAME;
+            this.reloadState();
         }
 
 

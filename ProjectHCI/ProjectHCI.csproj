@@ -70,7 +70,7 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameLengthLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameScoreLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HandUserGameObject.cs" />
-    <Compile Include="ReverseFruitNinja\CustomGameObject\ImageGuiGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Images\ImageGuiGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\CutGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Tags.cs" />
@@ -224,6 +224,22 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Kunai_Trasp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\easy_selected.png" />
+    <Resource Include="Resources\hard_selected.png" />
+    <Resource Include="Resources\normal_selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hand_control_selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\user_fruit_button1_selected.png" />
+    <Resource Include="Resources\user_fruit_button2_selected.png" />
+    <Resource Include="Resources\user_fruit_button3_selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\head_control_selected.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
