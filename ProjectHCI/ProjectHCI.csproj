@@ -63,6 +63,7 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\BoundingBoxViewerGameObject.cs" />
     <Compile Include="KinectEngine\GameObject\GameObject.cs" />
     <Compile Include="KinectEngine\GameObject\FormattedTextGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\FadeOutGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\GameLabelObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Images\RageItemGUIGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Labels\GameStartCountdownLabelObject.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\Images\ImageGuiGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\CutGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\ButtonGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\StainGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Tags.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\FruitGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\HeadUserGameObject.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="KinectEngine\GameObject\GameObjectEventArgs.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Images\HourglassGUIGameObject.cs" />
     <Compile Include="Utility\BitmapUtility.cs" />
+    <Compile Include="Utility\StandardUtility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -138,10 +141,6 @@
     </None>
     <AppDesigner Include="Properties\" />
     <Resource Include="Resources\made_in_china.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\slash_horiz.png" />
-    <Resource Include="Resources\slash_vert.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\new_game.png" />
@@ -244,6 +243,28 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\move.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\stain1.png" />
+    <Resource Include="Resources\stain10.png" />
+    <Resource Include="Resources\stain11.png" />
+    <Resource Include="Resources\stain12.png" />
+    <Resource Include="Resources\stain13.png" />
+    <Resource Include="Resources\stain14.png" />
+    <Resource Include="Resources\stain15.png" />
+    <Resource Include="Resources\stain16.png" />
+    <Resource Include="Resources\stain17.png" />
+    <Resource Include="Resources\stain18.png" />
+    <Resource Include="Resources\stain19.png" />
+    <Resource Include="Resources\stain2.png" />
+    <Resource Include="Resources\stain20.png" />
+    <Resource Include="Resources\stain3.png" />
+    <Resource Include="Resources\stain4.png" />
+    <Resource Include="Resources\stain5.png" />
+    <Resource Include="Resources\stain6.png" />
+    <Resource Include="Resources\stain7.png" />
+    <Resource Include="Resources\stain8.png" />
+    <Resource Include="Resources\stain9.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

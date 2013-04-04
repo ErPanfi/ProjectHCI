@@ -50,8 +50,6 @@ namespace ProjectHCI.ReverseFruitNinja
             base._xPosition = xPosition;
             base._yPosition = yPosition;
             base._boundingBoxGeometry = boundingBoxGeometry;
-            base._extraData = null;
-            base._uid = Guid.NewGuid().ToString();
             base._gameObjectTag = Tags.USER_TAG;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
@@ -125,8 +123,8 @@ namespace ProjectHCI.ReverseFruitNinja
                     this.firstTimeTracked = true;
                     this._image = cursorImage;
 
-                    double xScreenPosition = this.mapValueToNewRange(headJoint.Position.X, -1.0, 1.0, 0, sceneManager.getCanvasWidth());
-                    double yScreenPosition = this.mapValueToNewRange(headJoint.Position.Y, 1.0, -1.0, 0, sceneManager.getCanvasHeight());
+                    double xScreenPosition = StandardUtility.mapValueToNewRange(headJoint.Position.X, -1.0, 1.0, 0, sceneManager.getCanvasWidth());
+                    double yScreenPosition = StandardUtility.mapValueToNewRange(headJoint.Position.Y, 1.0, -1.0, 0, sceneManager.getCanvasHeight());
 
 
                     sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition(), true);
@@ -153,12 +151,13 @@ namespace ProjectHCI.ReverseFruitNinja
 
                     }
 
-                    
-                }
 
+
+                    sceneManager.canvasUpdateImage(this);
+                }
             }
 
-            sceneManager.canvasUpdateImage(this);
+            
         }
 
 
@@ -189,18 +188,7 @@ namespace ProjectHCI.ReverseFruitNinja
             //throw new NotSupportedException();
         }
 
-        protected double mapValueToNewRange(double value,
-                                            double oldLowerLimit,
-                                            double oldHigherLimit,
-                                            double newLowerLimit,
-                                            double newHigherLimit)
-        {
-
-            double oldRange = oldHigherLimit - oldLowerLimit;
-            double newRange = newHigherLimit - newLowerLimit;
-
-            return (((value - oldLowerLimit) * newRange) / oldRange) + newLowerLimit;
-        }
+        
 
         ///// <summary>
         ///// prototype for camera calibration. HEEELP!!

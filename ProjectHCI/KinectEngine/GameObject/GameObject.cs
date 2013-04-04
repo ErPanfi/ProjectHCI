@@ -20,11 +20,21 @@ namespace ProjectHCI.KinectEngine
         protected Geometry _boundingBoxGeometry;
         protected object _extraData;
         protected String _uid;
-        protected String _gameObjectTag = "no_tag";
+        protected String _gameObjectTag;
         protected Image _image;
 
 
 
+        public GameObject()
+        {
+            _gameObjectTag = "no_tag";
+            _uid = Guid.NewGuid().ToString();
+            _xPosition = 0;
+            _yPosition = 0;
+            _boundingBoxGeometry = null;
+            _extraData = null;
+            _image = null;
+        }
 
 
 

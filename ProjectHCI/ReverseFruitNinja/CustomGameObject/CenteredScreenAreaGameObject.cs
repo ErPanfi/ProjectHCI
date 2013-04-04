@@ -21,9 +21,6 @@ namespace ProjectHCI.ReverseFruitNinja
             base._xPosition = canvasWidth * 0.5 - gameObjectAreaWidth *0.5;
             base._yPosition = canvasHeight * 0.5 - gameObjectAreaHeight * 0.5;
             base._boundingBoxGeometry = new RectangleGeometry(new Rect(new Point(0, 0), new Point(gameObjectAreaWidth, gameObjectAreaHeight)));
-            base._extraData = null;
-            base._image = null;
-            base._uid = Guid.NewGuid().ToString();
             base._gameObjectTag = Tags.UI_TAG;
             
         }

@@ -24,9 +24,6 @@ namespace ProjectHCI.ReverseFruitNinja
 
             base._xPosition = gameObject.getBoundingBoxGeometry().Bounds.X - gameObject.getXPosition();
             base._yPosition = gameObject.getBoundingBoxGeometry().Bounds.Y - gameObject.getYPosition();
-            base._boundingBoxGeometry = null;
-            base._extraData = null;
-            base._uid = Guid.NewGuid().ToString();
             base._gameObjectTag = Tags.DEBUG_TAG;
 
 

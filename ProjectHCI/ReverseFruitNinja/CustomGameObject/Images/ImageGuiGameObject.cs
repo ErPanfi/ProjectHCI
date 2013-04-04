@@ -17,9 +17,6 @@ namespace ProjectHCI.ReverseFruitNinja
             
             base._xPosition = xPosition;
             base._yPosition = yPosition;
-            base._boundingBoxGeometry = null;
-            base._extraData = null;
-            base._uid = Guid.NewGuid().ToString();
             base._gameObjectTag = Tags.UI_TAG;
             base._image = image;
 

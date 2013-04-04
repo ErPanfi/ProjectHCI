@@ -49,11 +49,9 @@ namespace ProjectHCI.ReverseFruitNinja
         {
             base._xPosition = xPosition;
             base._yPosition = yPosition;
-            base._extraData = null;
             base._boundingBoxGeometry = boundingBoxGeometry;
             base._image = image;
             base._gameObjectTag = Tags.BUTTON_TAG;
-            base._uid = Guid.NewGuid().ToString();
 
             this.activationDelegate = activationDelegate;
             this.pointedByObject = false;
@@ -126,7 +124,7 @@ namespace ProjectHCI.ReverseFruitNinja
         public override void onRendererDisplayDelegate()
         {
             ISceneManager sceneManager = GameLoop.getSceneManager();
-            sceneManager.canvasDisplayImage(this, 1);
+            sceneManager.canvasDisplayImage(this, 0);
         }
 
         /// <summary>

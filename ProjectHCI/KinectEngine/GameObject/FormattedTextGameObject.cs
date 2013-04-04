@@ -36,8 +36,6 @@ namespace ProjectHCI.KinectEngine
             
             base._xPosition = xPosition;
             base._yPosition = yPosition;
-            base._extraData = null;
-            base._uid = Guid.NewGuid().ToString();
             base._gameObjectTag = Tags.UI_TAG;
 
 

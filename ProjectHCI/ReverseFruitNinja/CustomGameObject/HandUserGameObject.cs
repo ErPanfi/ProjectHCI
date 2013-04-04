@@ -1,5 +1,6 @@
 ﻿using Microsoft.Kinect;
 using ProjectHCI.KinectEngine;
+using ProjectHCI.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -50,16 +51,18 @@ namespace ProjectHCI.ReverseFruitNinja
                     double yHandJointPosition = Math.Abs(handJoint.Position.Y) > 0.4 ? 0.4 * Math.Sign(handJoint.Position.Y) : handJoint.Position.Y;
 
 
-                    double xScreenPosition = this.mapValueToNewRange(xHandJointPosition, -0.4, 0.4, 0, sceneManager.getCanvasWidth() - this.getImage().Width);
-                    double yScreenPosition = this.mapValueToNewRange(yHandJointPosition, 0.4, -0.4, 0, sceneManager.getCanvasHeight() - this.getImage().Height);
+                    double xScreenPosition = StandardUtility.mapValueToNewRange(xHandJointPosition, -0.4, 0.4, 0, sceneManager.getCanvasWidth() - this.getImage().Width);
+                    double yScreenPosition = StandardUtility.mapValueToNewRange(yHandJointPosition, 0.4, -0.4, 0, sceneManager.getCanvasHeight() - this.getImage().Height);
 
            
                     sceneManager.applyTranslation(this, xScreenPosition - this.getXPosition(), yScreenPosition - this.getYPosition(), true);
 
                 }
+
+                sceneManager.canvasUpdateImage(this);
             }
 
-            sceneManager.canvasUpdateImage(this);
+            
         }
 
         

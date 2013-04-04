@@ -16,7 +16,7 @@ namespace ProjectHCI.ReverseFruitNinja
     public class CutGameObject : GameObject
     {
 
-        private static int nextZIndex = 5;
+        private static int nextZIndex = 3;
 
         private int collidableTimeMillis;
         private int currentTimeToLiveMillis;
@@ -61,8 +61,6 @@ namespace ProjectHCI.ReverseFruitNinja
             base._xPosition = xPosition;
             base._yPosition = yPosition;
             base._boundingBoxGeometry = boundingBoxGeometry;
-            base._extraData = null;
-            base._uid = Guid.NewGuid().ToString();
             base._gameObjectTag = Tags.CUT_TAG;
             base._image = image;
 
@@ -130,7 +128,9 @@ namespace ProjectHCI.ReverseFruitNinja
 
             this.getImage().Source = this.animateImageColor();
 
-            sceneManager.canvasDisplayImage(this, nextZIndex++);
+
+            CutGameObject.nextZIndex = CutGameObject.nextZIndex + 1 >= 100 ? 3 : CutGameObject.nextZIndex + 1;
+            sceneManager.canvasDisplayImage(this, nextZIndex);
 
 
 
@@ -190,31 +190,28 @@ namespace ProjectHCI.ReverseFruitNinja
             {
 
 
-                const int BlueChannelIndex = 0;
-                const int GreenChannelIndex = 1;
-                const int RedChannelIndex = 2;
+                const int blueChannelIndex = 0;
+                const int greenChannelIndex = 1;
+                const int redChannelIndex = 2;
 
                 RgbData rgbData = BitmapUtility.getRgbData((BitmapSource)this.getImage().Source);
 
+
+                byte redChannelInterpolated = (byte)StandardUtility.mapValueToNewRange(this.timeToLiveMillis - this.currentTimeToLiveMillis, 0, this.timeToLiveMillis - this.collidableTimeMillis, 0, 255);
+
                 for (int i = 0; i < rgbData.dataLength; i += 4)
                 {
-                    //blue decrease cause currentTimeToLiveMillis is decreased
-                    //rgbData.rawRgbByteArray[i + BlueChannelIndex] = (byte)this.mapValueToNewRange(this.currentTimeToLiveMillis - this.collidableTimeMillis,
-                    //                                                                             0,
-                    //                                                                             this.timeToLiveMillis - this.collidableTimeMillis,
-                    //                                                                             0,
-                    //                                                                             255);
 
-                    rgbData.rawRgbByteArray[i + BlueChannelIndex] = 0;
-                    rgbData.rawRgbByteArray[i + GreenChannelIndex] = 0;
+
+                    rgbData.rawRgbByteArray[i + blueChannelIndex] = 0;
+                    rgbData.rawRgbByteArray[i + greenChannelIndex] = 0;
 
                     //red increase cause this.timeToLiveMillis - this.currentTimeToLiveMillis
-                    rgbData.rawRgbByteArray[i + RedChannelIndex] = (byte)this.mapValueToNewRange(this.timeToLiveMillis - this.currentTimeToLiveMillis,
-                                                                                                 0,
-                                                                                                 this.timeToLiveMillis - this.collidableTimeMillis,
-                                                                                                 0,
-                                                                                                 255);
+                    rgbData.rawRgbByteArray[i + redChannelIndex] = redChannelInterpolated;
                 }
+
+
+
                 return BitmapUtility.createBitmapSource(rgbData);
 
             }
@@ -224,18 +221,5 @@ namespace ProjectHCI.ReverseFruitNinja
             }
         }
 
-
-        protected double mapValueToNewRange(double value,
-                                            double oldLowerLimit,
-                                            double oldHigherLimit,
-                                            double newLowerLimit,
-                                            double newHigherLimit)
-        {
-
-            double oldRange = oldHigherLimit - oldLowerLimit;
-            double newRange = newHigherLimit - newLowerLimit;
-
-            return (((value - oldLowerLimit) * newRange) / oldRange) + newLowerLimit;
-        }
     }
 }
