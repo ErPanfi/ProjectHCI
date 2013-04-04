@@ -13,8 +13,8 @@ namespace ProjectHCI.ReverseFruitNinja
         private IGameStateTracker gameStateTracker;
         private bool opaque;
 
-        public const double IMAGE_WIDTH = 120;
-        public const double IMAGE_HEIGHT = 120;
+        public const double IMAGE_WIDTH = 150;
+        public const double IMAGE_HEIGHT = 150;
 
 
         #region ctors
@@ -38,12 +38,12 @@ namespace ProjectHCI.ReverseFruitNinja
             if (this.gameStateTracker.getRageLevel() < thresholdLevel)
             {
                 opaque = false;
-                kunaiImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"Kunai_Trasp.png")));
+                kunaiImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"rage_off.png")));
             }
             else
             {
                 opaque = true;
-                kunaiImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"Kunai.png")));
+                kunaiImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(BitmapUtility.getImgResourcePath(@"rage_on.png")));
             }
 
             kunaiImage.Height = IMAGE_HEIGHT;

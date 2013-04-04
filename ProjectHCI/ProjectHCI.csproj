@@ -220,12 +220,6 @@
     <Resource Include="Resources\cut.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Kunai.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Kunai_Trasp.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\easy_selected.png" />
     <Resource Include="Resources\hard_selected.png" />
     <Resource Include="Resources\normal_selected.png" />
@@ -265,6 +259,10 @@
     <Resource Include="Resources\stain7.png" />
     <Resource Include="Resources\stain8.png" />
     <Resource Include="Resources\stain9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\rage_off.png" />
+    <Resource Include="Resources\rage_on.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

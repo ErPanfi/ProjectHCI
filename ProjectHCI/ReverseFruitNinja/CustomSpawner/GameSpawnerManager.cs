@@ -144,11 +144,11 @@ namespace ProjectHCI.ReverseFruitNinja
 
             //rage icons spawn
             ISceneManager sceneManager = GameLoop.getSceneManager();
-            gameObject = new RageItemGUIGameObject(gameSceneBrain, 1, sceneManager.getCanvasWidth() - (4 * HORIZ_RAGE_IMG_SPACE + 3 * RageItemGUIGameObject.IMAGE_WIDTH), VERTICAL_LABEL_SPACE);
+            gameObject = new RageItemGUIGameObject(gameSceneBrain, 3, sceneManager.getCanvasWidth() - (4 * HORIZ_RAGE_IMG_SPACE + 3 * RageItemGUIGameObject.IMAGE_WIDTH), VERTICAL_LABEL_SPACE);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
             gameObject = new RageItemGUIGameObject(gameSceneBrain, 2, sceneManager.getCanvasWidth() - (3 * HORIZ_RAGE_IMG_SPACE + 2 * RageItemGUIGameObject.IMAGE_WIDTH), VERTICAL_LABEL_SPACE);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
-            gameObject = new RageItemGUIGameObject(gameSceneBrain, 3, sceneManager.getCanvasWidth() - (2 * HORIZ_RAGE_IMG_SPACE + 1 * RageItemGUIGameObject.IMAGE_WIDTH), VERTICAL_LABEL_SPACE);
+            gameObject = new RageItemGUIGameObject(gameSceneBrain, 1, sceneManager.getCanvasWidth() - (2 * HORIZ_RAGE_IMG_SPACE + 1 * RageItemGUIGameObject.IMAGE_WIDTH), VERTICAL_LABEL_SPACE);
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
             return gameObjectParentGameObjectPairList;
