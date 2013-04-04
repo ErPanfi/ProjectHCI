@@ -8,6 +8,8 @@ using System.Windows.Media;
 
 namespace ProjectHCI.ReverseFruitNinja
 {
+
+    // http://stackoverflow.com/questions/2625608/relative-uri-works-for-bitmapimage-but-not-for-mediaplayer
     public class SoundGameObject : GameObject
     {
 
