@@ -76,6 +76,7 @@
     <Compile Include="ReverseFruitNinja\CustomGameObject\Game\CutGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Gui\ButtonGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Game\StainGameObject.cs" />
+    <Compile Include="ReverseFruitNinja\CustomGameObject\Sound\SoundGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Tags.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Game\FruitGameObject.cs" />
     <Compile Include="ReverseFruitNinja\CustomGameObject\Game\HeadUserGameObject.cs" />
@@ -143,126 +144,237 @@
     <Resource Include="Resources\made_in_china.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\new_game.png" />
+    <Resource Include="Resources\images\back.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\settings.png" />
+    <Resource Include="Resources\images\background.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\quit.png" />
+    <Resource Include="Resources\images\controls.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\background.png" />
+    <Resource Include="Resources\images\cut.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\logo.png" />
+    <Resource Include="Resources\images\difficulty.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\hand.png" />
+    <Resource Include="Resources\images\easy.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\back.png" />
+    <Resource Include="Resources\images\easy_selected.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\controls.png" />
-    <Resource Include="Resources\difficulty.png" />
-    <Resource Include="Resources\graphics.png" />
+    <Resource Include="Resources\images\fruit_user1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\easy.png" />
-    <Resource Include="Resources\hard.png" />
-    <Resource Include="Resources\normal.png" />
+    <Resource Include="Resources\images\fruit_user2.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\head_control.png" />
+    <Resource Include="Resources\images\fruit_user3.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\hand_control.png" />
+    <Resource Include="Resources\images\fruit1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\fruit1.png" />
-    <Resource Include="Resources\fruit10.png" />
-    <Resource Include="Resources\fruit11.png" />
-    <Resource Include="Resources\fruit12.png" />
-    <Resource Include="Resources\fruit13.png" />
-    <Resource Include="Resources\fruit2.png" />
-    <Resource Include="Resources\fruit3.png" />
-    <Resource Include="Resources\fruit4.png" />
-    <Resource Include="Resources\fruit5.png" />
-    <Resource Include="Resources\fruit6.png" />
-    <Resource Include="Resources\fruit7.png" />
-    <Resource Include="Resources\fruit8.png" />
-    <Resource Include="Resources\fruit9.png" />
+    <Resource Include="Resources\images\fruit10.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\fruit14.png" />
+    <Resource Include="Resources\images\fruit11.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\wave.png" />
+    <Resource Include="Resources\images\fruit12.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\fruit_user1.png" />
-    <Resource Include="Resources\fruit_user2.png" />
-    <Resource Include="Resources\fruit_user3.png" />
+    <Resource Include="Resources\images\fruit13.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\user_fruit_button1.png" />
-    <Resource Include="Resources\user_fruit_button2.png" />
-    <Resource Include="Resources\user_fruit_button3.png" />
+    <Resource Include="Resources\images\fruit14.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Hourglass_1.png" />
-    <Resource Include="Resources\Hourglass_2.png" />
-    <Resource Include="Resources\Hourglass_3.png" />
-    <Resource Include="Resources\Hourglass_4.png" />
+    <Resource Include="Resources\images\fruit2.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\cut.png" />
+    <Resource Include="Resources\images\fruit3.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\easy_selected.png" />
-    <Resource Include="Resources\hard_selected.png" />
-    <Resource Include="Resources\normal_selected.png" />
+    <Resource Include="Resources\images\fruit4.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\hand_control_selected.png" />
+    <Resource Include="Resources\images\fruit5.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\user_fruit_button1_selected.png" />
-    <Resource Include="Resources\user_fruit_button2_selected.png" />
-    <Resource Include="Resources\user_fruit_button3_selected.png" />
+    <Resource Include="Resources\images\fruit6.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\head_control_selected.png" />
+    <Resource Include="Resources\images\fruit7.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\move.png" />
+    <Resource Include="Resources\images\fruit8.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\stain1.png" />
-    <Resource Include="Resources\stain10.png" />
-    <Resource Include="Resources\stain11.png" />
-    <Resource Include="Resources\stain12.png" />
-    <Resource Include="Resources\stain13.png" />
-    <Resource Include="Resources\stain14.png" />
-    <Resource Include="Resources\stain15.png" />
-    <Resource Include="Resources\stain16.png" />
-    <Resource Include="Resources\stain17.png" />
-    <Resource Include="Resources\stain18.png" />
-    <Resource Include="Resources\stain19.png" />
-    <Resource Include="Resources\stain2.png" />
-    <Resource Include="Resources\stain20.png" />
-    <Resource Include="Resources\stain3.png" />
-    <Resource Include="Resources\stain4.png" />
-    <Resource Include="Resources\stain5.png" />
-    <Resource Include="Resources\stain6.png" />
-    <Resource Include="Resources\stain7.png" />
-    <Resource Include="Resources\stain8.png" />
-    <Resource Include="Resources\stain9.png" />
+    <Resource Include="Resources\images\fruit9.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\rage_off.png" />
-    <Resource Include="Resources\rage_on.png" />
+    <Resource Include="Resources\images\graphics.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\hand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\hand_control.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\hand_control_selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\hard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\hard_selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\head_control.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\head_control_selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\Hourglass_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\Hourglass_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\Hourglass_3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\Hourglass_4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\move.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\new_game.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\normal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\normal_selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\quit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\rage_off.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\rage_on.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain10.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain11.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain12.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain13.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain14.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain15.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain17.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain18.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain19.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain8.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\stain9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\user_fruit_button1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\user_fruit_button1_selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\user_fruit_button2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\user_fruit_button2_selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\user_fruit_button3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\user_fruit_button3_selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\images\wave.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Sounds\air_cut.wav" />
+    <Resource Include="Resources\Sounds\cut.wav" />
+    <Resource Include="Resources\Sounds\fruit_appear.wav" />
+    <Resource Include="Resources\Sounds\fruit_cutted.wav" />
+    <Resource Include="Resources\Sounds\fruit_vanish.wav" />
+    <Resource Include="Resources\Sounds\game_theme.mp3" />
+    <Resource Include="Resources\Sounds\gong.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Sounds\menu_theme.mp3" />
+    <Resource Include="Resources\Sounds\selection.wav" />
+    <Resource Include="Resources\Sounds\user_dead.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Sounds\fruit_collected.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

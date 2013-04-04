@@ -112,6 +112,22 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
 
+            { // selection sound
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\selection.wav"), false);
+                GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+            }
+
+
+            { // Menu theme
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\menu_theme.mp3"),
+                                                                      0.4,
+                                                                      true);
+                gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(soundGameObject, null));
+            }
+
+
+
+
             { //userObject
 
                 Image image = new Image();
@@ -629,6 +645,8 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="newSpawnerState"></param>
         private void changeState(SpawnStateFunction newSpawnerState)
         {
+            this.playSelectionSound();
+
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.removeGameObjectsByTag(Tags.BUTTON_TAG);
 
@@ -643,6 +661,8 @@ namespace ProjectHCI.ReverseFruitNinja
         /// </summary>
         private void reloadState()
         {
+            this.playSelectionSound();
+
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.removeGameObjectsByTag(Tags.BUTTON_TAG);
             this.stateChanged = true;
@@ -662,6 +682,7 @@ namespace ProjectHCI.ReverseFruitNinja
             sceneManager.removeGameObjectsByTag(Tags.UI_TAG);
             sceneManager.removeGameObjectsByTag(Tags.USER_TAG);
             sceneManager.removeGameObjectsByTag(Tags.BUTTON_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.SOUND_TAG);
 
 
 
@@ -767,6 +788,8 @@ namespace ProjectHCI.ReverseFruitNinja
 
         public void backButtonActivationDelegate()
         {
+            this.playSelectionSound();
+
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.removeGameObjectsByTag(Tags.BUTTON_TAG);
 
@@ -776,6 +799,11 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
 
+        private void playSelectionSound()
+        {
+            SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\selection.wav"), false);
+            GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+        }
 
 
 

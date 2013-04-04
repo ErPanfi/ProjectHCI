@@ -74,6 +74,23 @@ namespace ProjectHCI.ReverseFruitNinja
         public override void onRendererDisplayDelegate()
         {
             GameLoop.getSceneManager().canvasDisplayImage(this, 1);
+
+            { //fruit appear sound
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\fruit_appear.wav"), 1,  false);
+                GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+            }
+        }
+
+        public override void onRendererRemoveDelegate()
+        {
+            base.onRendererRemoveDelegate();
+
+            if (!this.isCollected && !this.isCut)
+            {
+                //vanish sound
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\fruit_vanish.wav"), 0.2, false);
+                GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+            }
         }
 
         
@@ -111,6 +128,11 @@ namespace ProjectHCI.ReverseFruitNinja
                     //create floating death label
                     GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, GameFloatingLabelObject.points2string(FRUIT_COLLECTION_POINTS)), null));
                     
+                    {// fruit collected sound
+                        SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\fruit_collected.wav"), false);
+                        GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+                    }
+
                     break;
             }
         }

@@ -96,16 +96,7 @@ namespace ProjectHCI.ReverseFruitNinja
             this.gameFirstStart = true;
         }
 
-        #region commented code
-        //private void obtainGameSceneBrain()
-        //{
-        //    if (this.gameSceneBrain == null)
-        //    {
-        //        Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
-        //        this.gameSceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
-        //    }
-        //}        
-        #endregion
+       
 
         /// <summary>
         /// 
@@ -113,6 +104,21 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <returns></returns>
         protected override List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjectsOnStart()
         {
+
+
+
+            {//selection sound
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\selection.wav"), false);
+                GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+            }
+
+            {//game main theme
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\game_theme.mp3"), 0.2, true);
+                GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+            }
+
+
+
 
             //userGameObject spawn
 
@@ -128,13 +134,6 @@ namespace ProjectHCI.ReverseFruitNinja
             gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(new BoundingBoxViewerGameObject(gameObject), gameObject));            
 #endif
 
-            //label spawn
-            //Debug.Assert(typeof(GameSceneBrain).IsAssignableFrom(GameLoop.getSceneBrain().GetType()), "Expected a GameSceneBrain object");
-            //GameSceneBrain sceneBrain = (GameSceneBrain)GameLoop.getSceneBrain();
-
-            //this label will be spawned with special request
-            //gameObject = new GameStartCountdownLabelObject(GameLoop.getSceneManager().getCanvasWidth() / 2 - 30, GameLoop.getSceneManager().getCanvasHeight() / 2 - 30, gameSceneBrain);
-            //gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(gameObject, null));
 
 #if DEBUG
             //debug cooldown label objs
@@ -178,6 +177,12 @@ namespace ProjectHCI.ReverseFruitNinja
                     IGameObject scoreLabelGameObject = new GameScoreLabelObject(HORIZ_RAGE_IMG_SPACE, (2 * VERTICAL_LABEL_SPACE) + lengthLabelGameObject.getBoundingBoxGeometry().Bounds.Height, gameSceneBrain);
                     gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(scoreLabelGameObject, null));
 
+
+                    {// gong sound
+                        SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\gong.wav"), 0.2, false);
+                        GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+                    }
+
                     this.gameFirstStart = false;
                 }
                 
@@ -193,6 +198,7 @@ namespace ProjectHCI.ReverseFruitNinja
                 ISceneManager sceneManager = GameLoop.getSceneManager();
 
                 Dictionary<String, List<IGameObject>> gameObjectListMapByType = sceneManager.getGameObjectListMapByTag();
+
                 //userGameObjectList
                 Debug.Assert(gameObjectListMapByType.ContainsKey(Tags.USER_TAG), "the userGameObject must be created.");
                 List<IGameObject> userGameObjectList = userGameObjectList = gameObjectListMapByType[Tags.USER_TAG];
@@ -407,7 +413,7 @@ namespace ProjectHCI.ReverseFruitNinja
                                                  boundigBoxGeometry,
                                                  image,
                                                  timeToLive,
-                                                 (int)(timeToLive * 0.8)
+                                                 (int)(timeToLive * 0.9)
                                                  );
         }
 

@@ -14,6 +14,7 @@ namespace ProjectHCI.ReverseFruitNinja
         public const String CUT_TAG    = "cut_tag";
         public const String UI_TAG     = "ui_tag";
         public const String BUTTON_TAG = "button_tag";
+        public const String SOUND_TAG  = "sound_tag";
 
 
     }

@@ -86,6 +86,14 @@ namespace ProjectHCI.ReverseFruitNinja
 
         protected override List<KeyValuePair<IGameObject, IGameObject>> spawnGameObjectsOnStart()
         {
+
+
+            {// user dead sound
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\user_dead.wav"), false);
+                GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+            }
+
+
             List<KeyValuePair<IGameObject, IGameObject>> ret = base.spawnGameObjectsOnStart();
             ISceneManager sceneManager = GameLoop.getSceneManager();
 
@@ -216,32 +224,22 @@ namespace ProjectHCI.ReverseFruitNinja
             return ret;
         }
 
+
+
         //when the button is pressed remove all objects and go back to main menu
         public void backButtonActivationDelegate()
         {
             ISceneManager sceneManager = GameLoop.getSceneManager();
-            List<IGameObject> objsToRemove = new List<IGameObject>();
 
-            //removing all objs
-            foreach (KeyValuePair<String, List<IGameObject>> gameTypeAndObjectPair0 in sceneManager.getGameObjectListMapByTag())
-            {
-                foreach (IGameObject gameObject00 in gameTypeAndObjectPair0.Value)
-                {
-                    switch (gameTypeAndObjectPair0.Key)
-                    {
-                        case Tags.DEBUG_TAG:   //debug objs are removed implicitly
-                            break;
-                        default:
-                            objsToRemove.Add(gameObject00); //can't remove object in this foreach (collection modified exception)
-                            break;
-                    }
-                }                
-            }
 
-            foreach (IGameObject gameObject0 in objsToRemove)
-            {
-                sceneManager.removeGameObject(gameObject0);
-            }
+            sceneManager.removeGameObjectsByTag(Tags.USER_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.CUT_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.DEBUG_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.FRUIT_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.UI_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.SOUND_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.BUTTON_TAG);
+            
 
             //back to main menu
             GameLoop.getGameLoopSingleton().setSpawnerManager(new MainMenuSpawnerManager());

@@ -57,7 +57,7 @@ namespace ProjectHCI.Utility
 
         static public string getImgResourcePath(string imgResourceName)
         {
-            return @"pack://application:,,,/Resources/" + imgResourceName;
+            return @"pack://application:,,,/Resources/images/" + imgResourceName;
         }
 
         /// <summary>

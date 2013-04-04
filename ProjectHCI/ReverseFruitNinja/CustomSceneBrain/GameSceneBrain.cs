@@ -388,26 +388,16 @@ namespace ProjectHCI.ReverseFruitNinja
         protected void userDeadTrigger(List<IGameObject> collidedCuts)
         {
             ISceneManager sceneManager = GameLoop.getSceneManager();
-            List<IGameObject> objsToRemove = new List<IGameObject>();
 
             this.decRage();
-            if (sceneManager.getGameObjectListMapByTag()[Tags.USER_TAG].Count == 1)
-            {
-                //remove all object from scene, except the cuts which killed the user
-                foreach (KeyValuePair<String, List<IGameObject>> gameObjectList0 in sceneManager.getGameObjectListMapByTag())
-                {
-                    foreach (IGameObject gameObject00 in gameObjectList0.Value)
-                    {
-                        objsToRemove.Add(gameObject00);
-                    }
-                }
-            }
 
-            //remove objs
-            foreach (IGameObject gameObject0 in objsToRemove)
-            {
-                sceneManager.removeGameObject(gameObject0);
-            }
+            //delete all except sound gameObject
+            sceneManager.removeGameObjectsByTag(Tags.USER_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.CUT_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.DEBUG_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.FRUIT_TAG);
+            sceneManager.removeGameObjectsByTag(Tags.UI_TAG);
+
 
             //switch to endgame scene
             GameLoop.getGameLoopSingleton().setSpawnerManager(new GameDebriefingSpawnerManager(this));

@@ -9,7 +9,7 @@
                 VerticalAlignment="Stretch"
                 x:Name="windowsCanvas">
             <Canvas.Background>
-                <ImageBrush ImageSource="Resources/background.png"/>
+                <ImageBrush ImageSource="Resources/images/background.png"/>
             </Canvas.Background>
 
 

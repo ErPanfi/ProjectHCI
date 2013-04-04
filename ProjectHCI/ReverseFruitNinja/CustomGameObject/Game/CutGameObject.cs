@@ -22,6 +22,8 @@ namespace ProjectHCI.ReverseFruitNinja
         private int currentTimeToLiveMillis;
         private ImageSource originalImageSource;
 
+        private bool cutSuccess;
+
         #region protected timeToLiveMillis {public get; public set;}
 
         protected int timeToLiveMillis;
@@ -69,6 +71,7 @@ namespace ProjectHCI.ReverseFruitNinja
             this.timeToLiveMillis = timeToLiveMillis;
             this.currentTimeToLiveMillis = timeToLiveMillis;
             this.collidableTimeMillis = this.timeToLiveMillis - notCollidableTimeMillis;
+            this.cutSuccess = false;
         }
 
 
@@ -154,6 +157,12 @@ namespace ProjectHCI.ReverseFruitNinja
         public override void onRendererRemoveDelegate()
         {
 
+            if (!this.cutSuccess)
+            {
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\air_cut.wav"), false);
+                GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+            }
+
             ISceneManager sceneManager = GameLoop.getSceneManager();
             sceneManager.canvasRemoveImage(this);
 
@@ -167,7 +176,14 @@ namespace ProjectHCI.ReverseFruitNinja
         /// <param name="otherGameObject"></param>
         public override void onCollisionEnterDelegate(IGameObject otherGameObject)
         {
-            //throw new NotSupportedException();
+            if (otherGameObject.getGameObjectTag() == Tags.FRUIT_TAG)
+            {
+                this.cutSuccess = true;
+
+                //cut success sound
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\fruit_cutted.wav"), false);
+                GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
+            }
         }
 
         /// <summary>
