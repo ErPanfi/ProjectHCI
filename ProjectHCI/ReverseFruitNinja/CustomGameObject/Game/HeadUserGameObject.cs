@@ -53,7 +53,7 @@ namespace ProjectHCI.ReverseFruitNinja
             base._gameObjectTag = Tags.USER_TAG;
 
             this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
-            //this.kinectSensorHelper.initializeKinect();
+            this.kinectSensorHelper.initializeKinect();
             //this.calibrateCamera();
 
 
