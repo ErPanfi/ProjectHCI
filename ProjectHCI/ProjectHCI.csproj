@@ -360,21 +360,38 @@
     <Resource Include="Resources\images\wave.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Sounds\air_cut.wav" />
-    <Resource Include="Resources\Sounds\cut.wav" />
-    <Resource Include="Resources\Sounds\fruit_appear.wav" />
-    <Resource Include="Resources\Sounds\fruit_cutted.wav" />
-    <Resource Include="Resources\Sounds\fruit_vanish.wav" />
-    <Resource Include="Resources\Sounds\game_theme.mp3" />
-    <Resource Include="Resources\Sounds\gong.wav">
+    <Content Include="Resources\Sounds\air_cut.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Sounds\menu_theme.mp3" />
-    <Resource Include="Resources\Sounds\selection.wav" />
-    <Resource Include="Resources\Sounds\user_dead.wav" />
+    </Content>
+    <Content Include="Resources\Sounds\fruit_appear.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\fruit_cutted.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\fruit_vanish.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\game_theme.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\gong.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\menu_theme.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\selection.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\user_dead.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Sounds\fruit_collected.wav" />
+    <Content Include="Resources\Sounds\fruit_collected.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

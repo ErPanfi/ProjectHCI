@@ -108,12 +108,12 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
             {//selection sound
-                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\selection.wav"), false);
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\selection.wav", UriKind.Relative), false);
                 GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
             }
 
             {//game main theme
-                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\game_theme.mp3"), 0.2, true);
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\game_theme.mp3", UriKind.Relative), 0.2, true);
                 GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
             }
 
@@ -179,7 +179,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
                     {// gong sound
-                        SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\gong.wav"), 0.2, false);
+                        SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\gong.wav", UriKind.Relative), 0.2, false);
                         GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
                     }
 

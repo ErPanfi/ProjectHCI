@@ -89,7 +89,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
             {// user dead sound
-                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\user_dead.wav"), false);
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\user_dead.wav", UriKind.Relative), false);
                 GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
             }
 

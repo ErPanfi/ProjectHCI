@@ -113,13 +113,13 @@ namespace ProjectHCI.ReverseFruitNinja
 
 
             { // selection sound
-                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\selection.wav"), false);
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\selection.wav", UriKind.Relative), false);
                 GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
             }
 
 
             { // Menu theme
-                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\menu_theme.mp3"),
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources/Sounds/menu_theme.mp3", UriKind.Relative),
                                                                       0.4,
                                                                       true);
                 gameObjectParentGameObjectPairList.Add(new KeyValuePair<IGameObject, IGameObject>(soundGameObject, null));
@@ -801,7 +801,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
         private void playSelectionSound()
         {
-            SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\selection.wav"), false);
+            SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\selection.wav", UriKind.Relative), false);
             GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
         }
 

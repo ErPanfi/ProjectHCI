@@ -76,7 +76,7 @@ namespace ProjectHCI.ReverseFruitNinja
             GameLoop.getSceneManager().canvasDisplayImage(this, 1);
 
             { //fruit appear sound
-                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\fruit_appear.wav"), 1,  false);
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\fruit_appear.wav", UriKind.Relative), 1, false);
                 GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
             }
         }
@@ -88,7 +88,7 @@ namespace ProjectHCI.ReverseFruitNinja
             if (!this.isCollected && !this.isCut)
             {
                 //vanish sound
-                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\fruit_vanish.wav"), 0.2, false);
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\fruit_vanish.wav", UriKind.Relative), 0.2, false);
                 GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
             }
         }
@@ -129,7 +129,7 @@ namespace ProjectHCI.ReverseFruitNinja
                     GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(new GameFloatingLabelObject(this, GameFloatingLabelObject.points2string(FRUIT_COLLECTION_POINTS)), null));
                     
                     {// fruit collected sound
-                        SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\fruit_collected.wav"), false);
+                        SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\fruit_collected.wav", UriKind.Relative), false);
                         GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
                     }
 

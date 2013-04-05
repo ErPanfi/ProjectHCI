@@ -159,7 +159,7 @@ namespace ProjectHCI.ReverseFruitNinja
 
             if (!this.cutSuccess)
             {
-                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\air_cut.wav"), false);
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\air_cut.wav", UriKind.Relative), false);
                 GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
             }
 
@@ -181,7 +181,7 @@ namespace ProjectHCI.ReverseFruitNinja
                 this.cutSuccess = true;
 
                 //cut success sound
-                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"D:\VisualStudio\GitRepositories\ProjectHCI\ProjectHCI\Resources\Sounds\fruit_cutted.wav"), false);
+                SoundGameObject soundGameObject = new SoundGameObject(new Uri(@"Resources\Sounds\fruit_cutted.wav", UriKind.Relative), false);
                 GameLoop.getSpawnerManager().specialRequestToSpawn(new GameObjectSpawnRequest(soundGameObject, null));
             }
         }
