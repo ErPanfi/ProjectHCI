@@ -80,6 +80,7 @@ namespace ProjectHCI.KinectEngine
             Time time = Time.getTimeSingleton();
             time.start();
 
+            Thread.Sleep(200);
 
             while (gameStillRunning)
             {
