@@ -22,12 +22,28 @@ namespace ProjectHCI.KinectEngine
     public class KinectSensorHelper
     {
 
+        #region Singleton access methods
+
+        private static KinectSensorHelper kinectSensorHelperSingleton = null;
+
+        public static KinectSensorHelper getKinectSensorHelperSingleton()
+        {
+            if (kinectSensorHelperSingleton == null)
+            {
+                kinectSensorHelperSingleton = new KinectSensorHelper(SkeletonSmoothingFilter.MEDIUM_SMOOTHING_LEVEL);
+            }
+
+            return kinectSensorHelperSingleton;
+        }
+
+        #endregion
+
         private KinectSensor kinectSensor;
         private Skeleton trackedSkeleton;
         private TransformSmoothParameters transformSmoothParameters;
 
 
-        public KinectSensorHelper(SkeletonSmoothingFilter skeletonSmoothingFilter)
+        protected KinectSensorHelper(SkeletonSmoothingFilter skeletonSmoothingFilter)
         {
 
             this.kinectSensor = null;
@@ -71,13 +87,14 @@ namespace ProjectHCI.KinectEngine
                     throw new Exception("Unexpected SkeletonSmoothingFilter");
             }
 
+            this.initializeKinect();
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        public void initializeKinect()
+        protected void initializeKinect()
         {
 
             KinectSensor choosenKinectSensor = null;
@@ -140,8 +157,6 @@ namespace ProjectHCI.KinectEngine
                     
                 }
             }
-
-            
         }
 
 

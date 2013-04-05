@@ -52,7 +52,8 @@ namespace ProjectHCI.ReverseFruitNinja
             base._boundingBoxGeometry = boundingBoxGeometry;
             base._gameObjectTag = Tags.USER_TAG;
 
-            this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
+            //this.kinectSensorHelper = new KinectSensorHelper(skeletonSmoothingFilter);
+            this.kinectSensorHelper = KinectSensorHelper.getKinectSensorHelperSingleton();
             //this.kinectSensorHelper.initializeKinect();
             //this.calibrateCamera();
 
