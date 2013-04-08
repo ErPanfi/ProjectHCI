@@ -12,6 +12,8 @@ namespace ProjectHCI.KinectEngine
     public class GameLoop
     {
 
+        public const int LOOP_ITERATION_WAIT_MILLIS = 20;
+
         private static GameLoop gameLoopSingleton;
 
         private static object staticLock = new object();
@@ -80,10 +82,10 @@ namespace ProjectHCI.KinectEngine
             Time time = Time.getTimeSingleton();
             time.start();
 
-            Thread.Sleep(200);
-
             while (gameStillRunning)
             {
+
+                Thread.Sleep(LOOP_ITERATION_WAIT_MILLIS);
 
                 time.tick();
 
