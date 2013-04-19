@@ -123,10 +123,11 @@ namespace ProjectHCI.KinectEngine
         /// <param name="gameObjectTag"></param>
         public void removeGameObjectsByTag(String gameObjectTag)
         {
-            Debug.Assert(this.gameObjectListMapByTag.ContainsKey(gameObjectTag), "expected this.gameObjectListMapByTypeEnum.ContainsKey(gameObjectTypeEnum)");
-            foreach(IGameObject gameObject0 in this.gameObjectListMapByTag[gameObjectTag].ToList()) //to list used as copy
-            {
-                this.removeGameObject(gameObject0);
+            if(this.gameObjectListMapByTag.ContainsKey(gameObjectTag)){
+                foreach(IGameObject gameObject0 in this.gameObjectListMapByTag[gameObjectTag].ToList()) //to list used as copy
+                {
+                    this.removeGameObject(gameObject0);
+                }
             }
         }
 
